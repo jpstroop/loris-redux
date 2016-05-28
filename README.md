@@ -4,6 +4,21 @@ __WIP!__
 
 A rewrite of loris using [Tornado](http://www.tornadoweb.org/en/stable/).
 
+## Stuff you can do now
+
+### Run the server in debug mode
+
+```
+$ loris/run.py
+```
+
+### Run tests
+
+```
+$ python setup.py test
+```
+
+
 ## Goals
  * Full Image API 2.1 support, including all optional features
  * Work with front-end caches (Varnish, Squid)
@@ -12,3 +27,5 @@ A rewrite of loris using [Tornado](http://www.tornadoweb.org/en/stable/).
  * No WSGI!
  * http or https support
  * Option to pre-bake tiles (supply a script)
+ * Store and Delete source files on the server over HTTP
+ * Enable and disable specific features, and dynamically determine compliance level
