@@ -4,8 +4,12 @@ from loris.handlers import route_patterns
 from loris.handlers.identifier_handler import IdentifierHandler
 from loris.handlers.image_handler import ImageHandler
 from loris.handlers.info_handler import InfoHandler
+from os import path
 from tornado.ioloop import IOLoop
 from tornado.web import Application
+import json
+import logging
+import logging.config
 import sys
 
 class App(object):
@@ -19,6 +23,8 @@ class App(object):
         (route_patterns.info_route_pattern(), InfoHandler),
         (route_patterns.image_route_pattern(), ImageHandler),
         (route_patterns.identifier_route_pattern(), IdentifierHandler)
+        # TODO: do we need a fallback handler?
+        # TODO: favicon
     )
 
     @staticmethod
@@ -32,8 +38,40 @@ class App(object):
         return debug
 
     @staticmethod
+    def _configure(debug=False):
+        cfg_dict = App._load_config_file(debug=debug)
+        App._configure_logging(cfg_dict['logging'])
+        return 0
+
+    @staticmethod
+    def _load_config_file(debug=False):
+        cfg_file_path = App._find_config_file(debug=debug)
+        cfg_dict = None
+        with open(cfg_file_path) as cfg_file:
+            cfg_dict = json.load(cfg_file)
+        return cfg_dict
+
+    @staticmethod
+    def _find_config_file(debug=False):
+        if debug:
+            project_dir = path.dirname(path.dirname(path.realpath(__file__)))
+            return path.join(project_dir, 'config.json')
+        else:
+            pass
+            # TODO: Figure out where we want to look for config. Seems like
+            # the app owner's home, then /etc/whatev, and then somewhere
+            # packaged with the app.
+
+    @staticmethod
+    def _configure_logging(cfg_dict):
+        logging.config.dictConfig(cfg_dict)
+        logger = logging.getLogger('loris')
+        logger.debug('Logging configured')
+
+    @staticmethod
     def create():
         debug = App._run_debug()
+        App._configure(debug=debug)
         # See http://www.tornadoweb.org/en/stable/web.html#tornado.web.Application.settings
         return Application(App.route_list, debug=debug)
 
