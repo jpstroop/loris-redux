@@ -14,6 +14,7 @@ class PyTest(TestCommand):
 
     def run_tests(self):
         import pytest
+        self.pytest_args.insert(0, '--cache-clear')
         errno = pytest.main(self.pytest_args)
         sys.exit(errno)
 

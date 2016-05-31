@@ -30,6 +30,8 @@ from abc import abstractproperty
 # >>> foo_parameter = FooParameter('abc')
 # >>> foo_parameter.canonical
 # 'abc_canonical'
+# >>> str(foo_parameter)
+# 'abc'
 
 class AbstractParameter(metaclass=ABCMeta):
 
