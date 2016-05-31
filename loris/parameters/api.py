@@ -40,7 +40,8 @@ class AbstractParameter(metaclass=ABCMeta):
         self.original_request = uri_slice
         return
 
-    @abstractproperty
+    @property
+    @abstractmethod
     def canonical(self):
         return
 
