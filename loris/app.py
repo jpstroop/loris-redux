@@ -12,6 +12,8 @@ import logging
 import logging.config
 import sys
 
+global logger
+
 class App(object):
 
     # From http://www.tornadoweb.org/en/stable/guide/structure.html#the-application-object

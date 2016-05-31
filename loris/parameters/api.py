@@ -1,6 +1,5 @@
 from abc import ABCMeta
 from abc import abstractmethod
-from abc import abstractproperty
 
 # See: https://docs.python.org/3.5/library/abc.html
 # and: https://pymotw.com/2/abc/
