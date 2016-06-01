@@ -5,7 +5,8 @@ import sys
 
 class PyTest(TestCommand):
     # TODO: figure out how to get the stuff we have in setup.cfg into this
-    # class instead. See:
+    # class instead, if possible, or else get rid of this so that config is all
+    # in one place. See:
     # http://pytest.org/latest/goodpractices.html#manual-integration
     user_options = [('pytest-args=', 'a', "Arguments to pass to py.test")]
     def initialize_options(self):
@@ -34,10 +35,11 @@ setup(
     cmdclass = {'test': PyTest},
     setup_requires=[ ],
     tests_require=[
-        'pytest==2.9.1'
+        'pytest==2.9.1,<3'
     ],
     install_requires=[
-        'Pillow==3.2.0',
-        'tornado==4.3',
+        'Pillow>=3.2.0,<4',
+        'tornado==4.3,<5',
+        'python-magic==0.4.11,<5'
     ],
 )

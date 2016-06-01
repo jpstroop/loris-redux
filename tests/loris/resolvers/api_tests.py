@@ -7,9 +7,6 @@ class ProperImpl(AbstractResolver):
     def resolve(self, ident):
         # Note that a real impl. would need to raise an IOError
         return '/foo/bar/baz.jpg'
-    def characterize(file_path):
-        return 'jpg'
-
 
 class TestAbstractResolver(object):
 
@@ -35,16 +32,6 @@ class TestAbstractResolver(object):
             w = WithoutResolvable({})
         assert "Can't instantiate abstract class" in str(type_error.value)
 
-    def test_resolvable_required(self):
-        class WithoutCharacterize(AbstractResolver):
-            def is_resolvable(self, ident):
-                return True
-            def resolve(self, ident):
-                return '/foo/bar/baz.jpg'
-        with pytest.raises(TypeError) as type_error:
-            w = WithoutCharacterize({})
-        assert "Can't instantiate abstract class" in str(type_error.value)
-
     def test_proper_impl_works(self):
         resolver = ProperImpl({})
 
@@ -52,7 +39,3 @@ class TestAbstractResolver(object):
         resolver = ProperImpl({'foo' : 'bar', 'baz' : 'quux'})
         assert resolver.foo == 'bar'
         assert resolver.baz == 'quux'
-
-    def test_characterize_must_be_static(self):
-        # TODO: How?
-        pass

@@ -22,16 +22,13 @@ class AbstractResolver(metaclass=ABCMeta):
 
     @abstractmethod
     def resolve(self, ident):
-        # Return a path (str) to a file on the local system that can be
-        # transformed/transcoded to fulfill the request.
-        # __Note__: MUST raise an IOError if the file does not exist. We
-        # can't enforce that here, so implementations should do so in their
+        # Return a path to a file that can be transformed/transcoded to fulfill
+        # the request and the format (str, str)
+        #  * The path to the file on the local system MUST be absolute.
+        #  * Implemetations may want to mix in the MagicCharacterizerMixin to
+        #    help acquire the format.
+        #
+        # __Note__: MUST raise an ResolverException if the file does not exist.
+        # We can't enforce that here, so implementations should do so in their
         # tests.
-        return
-
-    @staticmethod
-    @abstractmethod
-    def characterize(file_path):
-        # Return a str representing the file format. MUST be one of the
-        # extensions listed here: http://iiif.io/api/image/2.1/#format
         return
