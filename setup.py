@@ -38,8 +38,8 @@ setup(
         'pytest==2.9.1,<3'
     ],
     install_requires=[
-        'Pillow>=3.2.0,<4',
-        'tornado==4.3,<5',
-        'python-magic==0.4.11,<5'
+        'Pillow>=3.2.0',
+        'tornado>=4.3',
+        'python-magic>=0.4.11'
     ],
 )

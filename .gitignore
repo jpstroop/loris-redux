@@ -1,5 +1,7 @@
 python*
 __pycache__
 *.egg-info
+.eggs
 .cache/
 fake.py
+*.pyc
