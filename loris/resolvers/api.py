@@ -13,7 +13,7 @@ class AbstractResolver(metaclass=ABCMeta):
         logger.debug('Initialized %s.%s', __name__, self.__class__.__name__)
 
     @abstractmethod
-    def is_resolvable(self, ident):
+    def is_resolvable(self, ident):  # pragma: no cover
         # The idea here is that in some scenarios it may be cheaper to check
         # that an id is resolvable than to actually resolve it. For example, in
         # an HTTP resolver, this could be a HEAD instead of a GET.
@@ -21,7 +21,7 @@ class AbstractResolver(metaclass=ABCMeta):
         return
 
     @abstractmethod
-    def resolve(self, ident):
+    def resolve(self, ident):  # pragma: no cover
         # Return a path to a file that can be transformed/transcoded to fulfill
         # the request and the format (str, str)
         #  * The path to the file on the local system MUST be absolute.
