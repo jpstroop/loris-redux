@@ -30,7 +30,7 @@ class App(object):
     )
 
     @staticmethod
-    def _run_debug():
+    def _run_debug():  # pragma: no cover
         debug = False
         try:
             debug = sys.argv[1] == 'debug'
@@ -40,13 +40,13 @@ class App(object):
         return debug
 
     @staticmethod
-    def _configure(debug=False):
+    def _configure(debug=False):  # pragma: no cover
         cfg_dict = App._load_config_file(debug=debug)
         App._configure_logging(cfg_dict['logging'])
         return 0
 
     @staticmethod
-    def _load_config_file(debug=False):
+    def _load_config_file(debug=False):  # pragma: no cover
         cfg_file_path = App._find_config_file(debug=debug)
         cfg_dict = None
         with open(cfg_file_path) as cfg_file:
@@ -54,7 +54,7 @@ class App(object):
         return cfg_dict
 
     @staticmethod
-    def _find_config_file(debug=False):
+    def _find_config_file(debug=False): # pragma: no cover
         if debug:
             project_dir = path.dirname(path.dirname(path.realpath(__file__)))
             return path.join(project_dir, 'config.json')
@@ -65,7 +65,7 @@ class App(object):
             # packaged with the app.
 
     @staticmethod
-    def _configure_logging(cfg_dict):
+    def _configure_logging(cfg_dict):  # pragma: no cover
         logging.config.dictConfig(cfg_dict)
         logger = logging.getLogger('loris')
         logger.debug('Logging configured')

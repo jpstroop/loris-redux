@@ -24,9 +24,11 @@ addons:
 install:
   - pip install -r requirements.txt
   - pip install pytest
-  - pip install coveralls
+  - pip install pytest-cov
+  - pip install python-coveralls
 
-script: py.test
+# See https://pypi.python.org/pypi/pytest-cov
+script: py.test --cov=loris
 
 after_success:
   coveralls

@@ -41,7 +41,7 @@ class AbstractParameter(metaclass=ABCMeta):
 
     @property
     @abstractmethod
-    def canonical(self):
+    def canonical(self):  # pragma: no cover
         return
 
     def __str__(self):

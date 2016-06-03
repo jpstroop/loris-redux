@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/jpstroop/loris-redux.svg?branch=master)](https://travis-ci.org/jpstroop/loris-redux)
 
+[![Coverage Status](https://coveralls.io/repos/github/jpstroop/loris-redux/badge.svg?branch=master)](https://coveralls.io/github/jpstroop/loris-redux?branch=master)
+
 __WIP!__
 
 A rewrite of loris using [Tornado](http://www.tornadoweb.org/en/stable/).
