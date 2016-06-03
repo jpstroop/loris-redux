@@ -1,4 +1,6 @@
-# Loris 3
+# loris-reduz
+
+[![Build Status](https://travis-ci.org/jpstroop/loris-redux.svg?branch=master)](https://travis-ci.org/jpstroop/loris-redux)
 
 __WIP!__
 
