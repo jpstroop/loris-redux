@@ -1,0 +1,40 @@
+sudo: required
+dist: trusty
+
+language: python
+
+python:
+  - 3.5
+
+addons:
+  apt:
+    packages:
+    - libmagic1
+    - libjpeg-turbo8
+    - libjpeg-turbo8-dev
+    - libfreetype6
+    - libfreetype6-dev
+    - zlib1g-dev
+    - liblcms2-2
+    - liblcms2-dev
+    - liblcms-utils
+    - libtiff4-dev
+    - libwebp-dev
+
+install:
+  - pip install -r requirements.txt
+  - pip install pytest
+  - pip install coveralls
+
+script: py.test
+
+after_success:
+  coveralls
+
+notifications:
+  email:
+    recipients: "jpstroop@gmail.com"
+    on_success: "always"
+    on_failure: "always"
+    template:
+      - "%{repository}//%{branch}@%{commit} by %{author}: %{message} - %{build_url}"
