@@ -11,7 +11,7 @@ class AbstractTranscoder(metaclass=ABCMeta):
     # TODO: consider adding two static properties: input='fmt' and
     # outputs=('fmt', 'fmt')
     # The application could then have a transcoder registry that finds
-    # transcoders dynamically based on the input. Maybe outputs isn't necessary? 
+    # transcoders dynamically based on the input. Maybe outputs isn't necessary?
 
     def __init__(self, config={}):
         self.__dict__ = { **self.__dict__, **config }
@@ -19,6 +19,6 @@ class AbstractTranscoder(metaclass=ABCMeta):
         logger.debug('Initialized %s.%s' % (__name__, self.__class__.__name__))
 
     @abstractmethod
-    def transcode(self, src_file_path, target_file_path, image_request):
+    def transcode(self, src_file_path, target_file_path, image_request):  # pragma: no cover
         # TODO: target_file_path could change or go away since we're not caching
         return
