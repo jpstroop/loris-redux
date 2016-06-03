@@ -1,8 +1,5 @@
 ## !! Could not determine repository location
-Loris==0.0.1
 Pillow==3.2.0
-pkg-resources==0.0.0
-py==1.4.31
 pytest==2.9.1
 python-magic==0.4.11
 tornado==4.3
