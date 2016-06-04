@@ -1,4 +1,4 @@
-from loris.app import App
+from app import App
 from loris.handlers.info_handler import InfoHandler
 from loris.handlers.identifier_handler import IdentifierHandler
 from loris.handlers.image_handler import ImageHandler

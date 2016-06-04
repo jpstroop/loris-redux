@@ -24,6 +24,7 @@ class AbstractResolver(metaclass=ABCMeta):
     def resolve(self, ident):  # pragma: no cover
         # Return a path to a file that can be transformed/transcoded to fulfill
         # the request and the format (str, str)
+        #
         #  * The path to the file on the local system MUST be absolute.
         #  * Implemetations may want to mix in the MagicCharacterizerMixin to
         #    help acquire the format.
