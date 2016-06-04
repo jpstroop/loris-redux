@@ -12,7 +12,7 @@ A rewrite of loris using [Tornado](http://www.tornadoweb.org/en/stable/).
 
 ```
 $ pip install -r requirements.txt
-$ loris/run.py debug
+$ ./run.py debug
 ```
 
 ### Run tests

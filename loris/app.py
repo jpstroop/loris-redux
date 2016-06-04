@@ -1,11 +1,8 @@
-#!/usr/bin/env python
-
 from loris.handlers import route_patterns
 from loris.handlers.identifier_handler import IdentifierHandler
 from loris.handlers.image_handler import ImageHandler
 from loris.handlers.info_handler import InfoHandler
 from os import path
-from tornado.ioloop import IOLoop
 from tornado.web import Application
 import json
 import logging
@@ -56,7 +53,7 @@ class App(object):
     @staticmethod
     def _find_config_file(debug=False): # pragma: no cover
         if debug:
-            project_dir = path.dirname(path.realpath(__file__))
+            project_dir = path.dirname(path.dirname(path.realpath(__file__)))
             return path.join(project_dir, 'config.json')
         else:
             pass
@@ -76,9 +73,3 @@ class App(object):
         App._configure(debug=debug)
         # See http://www.tornadoweb.org/en/stable/web.html#tornado.web.Application.settings
         return Application(App.route_list, debug=debug)
-
-if __name__ == "__main__":
-    # load configs here and pass to create_app?
-    app = App.create()
-    app.listen(8888)
-    IOLoop.current().start()
