@@ -27,9 +27,6 @@ class MagicCharacterizerMixin(object):
 
     @classproperty
     def _cache():
-        # TODO: this should really be a static property, but not possible in
-        # Python and no luck implemting a static memozing decorator that can
-        # take args yet.
         try:
             return MagicCharacterizerMixin._format_cache
         except AttributeError:

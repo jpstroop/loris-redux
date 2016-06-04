@@ -56,7 +56,7 @@ class App(object):
     @staticmethod
     def _find_config_file(debug=False): # pragma: no cover
         if debug:
-            project_dir = path.dirname(path.dirname(path.realpath(__file__)))
+            project_dir = path.dirname(path.realpath(__file__))
             return path.join(project_dir, 'config.json')
         else:
             pass
