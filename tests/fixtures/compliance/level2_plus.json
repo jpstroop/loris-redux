@@ -1,0 +1,86 @@
+{
+  "formats": {
+    "png": {
+      "enabled": true
+    },
+    "webp": {
+      "enabled": true
+    }
+  },
+  "http": {
+    "baseUriRedirect": {
+      "enabled": true
+    },
+    "canonicalLinkHeader": {
+      "enabled": false
+    },
+    "cors": {
+      "enabled": true
+    },
+    "jsonldMediaType": {
+      "enabled": true
+    },
+    "profileLinkHeader": {
+      "enabled": false
+    }
+  },
+  "quality": {
+    "bitonal": {
+      "enabled": true
+    },
+    "color": {
+      "enabled": true
+    },
+    "gray": {
+      "enabled": true
+    }
+  },
+  "region": {
+    "regionByPct": {
+      "enabled": true
+    },
+    "regionByPx": {
+      "enabled": true
+    },
+    "regionSquare": {
+      "enabled": true
+    }
+  },
+  "rotation": {
+    "mirroring": {
+      "enabled": false
+    },
+    "rotationArbitrary": {
+      "enabled": false
+    },
+    "rotationBy90s": {
+      "enabled": true
+    }
+  },
+  "size": {
+    "max": {
+      "enabled": true
+    },
+    "sizeAboveFull": {
+      "enabled": false
+    },
+    "sizeByConfinedWh": {
+      "enabled": true
+    },
+    "sizeByDistortedWh": {
+      "enabled": true
+    },
+    "sizeByH": {
+      "enabled": true
+    },
+    "sizeByPct": {
+      "enabled": true
+    },
+    "sizeByW": {
+      "enabled": true
+    },
+    "sizeByWh": {
+      "enabled": true
+    }
+  }
+}
