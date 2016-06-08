@@ -4,7 +4,7 @@ from loris.resolvers.api import AbstractResolver
 
 class TestMagicCharacterizerMixin(object):
 
-    # TODO: start here w/ fixtures
+    # Fixtures (like tiled_jp2) are defined in ../conftest.py
     def test_works_with_jp2(self, tiled_jp2):
         assert MagicCharacterizerMixin.characterize(tiled_jp2) == 'jp2'
 

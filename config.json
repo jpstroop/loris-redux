@@ -1,6 +1,52 @@
 {
-  "something_else" : {
-
+  "features": {
+    "note": "Loris will always be at least level 0 compliant. Enable additional
+      features here.",
+    "region": {
+      "regionByPx": { "enabled": true },
+      "regionByPct": { "enabled": true },
+      "regionSquare": { "enabled": true }
+    },
+    "size": {
+      "sizeByW": { "enabled": true },
+      "sizeByH": { "enabled": true },
+      "sizeByPct": { "enabled": true },
+      "sizeByConfinedWh": { "enabled": true },
+      "sizeByDistortedWh": { "enabled": true },
+      "sizeByWh": { "enabled": true },
+      "sizeAboveFull": { "enabled": true },
+      "max": { "enabled": true },
+      "scaleFactors": {
+        "note": "If complilance is level 0, tiles will be allowed for scale
+          factors > 1024, and sizes will be available for scale factors
+          <= 1024",
+        "enabled": false,
+        "tileWidth": 1024,
+        "tileHeight": 1024
+      }
+    },
+    "rotation": {
+      "rotationBy90s": { "enabled": true },
+      "rotationArbitrary": { "enabled": true },
+      "mirroring": { "enabled": true },
+      "color": { "enabled": true }
+    },
+    "qualities": {
+      "color": { "enabled": true },
+      "gray": { "enabled": true },
+      "bitonal": { "enabled": true },
+    },
+    "formats": {
+      "png": { "enabled": true },
+      "webp": { "enabled": true }
+    },
+    "http": {
+      "baseUriRedirect": { "enabled": true },
+      "cors": { "enabled": true },
+      "jsonldMediaType": { "enabled": true },
+      "profileLinkHeader": { "enabled": true },
+      "canonicalLinkHeader": { "enabled": true }
+    }
   },
   "logging": {
     "handlers": {

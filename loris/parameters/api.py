@@ -35,7 +35,8 @@ from abc import abstractmethod
 class AbstractParameter(metaclass=ABCMeta):
 
     @abstractmethod
-    def __init__(self, uri_slice):
+    def __init__(self, uri_slice, features):
+        self.enabled_features = features
         self.original_request = uri_slice
         return
 

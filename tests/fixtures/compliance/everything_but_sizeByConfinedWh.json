@@ -1,0 +1,83 @@
+{
+  "formats": {
+    "png": {
+      "enabled": true
+    },
+    "webp": {
+      "enabled": true
+    }
+  },
+  "http": {
+    "baseUriRedirect": {
+      "enabled": true
+    },
+    "canonicalLinkHeader": {
+      "enabled": true
+    },
+    "cors": {
+      "enabled": true
+    },
+    "jsonldMediaType": {
+      "enabled": true
+    },
+    "profileLinkHeader": {
+      "enabled": true
+    }
+  },
+  "quality": {
+    "bitonal": {
+      "enabled": true
+    },
+    "color": {
+      "enabled": true
+    },
+    "gray": {
+      "enabled": true
+    }
+  },
+  "region": {
+    "regionByPct": {
+      "enabled": true
+    },
+    "regionByPx": {
+      "enabled": true
+    },
+    "regionSquare": {
+      "enabled": true
+    }
+  },
+  "rotation": {
+    "mirroring": {
+      "enabled": true
+    },
+    "rotationArbitrary": {
+      "enabled": true
+    },
+    "rotationBy90s": {
+      "enabled": true
+    }
+  },
+  "size": {
+    "sizeAboveFull": {
+      "enabled": true
+    },
+    "sizeByConfinedWh": {
+      "enabled": false
+    },
+    "sizeByDistortedWh": {
+      "enabled": true
+    },
+    "sizeByH": {
+      "enabled": true
+    },
+    "sizeByPct": {
+      "enabled": true
+    },
+    "sizeByW": {
+      "enabled": true
+    },
+    "sizeByWh": {
+      "enabled": true
+    }
+  }
+}
