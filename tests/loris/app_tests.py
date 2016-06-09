@@ -2,12 +2,13 @@ from loris.app import App
 from loris.handlers.info_handler import InfoHandler
 from loris.handlers.identifier_handler import IdentifierHandler
 from loris.handlers.image_handler import ImageHandler
+from loris.helpers.compliance import Compliance
 import re
 
 class FakeRouter(object):
 
     def route(self, path):
-        for route in App.route_list:
+        for route in App._create_route_list(Compliance({})):
             if re.match(route[0], path):
                 return route[1]
 

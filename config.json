@@ -1,7 +1,6 @@
 {
   "features": {
-    "note": "Loris will always be at least level 0 compliant. Enable additional
-      features here.",
+    "note": "Loris will always be at least level 0 compliant. Enable additional features here.",
     "region": {
       "regionByPx": { "enabled": true },
       "regionByPct": { "enabled": true },
@@ -17,9 +16,7 @@
       "sizeAboveFull": { "enabled": true },
       "max": { "enabled": true },
       "scaleFactors": {
-        "note": "If complilance is level 0, tiles will be allowed for scale
-          factors > 1024, and sizes will be available for scale factors
-          <= 1024",
+        "note": "If complilance is level 0, tiles will be allowed for scale factors > 1024, and sizes will be available for scale factors <= 1024",
         "enabled": false,
         "tileWidth": 1024,
         "tileHeight": 1024
@@ -31,10 +28,10 @@
       "mirroring": { "enabled": true },
       "color": { "enabled": true }
     },
-    "qualities": {
+    "quality": {
       "color": { "enabled": true },
       "gray": { "enabled": true },
-      "bitonal": { "enabled": true },
+      "bitonal": { "enabled": true }
     },
     "formats": {
       "png": { "enabled": true },
@@ -59,7 +56,7 @@
     "loggers": {
       "loris": {
         "level": "DEBUG",
-        "propagate": true,
+        "propagate": false,
         "handlers": ["default"]
       }
     },

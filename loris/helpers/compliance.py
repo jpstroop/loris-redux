@@ -80,11 +80,11 @@ class Compliance(object):
                 level_features = set(Compliance.ALL_LEVEL_2)
             elif self.server_compliance == 1:
                 level_features = set(Compliance.ALL_LEVEL_1)
-            self._additional_features = set(self._all_enabled_features) - level_features
+            self._additional_features = set(self.all_enabled_features) - level_features
         return st(self._additional_features)
 
     @property
-    def _all_enabled_features(self):
+    def all_enabled_features(self):
         return st(
             self.region_features +
             self.size_features +
