@@ -1,7 +1,7 @@
 {
   "formats": {
     "png": {
-      "enabled": true
+      "enabled": false
     },
     "webp": {
       "enabled": false
@@ -65,7 +65,7 @@
       "enabled": false
     },
     "sizeByConfinedWh": {
-      "enabled": false
+      "enabled": true
     },
     "sizeByDistortedWh": {
       "enabled": false

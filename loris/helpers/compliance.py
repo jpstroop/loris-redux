@@ -17,8 +17,10 @@ class Compliance(object):
     SIZE_ALL = st(SIZE_LEVEL_2 + ('max','sizeAboveFull'))
     ROTATION_LEVEL_2 = ('rotationBy90s',)
     ROTATION_ALL = st(ROTATION_LEVEL_2 + ('rotationArbitrary', 'mirroring'))
+    QUALITY_LEVEL_0 = ('default',)
     QUALITY_LEVEL_2 = st(('color', 'gray', 'bitonal'))
     QUALITY_ALL = QUALITY_LEVEL_2
+    FORMAT_LEVEL_0 = ('jpg',)
     FORMAT_LEVEL_2 = ('png',)
     FORMAT_ALL = st(FORMAT_LEVEL_2 + ('webp',)) # this is specific to loris
     HTTP_LEVEL_1 = ('baseUriRedirect', 'cors', 'jsonldMediaType')
@@ -89,10 +91,22 @@ class Compliance(object):
             self.region_features +
             self.size_features +
             self.rotation_features +
-            self.quality_features +
-            self.format_features +
             self.http_features
         )
+
+    def to_profile(self, include_color=True):
+        # A list suitable for placing in the "supports" key of info.json
+        # Pass include_color=False if the source image is grayscale
+        qualities = Compliance.QUALITY_LEVEL_0 + self.quality_features
+        if not include_color:
+            qualities = tuple(q for q in qualities if q != 'color')
+        d = {
+            "supports" : self.additional_features,
+            "qualities" : qualities,
+            "formats" :  Compliance.FORMAT_LEVEL_0 + self.format_features
+        }
+        l = [ self.compliance_uri, d ]
+        return l
 
     @property
     def region_features(self):
