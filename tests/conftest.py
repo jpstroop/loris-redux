@@ -47,8 +47,8 @@ def level0_plus_sizeByW_json():
     return _load_json(pth)
 
 @pytest.fixture()
-def level1_plus_png_json():
-    pth = path.join(COMPLIANCE_DIR, 'level1_plus_png.json')
+def level1_plus_sizeByConfinedWh_json():
+    pth = path.join(COMPLIANCE_DIR, 'level1_plus_sizeByConfinedWh.json')
     return _load_json(pth)
 
 @pytest.fixture()
