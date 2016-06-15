@@ -8,7 +8,10 @@ import re
 class FakeRouter(object):
 
     def route(self, path):
-        for route in App._create_route_list(Compliance({})):
+        c = Compliance({})
+        base_uri = 'http://foo.edu/loris/'
+        extractors = {}
+        for route in App._create_route_list(c, base_uri, extractors):
             if re.match(route[0], path):
                 return route[1]
 
