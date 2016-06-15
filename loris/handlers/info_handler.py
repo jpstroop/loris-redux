@@ -7,9 +7,11 @@ logger = getLogger('loris')
 class InfoHandler(RequestHandler):
     # See http://www.tornadoweb.org/en/stable/web.html#entry-points
     # and http://www.tornadoweb.org/en/stable/guide/structure.html#overriding-requesthandler-methods
-    # Expensive static stuff as a static property
-    def initialize(self, compliance):
+    def initialize(self, compliance, base_uri, extractors):
         self.compliance = compliance
+        self.compliance = base_uri
+        self.extractors = extractors
+
 
     # @classproperty
     # def compliance(compliance):

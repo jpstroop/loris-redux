@@ -1,4 +1,7 @@
 {
+  "application" : {
+    "base_uri" : null
+  },
   "features": {
     "note": "Loris will always be at least level 0 compliant. Enable additional features here.",
     "region": {

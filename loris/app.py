@@ -15,19 +15,30 @@ class App(object):
     routes = None
 
     @staticmethod
-    def _create_route_list(compliance):
+    def _create_route_list(compliance, base_uri, extractors):
         # From:
         # http://www.tornadoweb.org/en/stable/guide/structure.html#the-application-object
         # "... If a dictionary is passed as the third element of the URLSpec,
         # it supplies the initialization arguments which will be passed to
         # RequestHandler.initialize. Finally, the URLSpec may have a name, which
         # will allow it to be used with RequestHandler.reverse_url."
-        init_args = { 'compliance' : compliance }
+        info_init_args = {
+            'compliance' : compliance,
+            'base_uri' : base_uri,
+            'extractors' : extractors
+        }
+        img_init_args = {
+            'compliance' : compliance
+            # probably should pass transcoders as well, just to be consistent.
+        }
+        id_init_args = {
+            'compliance' : compliance
+        }
         route_list = (
-            (route_patterns.info_route_pattern(), InfoHandler, init_args),
-            (route_patterns.image_route_pattern(), ImageHandler, init_args),
-            (route_patterns.identifier_route_pattern(), IdentifierHandler, init_args)
-            # TODO: do we need a fallback handler?
+            (route_patterns.info_route_pattern(), InfoHandler, info_init_args),
+            (route_patterns.image_route_pattern(), ImageHandler, img_init_args),
+            (route_patterns.identifier_route_pattern(), IdentifierHandler, id_init_args)
+            # TODO: we need a fallback handler (/id/random)
             # TODO: favicon
         )
         return route_list
@@ -49,11 +60,25 @@ class App(object):
         logger.info(msg)
         return compliance
 
+    @staticmethod
+    def _init_base_uri(cfg):
+        return cfg.get('base_uri')
+
+    @staticmethod
+    def _init_extractors():
+        lookup = {}
+        # lookup['jp2'] = JP2extractor()
+        # lookup['jpg'] = JPEGextractor()
+        # etc.
+        return lookup
+
     def _configure(debug=False):  # pragma: no cover
         cfg_dict = App._load_config_file(debug=debug)
         App._configure_logging(cfg_dict['logging'])
         compliance = App._init_compliance(cfg_dict['features'])
-        App.routes = App._create_route_list(compliance)
+        base_uri = App._init_base_uri(cfg_dict['application'])
+        extractors = App._init_extractors()
+        App.routes = App._create_route_list(compliance, base_uri, extractors)
 
     @staticmethod
     def _load_config_file(debug=False):  # pragma: no cover
