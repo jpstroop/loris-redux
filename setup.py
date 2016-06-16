@@ -58,5 +58,5 @@ setup(
         'Pillow>=3.2.0',
         'tornado>=4.3',
         'python-magic>=0.4.11'
-    ],
+    ]
 )

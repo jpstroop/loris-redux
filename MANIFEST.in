@@ -1,1 +1,1 @@
-include config.json
+include loris/config.json
