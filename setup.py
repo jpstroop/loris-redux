@@ -3,6 +3,12 @@ from setuptools.command.test import test as TestCommand
 import loris
 import sys
 
+# Distribution Guidance:
+# https://www.digitalocean.com/community/tutorials/how-to-package-and-distribute-python-applications
+# https://docs.python.org/3/distutils/sourcedist.html
+# http://python-packaging.readthedocs.io/en/latest/minimal.html
+# Maybe for init script? http://python-packaging.readthedocs.io/en/latest/command-line-scripts.html#the-console-scripts-entry-point
+
 class PyTest(TestCommand):
     # TODO: figure out how to get the stuff we have in setup.cfg into this
     # class instead, if possible, or else get rid of this so that config is all
@@ -19,12 +25,23 @@ class PyTest(TestCommand):
         errno = pytest.main(self.pytest_args)
         sys.exit(errno)
 
+PACKAGES=(
+    'loris',
+    'loris.exceptions',
+    'loris.handlers',
+    'loris.helpers',
+    'loris.info',
+    'loris.parameters',
+    'loris.resolvers',
+    'loris.transcoders'
+)
+
 setup(
     name='Loris',
     version=loris.__version__,
     author='Jon Stroop',
     author_email='jpstroop@gmail.com',
-    packages=['loris'],
+    packages=PACKAGES,
     # Include additional files into the package
     include_package_data=True,
     # Details
@@ -41,5 +58,5 @@ setup(
         'Pillow>=3.2.0',
         'tornado>=4.3',
         'python-magic>=0.4.11'
-    ],
+    ]
 )

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from loris.handlers import route_patterns
 from loris.handlers.identifier_handler import IdentifierHandler
 from loris.handlers.image_handler import ImageHandler
@@ -91,12 +93,13 @@ class App(object):
     @staticmethod
     def _find_config_file(debug=False): # pragma: no cover
         if debug:
-            project_dir = path.dirname(path.dirname(path.realpath(__file__)))
-            return path.join(project_dir, 'config.json')
+            package_dir = path.dirname(path.realpath(__file__))
+            return path.join(package_dir, 'config.json')
         else:
             pass
             # TODO: Figure out where we want to look for config. Seems like
-            # the app owner's home, then /etc/whatev, and then somewhere
+            # ~/.loris/config.json
+            # /etc/loris/config.json, and then
             # packaged with the app.
 
     @staticmethod
