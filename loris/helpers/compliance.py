@@ -97,9 +97,9 @@ class Compliance(object):
     def to_profile(self, include_color=True):
         # A list suitable for placing in the "supports" key of info.json
         # Pass include_color=False if the source image is grayscale
-        qualities = Compliance.QUALITY_LEVEL_0 + self.quality_features
+        qualities = st(Compliance.QUALITY_LEVEL_0 + self.quality_features)
         if not include_color:
-            qualities = tuple(q for q in qualities if q != 'color')
+            qualities = st(q for q in qualities if q != 'color')
         d = {
             "supports" : self.additional_features,
             "qualities" : qualities,

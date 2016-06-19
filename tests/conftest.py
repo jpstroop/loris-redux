@@ -27,6 +27,18 @@ def color_tif():
     return path.join(FIXTURES_DIR, 'color.tif')
 
 @pytest.fixture()
+def gray_jpg():
+    return path.join(FIXTURES_DIR, 'gray.jpg')
+
+@pytest.fixture()
+def gray_png():
+    return path.join(FIXTURES_DIR, 'gray.png')
+
+@pytest.fixture()
+def gray_tif():
+    return path.join(FIXTURES_DIR, 'gray.tif')
+
+@pytest.fixture()
 def level0_scales_enabled_json():
     pth = path.join(COMPLIANCE_DIR, 'level0_scales_enabled.json')
     return _load_json(pth)
