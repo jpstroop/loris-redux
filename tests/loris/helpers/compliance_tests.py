@@ -498,7 +498,7 @@ class TestCompliance(object):
             'http://iiif.io/api/image/2/level2.json',
             {
                 'formats': ('jpg', 'png', 'webp'),
-                'qualities': ('default', 'bitonal', 'color', 'gray'),
+                'qualities': ('bitonal', 'color', 'default', 'gray'),
                 "supports" : (
                     'canonicalLinkHeader',
                     'max',
@@ -518,7 +518,7 @@ class TestCompliance(object):
             'http://iiif.io/api/image/2/level2.json',
             {
                 'formats': ('jpg', 'png', 'webp'),
-                'qualities': ('default', 'bitonal', 'gray'),
+                'qualities': ('bitonal', 'default', 'gray'),
                 "supports" : (
                     'canonicalLinkHeader',
                     'max',

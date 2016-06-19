@@ -17,7 +17,7 @@ class App(object):
     routes = None
 
     @staticmethod
-    def _create_route_list(compliance, base_uri, extractors):
+    def _create_route_list(compliance, server_uri, extractors):
         # From:
         # http://www.tornadoweb.org/en/stable/guide/structure.html#the-application-object
         # "... If a dictionary is passed as the third element of the URLSpec,
@@ -26,7 +26,7 @@ class App(object):
         # will allow it to be used with RequestHandler.reverse_url."
         info_init_args = {
             'compliance' : compliance,
-            'base_uri' : base_uri,
+            'server_uri' : server_uri,
             'extractors' : extractors
         }
         img_init_args = {
@@ -63,8 +63,8 @@ class App(object):
         return compliance
 
     @staticmethod
-    def _init_base_uri(cfg):
-        return cfg.get('base_uri')
+    def _init_server_uri(cfg):
+        return cfg.get('server_uri')
 
     @staticmethod
     def _init_extractors():
@@ -78,9 +78,9 @@ class App(object):
         cfg_dict = App._load_config_file(debug=debug)
         App._configure_logging(cfg_dict['logging'])
         compliance = App._init_compliance(cfg_dict['features'])
-        base_uri = App._init_base_uri(cfg_dict['application'])
+        server_uri = App._init_server_uri(cfg_dict['application'])
         extractors = App._init_extractors()
-        App.routes = App._create_route_list(compliance, base_uri, extractors)
+        App.routes = App._create_route_list(compliance, server_uri, extractors)
 
     @staticmethod
     def _load_config_file(debug=False):  # pragma: no cover

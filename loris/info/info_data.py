@@ -14,7 +14,7 @@ class InfoData(object):
         self.tiles = None
         self.sizes = None
 
-    def to_json(self):
+    def __str__(self):
         return json.dumps(self._to_dict())
 
     def _to_dict(self):
