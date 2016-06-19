@@ -1,4 +1,4 @@
-from loris.app import App
+from loris.loris_app import LorisApp
 from loris.handlers.info_handler import InfoHandler
 from loris.handlers.identifier_handler import IdentifierHandler
 from loris.handlers.image_handler import ImageHandler
@@ -8,10 +8,8 @@ import re
 class FakeRouter(object):
 
     def route(self, path):
-        c = Compliance({})
-        base_uri = 'http://foo.edu/loris/'
-        extractors = {}
-        for route in App._create_route_list(c, base_uri, extractors):
+        app = LorisApp(debug=True)
+        for route in app.routes:
             if re.match(route[0], path):
                 return route[1]
 

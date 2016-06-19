@@ -24,8 +24,8 @@ class PillowExtractor(AbstractExtractor):
     # See comments in AbstractExtractor (in this module) for how this is
     # intended to work.
     # TODO: needs configured values for maxWidth, maxHeight...
-    def __init__(self, compliance):
-        super().__init__(compliance)
+    def __init__(self, compliance, app_configs):
+        super().__init__(compliance, app_configs)
 
     def extract(self, path, http_identifier):
         # TODO: maxArea, maxWidth, maxHeight

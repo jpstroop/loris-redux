@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-from loris.app import App
+from loris.loris_app import LorisApp
 from tornado.ioloop import IOLoop
 
 if __name__ == "__main__":
-    # load configs here and pass to create_app?
-    app = App.create()
+    # TODO: grab debug here or make the loris_app module executable as well.
+    app = LorisApp.create_tornado_application()
     app.listen(8888)
     IOLoop.current().start()
