@@ -1,9 +1,15 @@
 {
   "application" : {
     "server_uri" : null,
-    "maxArea" : 16000000,
-    "maxWidth" : null,
-    "maxArea" : null
+    "max_area" : 16000000,
+    "max_width" : null,
+    "max_height" : null,
+    "scale_factors": {
+      "note": "If complilance is level 0, tiles will be allowed for scale factors > the tile size, and sizes will be available for scale factors <= the tile size",
+      "enabled": false,
+      "tileWidth": 1024,
+      "tileHeight": 1024
+    }
   },
   "features": {
     "note": "Loris will always be at least level 0 compliant. Enable additional features here.",
@@ -20,13 +26,7 @@
       "sizeByDistortedWh": { "enabled": true },
       "sizeByWh": { "enabled": true },
       "sizeAboveFull": { "enabled": true },
-      "max": { "enabled": true },
-      "scaleFactors": {
-        "note": "If complilance is level 0, tiles will be allowed for scale factors > the tile size, and sizes will be available for scale factors <= the tile size",
-        "enabled": false,
-        "tileWidth": 1024,
-        "tileHeight": 1024
-      }
+      "max": { "enabled": true }
     },
     "rotation": {
       "rotationBy90s": { "enabled": true },

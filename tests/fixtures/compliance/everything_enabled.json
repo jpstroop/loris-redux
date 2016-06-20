@@ -61,11 +61,6 @@
     "max": {
       "enabled": true
     },
-    "scaleFactors": {
-      "enabled": true,
-      "tileHeight": 1024,
-      "tileWidth": 1024
-    },
     "sizeAboveFull": {
       "enabled": true
     },

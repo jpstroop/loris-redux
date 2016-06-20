@@ -56,11 +56,6 @@
     },
     "sizeByWh": {
       "enabled": false
-    },
-    "scaleFactors": {
-      "tileWidth": 1024,
-      "enabled": true,
-      "tileHeight": 1024
     }
   },
   "http": {

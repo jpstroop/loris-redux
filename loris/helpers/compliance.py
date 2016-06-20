@@ -44,9 +44,6 @@ class Compliance(object):
         self._quality_features = None
         self._format_features = None
         self._http_features = None
-        self._scale_factors_only = None
-        self._scale_factors_only_width = None
-        self._scale_factors_only_height = None
         self._compliance_uri = None
 
     @property
@@ -229,38 +226,6 @@ class Compliance(object):
     def _http_is_2(self):
         return all(r in self.http_features for r in Compliance.HTTP_LEVEL_2)
 
-    @property
-    def scale_factors_only(self):
-        # See http://iiif.io/api/image/2.1/compliance/#level-0-compliance
-        # Only do the check if compliance is level 0, otherwise return False.
-        level0 = self.server_compliance == 0
-        if self._scale_factors_only is None and level0:
-            enabled = self.config['size']['scaleFactors']['enabled']
-            self._scale_factors_only = enabled
-        else:
-            self._scale_factors_only = False
-        return self._scale_factors_only
-
-    @property
-    def scale_factors_only_width(self):
-        # See http://iiif.io/api/image/2.1/compliance/#level-0-compliance
-        # Only do the check if compliance is level 0, otherwise return None.
-        level0 = self.server_compliance == 0
-        if self._scale_factors_only_width is None and level0:
-            w = self.config['size']['scaleFactors']['tileWidth']
-            self._scale_factors_only_width = w
-        return self._scale_factors_only_width
-
-    @property
-    def scale_factors_only_height(self):
-        # See http://iiif.io/api/image/2.1/compliance/#level-0-compliance
-        # Only do the check if compliance is level 0, otherwise return None.
-        level0 = self.server_compliance == 0
-        if self._scale_factors_only_height is None and level0:
-            h = self.config['size']['scaleFactors']['tileHeight']
-            self._scale_factors_only_height = h
-        return self._scale_factors_only_height
-
     @staticmethod
     def _filter_out_falses(dict):
         # Takes e.g.:
@@ -271,9 +236,4 @@ class Compliance(object):
         #   }
         # and returns a tuple of the keys for which enabled is True.
         # (keys are sorted to make this method easier to test)
-        keys = sorted(k for k,v in dict.items() if v['enabled'])
-        try:
-            keys.remove('scaleFactors') # this is a special case
-        except ValueError:
-            pass
-        return tuple(keys)
+        return st(k for k,v in dict.items() if v['enabled'])
