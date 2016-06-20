@@ -563,21 +563,3 @@ class TestCompliance(object):
         compliance = Compliance(level0_plus_sizeByW_json)
         assert compliance.server_compliance == 0
         assert compliance.additional_features == extras
-
-    def test_scale_factors_only_false_level_2(self, everything_enabled_json):
-        compliance = Compliance(everything_enabled_json)
-        assert not compliance.scale_factors_only
-        assert compliance.scale_factors_only_width is None
-        assert compliance.scale_factors_only_height is None
-
-    def test_scale_factors_only_false_level_1(self, level1_exactly_scales_enabled_json):
-        compliance = Compliance(level1_exactly_scales_enabled_json)
-        assert not compliance.scale_factors_only
-        assert compliance.scale_factors_only_width is None
-        assert compliance.scale_factors_only_height is None
-
-    def test_scale_factors_only_can_be_level0(self, level0_scales_enabled_json):
-        compliance = Compliance(level0_scales_enabled_json)
-        assert compliance.scale_factors_only
-        assert compliance.scale_factors_only_width == 1024
-        assert compliance.scale_factors_only_height == 1024
