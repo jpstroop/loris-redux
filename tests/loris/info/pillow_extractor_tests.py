@@ -13,7 +13,8 @@ HTTP_ID = 'https://example.edu/images/1234'
 class TestPillowExtractor(object):
 
     def load_and_extract(self, path, compliance):
-        ex = PillowExtractor(compliance)
+        app_configs = {}
+        ex = PillowExtractor(compliance, app_configs)
         return ex.extract(path, HTTP_ID)
 
     def test_wh_color_jpg(self, compliance_everything, color_jpg):

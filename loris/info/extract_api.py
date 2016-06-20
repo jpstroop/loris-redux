@@ -18,8 +18,9 @@ class AbstractExtractor(metaclass=ABCMeta):
     # http_identifier = server_uri + urllib.quote_plus(identifier # accounting for trailing /
     # info = extractors[format].extract(path, http_identifier)
     #
-    def __init__(self, compliance):
+    def __init__(self, compliance, app_configs):
         self.compliance = compliance
+        self.app_configs = app_configs
 
     @abstractmethod
     def extract(self, path, http_identifier):  # pragma: no cover

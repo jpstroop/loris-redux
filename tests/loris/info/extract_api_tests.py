@@ -11,11 +11,11 @@ class TestAbstractExtractor(object):
             w = WithoutExtract('x')
         assert "Can't instantiate abstract class" in str(type_error.value)
 
-    def test_receives_compliance(self):
+    def test_receives_compliance_(self):
 
         class ProperExtractor(AbstractExtractor):
             def extract(self, path, http_identifier):
                 return 'bar'
 
-        ex = ProperExtractor('compliance')
+        ex = ProperExtractor('compliance', 'app_configs')
         assert ex.compliance == 'compliance'
