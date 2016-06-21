@@ -36,7 +36,7 @@ class Compliance(object):
 
     def __init__(self, config):
         self.config = config
-        self._server_compliance = None
+        self._level = None
         self._additional_features = None
         self._region_features = None
         self._size_features = None
@@ -47,10 +47,10 @@ class Compliance(object):
         self._compliance_uri = None
 
     @property
-    def server_compliance(self):
-        # Determine the copmliance level based on
-        if self._server_compliance is None:
-            self._server_compliance = min(
+    def level(self):
+        # Determine the compliance level based on
+        if self._level is None:
+            self._level = min(
                 self._region_level,
                 self._size_level,
                 self._rotation_level,
@@ -58,12 +58,12 @@ class Compliance(object):
                 self._format_level,
                 self._http_level
             )
-        return self._server_compliance
+        return self._level
 
     @property
     def compliance_uri(self):
         if self._compliance_uri is None:
-            level = self.server_compliance
+            level = self.level
             uri = 'http://iiif.io/api/image/2/level{}.json'.format(level)
             self._compliance_uri = uri
         return self._compliance_uri
@@ -75,9 +75,9 @@ class Compliance(object):
         # level. For listing in profile[1]['supports'].
         if self._additional_features is None:
             level_features = set(()) # 0
-            if self.server_compliance == 2:
+            if self.level == 2:
                 level_features = set(Compliance.ALL_LEVEL_2)
-            elif self.server_compliance == 1:
+            elif self.level == 1:
                 level_features = set(Compliance.ALL_LEVEL_1)
             self._additional_features = set(self.all_enabled_features) - level_features
         return st(self._additional_features)

@@ -55,7 +55,7 @@ class LorisApp(object):
 
     def _init_compliance(self, cfg_dict):
         compliance = Compliance(cfg_dict)
-        msg = 'Compliance is level {}'.format(compliance.server_compliance)
+        msg = 'Compliance is level {}'.format(compliance.level)
         logger.info(msg)
         return compliance
 

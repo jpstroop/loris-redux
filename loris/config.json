@@ -7,8 +7,8 @@
     "scale_factors": {
       "note": "If complilance is level 0, tiles will be allowed for scale factors > the tile size, and sizes will be available for scale factors <= the tile size",
       "enabled": false,
-      "tileWidth": 1024,
-      "tileHeight": 1024
+      "tile_width": 1024,
+      "tile_height": 1024
     }
   },
   "features": {
