@@ -19,7 +19,7 @@ class InfoData(object):
         return json.dumps(self._to_dict())
 
     def __repr__(self):
-        return self._to_dict()
+        return repr(self._to_dict())
 
     def _to_dict(self):
         d = OrderedDict()
