@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import json
 
 PROTOCOL = 'http://iiif.io/api/image'
@@ -17,8 +18,11 @@ class InfoData(object):
     def __str__(self):
         return json.dumps(self._to_dict())
 
+    def __repr__(self):
+        return self._to_dict()
+
     def _to_dict(self):
-        d = {}
+        d = OrderedDict()
         d['@context'] = CONTEXT
         d['@id'] = self.identifier
         d['protocol'] = PROTOCOL
