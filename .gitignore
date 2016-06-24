@@ -7,3 +7,8 @@ fake.py
 *.pyc
 Loris.egg*
 dist/
+tests/fixtures/images/*.png
+tests/fixtures/images/*.jpg
+tests/fixtures/images/*.tif
+tests/fixtures/images/*.jp2
+tests/fixtures/images/*.tar

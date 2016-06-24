@@ -52,7 +52,8 @@ setup(
     cmdclass = {'test': PyTest},
     setup_requires=[ ],
     tests_require=[
-        'pytest==2.9.1'
+        'pytest==2.9.1',
+        'requests==2.10.0'
     ],
     install_requires=[
         'Pillow>=3.2.0',

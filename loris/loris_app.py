@@ -43,6 +43,7 @@ class LorisApp(object):
             return json.load(p)
 
     def _find_config_files(self): # pragma: no cover
+        # TODO: https://github.com/jpstroop/loris-redux/issues/44
         # returns paths to the config files in order of preference
         paths = []
         package_dir = path.dirname(path.realpath(__file__))
