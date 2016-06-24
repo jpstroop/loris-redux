@@ -14,6 +14,7 @@ class InfoData(object):
         self.height = None
         self.tiles = None
         self.sizes = None
+        self.color_profile_bytes = None
 
     def __str__(self):
         return json.dumps(self._to_dict())

@@ -55,8 +55,6 @@ class AbstractExtractor(metaclass=ABCMeta):
     @classmethod
     def max_size(cls, image_width, image_height, max_area=None, max_width=None, max_height=None):
         # I stole this from @zimeon, sort of:
-        # https://github.com/zimeon/iiif/blob/bb6c0aefaf03ec270ca00a59de6c8d07a07b8fc2/iiif/manipulator.py#L265-L282
-        # He's much cleverer than me, but I made it prettier :-).
         w, h = image_width, image_height
         if max_area and max_area < (image_width * image_height):
             scale = (float(max_area) / float(image_width * image_height)) ** 0.5
@@ -95,8 +93,8 @@ class AbstractExtractor(metaclass=ABCMeta):
         if w != h: d['height'] = h
         return [d]
 
-    @staticmethod
-    def _structure_size(w, h):
+    @classmethod
+    def _structure_size(cls, w, h):
         return { 'width' : w, 'height' : h }
 
     @classmethod
