@@ -20,7 +20,7 @@ class LorisApp(object):
         # This should not be used directly, except in testing. Generally
         # one should call LorisApp.create_tornado_application(), which will
         # initialize and configure the application.
-        cfg_dict = self._load_config_file(debug=debug)
+        cfg_dict = self._load_config_files()
         _ = self._configure_logging(cfg_dict['logging'])
         self.compliance = self._init_compliance(cfg_dict['features'])
         self.app_configs = cfg_dict['application']
@@ -28,24 +28,28 @@ class LorisApp(object):
         self.info_cache = SafeLruDict(size=400)
         self.routes = self._create_route_list()
 
-    def _load_config_file(self, debug=False):  # pragma: no cover
-        cfg_file_path = self._find_config_file(debug=debug)
-        cfg_dict = None
-        with open(cfg_file_path) as cfg_file:
-            cfg_dict = json.load(cfg_file)
+    def _load_config_files(self): # Should probably have coverage for this. Mocks?
+        cfg_dict = {}
+        for cfg_path in self._find_config_files():
+            try:
+                cfg_dict.update(self._load_json_file(cfg_path))
+                print('Config file found at {0}'.format(cfg_path))
+            except FileNotFoundError:
+                print('No config file found at {0}'.format(cfg_path))
         return cfg_dict
 
-    def _find_config_file(self, debug=False): # pragma: no cover
-        if debug:
-            package_dir = path.dirname(path.realpath(__file__))
-            return path.join(package_dir, 'config.json')
-        else:
-            pass
-            # TODO: Figure out where we want to look for config. Seems like
-            # ~/.loris/config.json
-            # /etc/loris/config.json, and then
-            # packaged with the app.
-            # Should they inherit?
+    def _load_json_file(self, json_path): # pragma: no cover
+        with open(json_path) as p:
+            return json.load(p)
+
+    def _find_config_files(self): # pragma: no cover
+        # returns paths to the config files in order of preference
+        paths = []
+        package_dir = path.dirname(path.realpath(__file__))
+        paths.append(path.join(package_dir, 'config.json'))
+        paths.append('/etc/loris/config.json')
+        paths.append(path.expanduser('~/loris.conf'))
+        return paths
 
     def _configure_logging(self, cfg_dict):  # pragma: no cover
         global logger
@@ -78,6 +82,7 @@ class LorisApp(object):
         # will allow it to be used with RequestHandler.reverse_url."
         info_init_args = {
             'compliance' : self.compliance,
+            # TODO: https://github.com/jpstroop/loris-redux/issues/35
             'info_cache' : self.info_cache,
             'extractors' : self.extractors,
             'app_configs' : self.app_configs
@@ -101,7 +106,7 @@ class LorisApp(object):
         )
 
     @staticmethod
-    def _run_debug():  # pragma: no cover
+    def _run_in_debug():  # pragma: no cover
         debug = False
         try:
             debug = sys.argv[1] == 'debug'
@@ -110,9 +115,8 @@ class LorisApp(object):
             pass
         return debug
 
-    @staticmethod
-    def create_tornado_application():
-        debug = LorisApp._run_debug()
-        loris_app = LorisApp(debug=debug)
-        # See http://www.tornadoweb.org/en/stable/web.html#tornado.web.Application.settings
-        return Application(loris_app.routes, debug=debug)
+def create_tornado_application():
+    debug_bool = LorisApp._run_in_debug()
+    loris_app = LorisApp()
+    # See http://www.tornadoweb.org/en/stable/web.html#tornado.web.Application.settings
+    return Application(loris_app.routes, debug=debug_bool)
