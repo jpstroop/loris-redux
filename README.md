@@ -1,6 +1,7 @@
 # loris-redux
 
 [![Build Status](https://travis-ci.org/jpstroop/loris-redux.svg?branch=master)](https://travis-ci.org/jpstroop/loris-redux) [![Coverage Status](https://coveralls.io/repos/github/jpstroop/loris-redux/badge.svg?branch=master)](https://coveralls.io/github/jpstroop/loris-redux?branch=master)
+[![Ready](https://badge.waffle.io/jpstroop/loris-redux.svg?label=ready&title=Ready)](http://waffle.io/jpstroop/loris-redux)
 
 __WIP!__
 
@@ -29,6 +30,5 @@ $ python setup.py test
  * Install w/ pip
  * No WSGI!
  * http or https support
- * Option to pre-bake tiles (supply a script)
  * Store and Delete source files on the server over HTTP
  * Enable and disable specific features, and dynamically determine compliance level
