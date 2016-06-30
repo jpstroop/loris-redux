@@ -9,13 +9,17 @@ IMAGES_DIR = path.join(FIXTURES_DIR, 'images')
 COMPLIANCE_DIR = path.join(FIXTURES_DIR, 'compliance')
 
 COLOR_JP2 = path.join(IMAGES_DIR, 'color.jp2')
+GRAY_JP2 = path.join(IMAGES_DIR, 'gray.jp2')
+COLOR_PROFILE_JP2 = path.join(IMAGES_DIR, 'weird_color_profile.jp2')
+PRECINCTS_JP2 = path.join(IMAGES_DIR, 'precincts.jp2')
 COLOR_JPG = path.join(IMAGES_DIR, 'color.jpg')
 COLOR_PNG = path.join(IMAGES_DIR, 'color.png')
 COLOR_TIF = path.join(IMAGES_DIR, 'color.tif')
 GRAY_JPG = path.join(IMAGES_DIR, 'gray.jpg')
 GRAY_PNG = path.join(IMAGES_DIR, 'gray.png')
 GRAY_TIF = path.join(IMAGES_DIR, 'gray.tif')
-TEST_IMAGES = ( COLOR_JP2, COLOR_JPG, COLOR_PNG, COLOR_TIF, GRAY_JPG, GRAY_PNG, GRAY_TIF )
+TEST_IMAGES = ( COLOR_JP2, GRAY_JP2, COLOR_PROFILE_JP2, PRECINCTS_JP2,
+    COLOR_JPG, COLOR_PNG, COLOR_TIF, GRAY_JPG, GRAY_PNG, GRAY_TIF )
 
 IMAGES_URL = 'http://www.princeton.edu/~jstroop/loris_test_images/images.tar'
 
@@ -38,7 +42,7 @@ def download_images():
     if not all([path.exists(p) for p in TEST_IMAGES]):
         import tarfile
         print('\n'+'*'*80)
-        print('Downloading Test Images from {0}'.format(IMAGES_URL))
+        print('Downloading Test Images from \n{0}'.format(IMAGES_URL))
         print('*'*80)
         images_tarball = _download(IMAGES_URL, IMAGES_DIR)
         with tarfile.open(images_tarball, 'r:') as tar:
@@ -48,6 +52,18 @@ def download_images():
 @pytest.fixture()
 def tiled_jp2():
     return COLOR_JP2
+
+@pytest.fixture()
+def gray_jp2():
+    return GRAY_JP2
+
+@pytest.fixture()
+def color_profile_jp2():
+    return COLOR_PROFILE_JP2
+
+@pytest.fixture()
+def precincts_jp2():
+    return PRECINCTS_JP2
 
 @pytest.fixture()
 def color_jpg():
