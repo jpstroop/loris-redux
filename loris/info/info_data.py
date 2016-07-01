@@ -8,12 +8,12 @@ class InfoData(object):
     # POPO for info.json
     def __init__(self, compliance, http_identifier):
         self.identifier = http_identifier
-        self.is_color = False
         self.compliance = compliance
         self.width = None
         self.height = None
         self.tiles = None
         self.sizes = None
+        self.profile = None
         self.color_profile_bytes = None
 
     def __str__(self):
@@ -27,7 +27,7 @@ class InfoData(object):
         d['@context'] = CONTEXT
         d['@id'] = self.identifier
         d['protocol'] = PROTOCOL
-        d['profile'] = self.compliance.to_profile(include_color=self.is_color)
+        d['profile'] = self.profile
         d['width'] = self.width
         d['height'] = self.height
         if self.tiles:

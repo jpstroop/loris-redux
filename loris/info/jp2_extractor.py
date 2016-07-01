@@ -28,8 +28,12 @@ class Jp2Extractor(AbstractExtractor):
         info_data.profile = self._make_profile(metadata['is_color'])
         return info_data
 
+    # TODO: START HERE W/ TESTS THAT THE max*s SHOW UP
     def _make_profile(self, is_color):
-        return self.compliance.to_profile(include_color=is_color)
+        profile = self.compliance.to_profile(include_color=is_color, \
+            max_area=self.max_area, max_width=self.max_width, \
+            max_height=self.max_height)
+        return profile
 
     @staticmethod
     def _levels_to_sizes(levels, w, h, max_w, max_h):

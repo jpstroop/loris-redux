@@ -91,9 +91,10 @@ class Compliance(object):
             self.http_features
         )
 
-    def to_profile(self, include_color=True):
+    def to_profile(self, **kwargs):
         # A list suitable for placing in the "supports" key of info.json
         # Pass include_color=False if the source image is grayscale
+        include_color = kwargs.get('include_color', True)
         qualities = st(Compliance.QUALITY_LEVEL_0 + self.quality_features)
         if not include_color:
             qualities = st(q for q in qualities if q != 'color')
@@ -102,6 +103,12 @@ class Compliance(object):
             "qualities" : qualities,
             "formats" :  Compliance.FORMAT_LEVEL_0 + self.format_features
         }
+        if kwargs.get('max_area') is not None:
+            d['maxArea'] = kwargs['max_area']
+        if kwargs.get('max_width') is not None:
+            d['maxWidth'] = kwargs['max_width']
+        if kwargs.get('max_height') is not None:
+            d['maxHeight'] = kwargs['max_height']
         l = [ self.compliance_uri, d ]
         return l
 
@@ -163,10 +170,7 @@ class Compliance(object):
     @property
     def _rotation_level(self):
         # rotation level 0 is the same as rotation level 1
-        if self._rotation_is_2:
-            return 2
-        else:
-            return 1
+        return 2 if self._rotation_is_2 else 1
 
     @property
     def _rotation_is_2(self):
@@ -181,10 +185,7 @@ class Compliance(object):
     @property
     def _quality_level(self):
         # quality level 0 is the same as quality level 1
-        if self._quality_is_2:
-            return 2
-        else:
-            return 1
+        return 2 if self._quality_is_2 else 1
 
     @property
     def _quality_is_2(self):

@@ -3,7 +3,12 @@ from loris.helpers.compliance import Compliance
 from unittest.mock import Mock
 import pytest
 
-app_configs_wo_scale_factors = { 'scale_factors' : { 'enabled' : False } }
+app_configs_wo_scale_factors = {
+    'max_area' : 16000000,
+    'max_width' : None,
+    'max_height' : None,
+    'scale_factors' : { 'enabled' : False }
+}
 
 class ValidExtractor(AbstractExtractor):
     def __init__(self, compliance, app_configs):
