@@ -20,10 +20,9 @@ class LorisApp(object):
         # This should not be used directly, except in testing. Generally
         # one should call LorisApp.create_tornado_application(), which will
         # initialize and configure the application.
-        cfg_dict = self._load_config_files()
+        self.app_configs = self._load_config_files()
         _ = self._configure_logging(cfg_dict['logging'])
-        self.compliance = self._init_compliance(cfg_dict['features'])
-        self.app_configs = cfg_dict['application']
+        self.compliance = self._init_compliance(self.app_configs['iiif_features'])
         self.extractors = self._init_extractors()
         self.info_cache = SafeLruDict(size=400)
         self.routes = self._create_route_list()
@@ -66,12 +65,12 @@ class LorisApp(object):
 
     def _init_extractors(self):
         pillow_extractor = PillowExtractor(self.compliance, self.app_configs)
-        # jp2_extractor = Jp2Extractor(self.compliance)
+        jp2_extractor = Jp2Extractor(self.compliance, self.app_configs)
         return {
             'jpg' : pillow_extractor,
             'png' : pillow_extractor,
             'tif' : pillow_extractor,
-            # 'jp2' : jp2_extractor
+            'jp2' : jp2_extractor
         }
 
     def _create_route_list(self):
