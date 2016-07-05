@@ -8,6 +8,7 @@ FIXTURES_DIR = path.join(HERE, 'fixtures')
 IMAGES_DIR = path.join(FIXTURES_DIR, 'images')
 COMPLIANCE_DIR = path.join(FIXTURES_DIR, 'compliance')
 
+LORIS_CONFIG_FILE = path.join(HERE, '../loris/config.json')
 COLOR_JP2 = path.join(IMAGES_DIR, 'color.jp2')
 GRAY_JP2 = path.join(IMAGES_DIR, 'gray.jp2')
 COLOR_PROFILE_JP2 = path.join(IMAGES_DIR, 'weird_color_profile.jp2')
@@ -36,6 +37,7 @@ def _load_json(path):
     with open(path, 'r') as f:
         return json.load(f)
 
+
 @pytest.fixture(scope="session", autouse=True)
 def download_images():
     # Fight repo bloat by keeping test images out.
@@ -49,82 +51,92 @@ def download_images():
             tar.extractall(path=IMAGES_DIR)
         remove(images_tarball)
 
-@pytest.fixture()
+@pytest.fixture(scope='function')
+def default_configs():
+    # wish we didn't have to load this from disk every time, but it seems like
+    # the only way to have it reset
+    return _load_json(LORIS_CONFIG_FILE)
+
+@pytest.fixture(scope='function')
+def app_configs(default_configs):
+    return default_configs['application']
+
+@pytest.fixture(scope='session')
 def tiled_jp2():
     return COLOR_JP2
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def gray_jp2():
     return GRAY_JP2
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def color_profile_jp2():
     return COLOR_PROFILE_JP2
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def precincts_jp2():
     return PRECINCTS_JP2
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def color_jpg():
     return COLOR_JPG
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def color_png():
     return COLOR_PNG
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def color_tif():
     return COLOR_TIF
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def gray_jpg():
     return GRAY_JPG
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def gray_png():
     return GRAY_PNG
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def gray_tif():
     return GRAY_TIF
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def level0_scales_enabled_json():
     pth = path.join(COMPLIANCE_DIR, 'level0_scales_enabled.json')
     return _load_json(pth)
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def level1_exactly_scales_enabled_json():
     pth = path.join(COMPLIANCE_DIR, 'level1_exactly_scales_enabled.json')
     return _load_json(pth)
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def everything_enabled_json():
     pth = path.join(COMPLIANCE_DIR, 'everything_enabled.json')
     return _load_json(pth)
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def level0_plus_sizeByW_json():
     pth = path.join(COMPLIANCE_DIR, 'level0_plus_sizeByW.json')
     return _load_json(pth)
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def level1_plus_sizeByConfinedWh_json():
     pth = path.join(COMPLIANCE_DIR, 'level1_plus_sizeByConfinedWh.json')
     return _load_json(pth)
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def level2_plus_json():
     pth = path.join(COMPLIANCE_DIR, 'level2_plus.json')
     return _load_json(pth)
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def everything_but_regionByPx_json():
     pth = path.join(COMPLIANCE_DIR, 'everything_but_regionByPx.json')
     return _load_json(pth)
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def everything_but_sizeByConfinedWh_json():
     pth = path.join(COMPLIANCE_DIR, 'everything_but_sizeByConfinedWh.json')
     return _load_json(pth)
