@@ -3,13 +3,6 @@ from loris.helpers.compliance import Compliance
 from unittest.mock import Mock
 import pytest
 
-app_configs_wo_scale_factors = {
-    'max_area' : 16000000,
-    'max_width' : None,
-    'max_height' : None,
-    'scale_factors' : { 'enabled' : False }
-}
-
 class ValidExtractor(AbstractExtractor):
     def __init__(self, compliance, app_configs):
         super().__init__(compliance, app_configs)
@@ -27,9 +20,9 @@ class TestAbstractExtractor(object):
             w = WithoutExtract('x')
         assert "Can't instantiate abstract class" in str(type_error.value)
 
-    def test_receives_compliance_(self):
+    def test_receives_compliance(self, app_configs):
         compliance = Mock(level=2)
-        ex = ValidExtractor(compliance, app_configs_wo_scale_factors)
+        ex = ValidExtractor(compliance, app_configs)
         assert ex.compliance == compliance
 
     def test__level_zero_tiles_wide(self):
@@ -72,11 +65,12 @@ class TestAbstractExtractor(object):
         with pytest.raises(IndexError):
             _ = sizes[10]
 
-    def test_level_zero_tiles_and_sizes_raises(self):
+    def test_level_zero_tiles_and_sizes_raises(self, app_configs):
         compliance = Mock(level=1)
-        instance = ValidExtractor(compliance, app_configs_wo_scale_factors)
+        # instance = ValidExtractor(compliance, app_configs_wo_scale_factors)
+        instance = ValidExtractor(compliance, app_configs)
         with pytest.raises(Exception) as error:
-            _ = instance.level_zero_tiles_and_sizes(400, 300, 100, 100)
+            instance.level_zero_tiles_and_sizes(400, 300, 100, 100)
         assert 'but server compliance is 1' in str(error.value)
 
     def test_max_size_area_only(self):
