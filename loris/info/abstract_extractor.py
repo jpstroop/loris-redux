@@ -22,16 +22,9 @@ class AbstractExtractor(metaclass=ABCMeta):
     def __init__(self, compliance, app_configs):
         self.compliance = compliance
         self.app_configs = app_configs
-        sf = app_configs['scale_factors']
-        self.level_0_scale_factors_enabled = sf.get('enabled', False) \
-            and compliance.level == 0
-        if self.level_0_scale_factors_enabled:
-            self.level0_tile_w = sf['tile_width']
-            self.level0_tile_h = sf.get('tile_height', self.level0_tile_w)
-        self.max_area = app_configs.get('max_area')
-        self.max_width = app_configs.get('max_width')
-        self.max_height = app_configs.get('max_height')
-
+        self.max_area = app_configs['max_area']
+        self.max_width = app_configs['max_width']
+        self.max_height = app_configs['max_height']
 
     @abstractmethod
     def extract(self, path, http_identifier):  # pragma: no cover
@@ -44,7 +37,11 @@ class AbstractExtractor(metaclass=ABCMeta):
         # These are designed to work w/ OSd, hence ceil().
         if self.compliance.level == 0:
             tiles = AbstractExtractor._level_zero_tiles(image_w, image_h, tile_w, tile_h)
-            smallest_scale = tiles[0]['scaleFactors'][-1]
+            # there's always a chance that the default tile size is larger
+            # than the image, so
+            smallest_scale = 1
+            if tiles is not None:
+                smallest_scale = tiles[0]['scaleFactors'][-1]
             sizes = AbstractExtractor._level_zero_sizes(smallest_scale, image_w, image_h)
             return (tiles, sizes)
         else:

@@ -1,18 +1,27 @@
 {
+  "note0": "This file contains the application defaults. Removing keys will",
+  "note1": "cause errors. Place overrides in /etc/loris/config.json and/or",
+  "note2": "~/.loris/config.json",
   "application" : {
-    "server_uri" : null,
-    "max_area" : 16000000,
-    "max_width" : null,
-    "max_height" : null,
+    "server_uri": null,
+    "max_area": 16000000,
+    "max_width": null,
+    "max_height": null,
     "scale_factors": {
-      "note": "If complilance is level 0, tiles will be allowed for scale factors > the tile size, and sizes will be available for scale factors <= the tile size",
-      "enabled": false,
-      "tile_width": 1024,
-      "tile_height": 1024
+      "note0": "This section only applicable if regionByPx and sizeByW are disabled",
+      "jp2": { "encoded_only": false },
+      "other_formats" : {
+        "note0": "tiles will be allowed for scale factors > the tile size, and",
+        "note1": "sizes will be available for scale factors <= the tile size",
+        "enabled": true,
+        "tile_width": 1024,
+        "tile_height": 1024
+      }
     }
   },
-  "features": {
-    "note": "Loris will always be at least level 0 compliant. Enable additional features here.",
+  "iiif_features": {
+    "note0": "Loris will always be at least level 0 compliant. Enable ",
+    "note1": "additional features here.",
     "region": {
       "regionByPx": { "enabled": true },
       "regionByPct": { "enabled": true },

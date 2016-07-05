@@ -22,7 +22,7 @@ class LorisApp(object):
         # initialize and configure the application.
         cfg_dict = self._load_config_files()
         _ = self._configure_logging(cfg_dict['logging'])
-        self.compliance = self._init_compliance(cfg_dict['features'])
+        self.compliance = self._init_compliance(cfg_dict['iiif_features'])
         self.app_configs = cfg_dict['application']
         self.extractors = self._init_extractors()
         self.info_cache = SafeLruDict(size=400)
@@ -49,7 +49,7 @@ class LorisApp(object):
         package_dir = path.dirname(path.realpath(__file__))
         paths.append(path.join(package_dir, 'config.json'))
         paths.append('/etc/loris/config.json')
-        paths.append(path.expanduser('~/loris.conf'))
+        paths.append(path.expanduser('~/.loris/config.json'))
         return paths
 
     def _configure_logging(self, cfg_dict):  # pragma: no cover

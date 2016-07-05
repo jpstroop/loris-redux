@@ -15,32 +15,40 @@ def compliance_everything(everything_enabled_json):
 @pytest.fixture()
 def compliance_0():
     m = MagicMock(level=0, compliance_uri='http://iiif.io/api/image/2/level0.json')
-    m.to_profile = lambda include_color : {} # We don't need to test this here, just need to be serializable.
+    m.to_profile = lambda **kwargs : {} # We don't need to test this here, just need to be serializable.
     return m
 
 @pytest.fixture()
 def compliance_1():
     m = MagicMock(level=1, compliance_uri='http://iiif.io/api/image/2/level1.json')
-    m.to_profile = lambda include_color : {} # We don't need to test this here, just need to be serializable.
+    m.to_profile = lambda **kwargs : {} # We don't need to test this here, just need to be serializable.
     return m
 
 @pytest.fixture()
 def compliance_2():
     m = MagicMock(level=2, compliance_uri='http://iiif.io/api/image/2/level2.json')
     # We don't need to test the server profile here, just needs to be serializable.
-    m.to_profile = lambda include_color : {}
+    m.to_profile = lambda **kwargs : {}
     return m
 
-app_configs_with_max_area = {
-    'max_area' : 16000000,
-    'scale_factors' : {
-        'enabled': False,
-        'tile_width': 1024,
-        'tile_height': 1024
+# TODO: load these from the config file as a fixture so that we know tests &
+# reality are in sync
+default_app_configs =  {
+    "server_uri": None,
+    "max_area": 16000000,
+    "max_width": None,
+    "max_height": None,
+    "scale_factors": {
+        "jp2": { "encoded_only": False },
+        "other_formats" : {
+            "enabled": True,
+            "tile_width": 1024,
+            "tile_height": 1024
+        }
     }
 }
 
-def load_and_extract(path, compliance, app_configs=app_configs_with_max_area):
+def load_and_extract(path, compliance, app_configs=default_app_configs):
     ex = Jp2Extractor(compliance, app_configs)
     return ex.extract(path, HTTP_ID)
 
@@ -48,9 +56,9 @@ class TestJp2Extractor(object):
 
     def test_wh(self, compliance_2, tiled_jp2):
         info_data = load_and_extract(tiled_jp2, compliance_2)
-        print('\n'+'*'*80)
-        print(info_data._to_dict().keys())
-        print('*'*80)
+        # print('\n'+'*'*80)
+        # print(info_data._to_dict().keys())
+        # print('*'*80)
         assert info_data.width == 5906
         assert info_data.height == 7200
 
@@ -69,7 +77,20 @@ class TestJp2Extractor(object):
         assert info_data.tiles[0]['scaleFactors'] == [1, 2, 4, 8, 16, 32]
 
     def test_sizes_no_max(self, compliance_2, tiled_jp2):
-        config = { 'max_area' : None, 'scale_factors' : { 'enabled': False } }
+        config =  {
+            "server_uri": None,
+            "max_area": None,
+            "max_width": None,
+            "max_height": None,
+            "scale_factors": {
+                "jp2": { "encoded_only": False },
+                "other_formats" : {
+                    "enabled": True,
+                    "tile_width": 1024,
+                    "tile_height": 1024
+                }
+            }
+        }
         info_data = load_and_extract(tiled_jp2, compliance_2, config)
         assert info_data.sizes[0]['width'] == 5906
         assert info_data.sizes[0]['height'] == 7200
@@ -105,6 +126,45 @@ class TestJp2Extractor(object):
         assert info_data.sizes[4]['width'] == 185
         assert info_data.sizes[4]['height'] == 225
 
+    def test_profile_includes_max_area(self, compliance_everything, tiled_jp2):
+        info_data = load_and_extract(tiled_jp2, compliance_everything)
+        assert info_data.profile[1]['maxArea'] == 16000000
+
+    def test_profile_includes_max_width(self, compliance_everything, tiled_jp2):
+        config =  {
+            "server_uri": None,
+            "max_area": None,
+            "max_width": 4000,
+            "max_height": None,
+            "scale_factors": {
+                "jp2": { "encoded_only": False },
+                "other_formats" : {
+                    "enabled": True,
+                    "tile_width": 1024,
+                    "tile_height": 1024
+                }
+            }
+        }
+        info_data = load_and_extract(tiled_jp2, compliance_everything, config)
+        assert info_data.profile[1]['maxWidth'] == 4000
+
+    def test_profile_includes_max_height(self, compliance_everything, tiled_jp2):
+        config =  {
+            "server_uri": None,
+            "max_area": None,
+            "max_width": None,
+            "max_height": 4000,
+            "scale_factors": {
+                "jp2": { "encoded_only": False },
+                "other_formats" : {
+                    "enabled": True,
+                    "tile_width": 1024,
+                    "tile_height": 1024
+                }
+            }
+        }
+        info_data = load_and_extract(tiled_jp2, compliance_everything, config)
+        assert info_data.profile[1]['maxHeight'] == 4000
 
 class TestJp2Parser(object):
 

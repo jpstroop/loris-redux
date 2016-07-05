@@ -26,6 +26,11 @@ class PillowExtractor(AbstractExtractor):
 
     def __init__(self, compliance, app_configs):
         super().__init__(compliance, app_configs)
+        sf = app_configs['scale_factors']['other_formats']
+        self.include_scale_factors = sf['enabled'] and compliance.level == 0
+        if self.include_scale_factors:
+            self.tile_w = sf['tile_width']
+            self.tile_h = sf['tile_height']
 
     def extract(self, path, http_identifier):
         info_data = InfoData(self.compliance, http_identifier)
@@ -37,17 +42,19 @@ class PillowExtractor(AbstractExtractor):
             PillowExtractor.max_size(w, h, max_area=self.max_area, \
                 max_width=self.max_width, max_height=self.max_height)
         ]
-        # TODO: This still feels messy. Refactor (and push up to abstract?)
-        if self.level_0_scale_factors_enabled:
-            tiles, sizes = self.level_zero_tiles_and_sizes(w, h, self.level0_tile_w, self.level0_tile_h)
+        if self.include_scale_factors:
+            tiles, sizes = self.level_zero_tiles_and_sizes(w, h, self.tile_w, self.tile_h)
             info_data.tiles = tiles
             info_data.sizes = info_data.sizes + sizes
         return info_data
 
+    def _make_profile(self, pillow_image):
+        include_color = PillowExtractor.is_color(pillow_image)
+        profile = self.compliance.to_profile(include_color=include_color, \
+            max_area=self.max_area, max_width=self.max_width, \
+            max_height=self.max_height)
+        return profile
+
     @staticmethod
     def is_color(pillow_image):
         return pillow_image.mode in COLOR_MODES
-
-    def _make_profile(self, pillow_image):
-        include_color = PillowExtractor.is_color(pillow_image)
-        return self.compliance.to_profile(include_color=include_color)
