@@ -31,24 +31,6 @@ class AbstractExtractor(metaclass=ABCMeta):
         # Must return a loris.info.data.InfoData object.
         return
 
-    # TODO: needs a size for full or max ... configured values for maxWidth, maxHeight...
-
-    def level_zero_tiles_and_sizes(self, image_w, image_h, tile_w, tile_h):
-        # These are designed to work w/ OSd, hence ceil().
-        if self.compliance.level == 0:
-            tiles = AbstractExtractor._level_zero_tiles(image_w, image_h, tile_w, tile_h)
-            # there's always a chance that the default tile size is larger
-            # than the image, so
-            smallest_scale = 1
-            if tiles is not None:
-                smallest_scale = tiles[0]['scaleFactors'][-1]
-            sizes = AbstractExtractor._level_zero_sizes(smallest_scale, image_w, image_h)
-            return (tiles, sizes)
-        else:
-            # Shouldn't happen, but just to remind ourselves...
-            m = 'level_zero_tiles_and_sizes called, but server compliance is {0}'
-            raise Exception(m.format(self.compliance.level))
-
     @classmethod
     def max_size(cls, image_width, image_height, max_area=None, max_width=None, max_height=None):
         # I stole this from @zimeon, sort of:
@@ -72,18 +54,6 @@ class AbstractExtractor(metaclass=ABCMeta):
     def _scale_dim(dim, scale):
         return int(dim * scale + 0.5)
 
-    @classmethod
-    def _level_zero_tiles(cls, image_w, image_h, tile_w, tile_h):
-        long_image_dimenson = max(image_w, image_h)
-        long_tile_dimenson =  max(tile_w, tile_h)
-        scales = [1]
-        while (long_image_dimenson / scales[-1]) > long_tile_dimenson:
-            nxt = scales[-1]*2
-            if (long_image_dimenson / nxt) > long_tile_dimenson:
-                scales.append(nxt)
-            else:
-                return cls._structure_tiles(tile_w, tile_h, scales)
-
     @staticmethod
     def _structure_tiles(w, h, scales):
         d = { 'width' : w, 'scaleFactors' : scales }
@@ -93,17 +63,3 @@ class AbstractExtractor(metaclass=ABCMeta):
     @classmethod
     def _structure_size(cls, w, h):
         return { 'width' : w, 'height' : h }
-
-    @classmethod
-    def _level_zero_sizes(cls, smallest_scale_factor, image_w, image_h):
-        # smallest_scale_factor is tiles[0]['scaleFactors'][-1]
-        sizes = [ ]
-        scale = smallest_scale_factor*2
-        w = ceil(image_w / scale)
-        h = ceil(image_h / scale)
-        while any([d != 1 for d in (w,h)]):
-            sizes.append(cls._structure_size(w, h))
-            scale = scale*2
-            w = ceil(image_w / scale)
-            h = ceil(image_h / scale)
-        return sizes
