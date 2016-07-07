@@ -1,5 +1,6 @@
 from os import path
 from os import remove
+from loris.helpers.compliance import Compliance
 import json
 import pytest
 
@@ -101,14 +102,16 @@ def gray_png():
 def gray_tif():
     return GRAY_TIF
 
+# JSON fixtures for features
+
 @pytest.fixture(scope='session')
 def level0_scales_enabled_json():
     pth = path.join(COMPLIANCE_DIR, 'level0_scales_enabled.json')
     return _load_json(pth)
 
 @pytest.fixture(scope='session')
-def level1_exactly_scales_enabled_json():
-    pth = path.join(COMPLIANCE_DIR, 'level1_exactly_scales_enabled.json')
+def level1_exactly_json():
+    pth = path.join(COMPLIANCE_DIR, 'level1_exactly.json')
     return _load_json(pth)
 
 @pytest.fixture(scope='session')
@@ -140,3 +143,22 @@ def everything_but_regionByPx_json():
 def everything_but_sizeByConfinedWh_json():
     pth = path.join(COMPLIANCE_DIR, 'everything_but_sizeByConfinedWh.json')
     return _load_json(pth)
+
+@pytest.fixture(scope='session')
+def level0_nothing_json():
+    pth = path.join(COMPLIANCE_DIR, 'level0.json')
+    return _load_json(pth)
+
+# Compliance Fixtures
+
+@pytest.fixture()
+def compliance_2(everything_enabled_json):
+    return Compliance(everything_enabled_json)
+
+@pytest.fixture()
+def compliance_1(level1_exactly_json):
+    return Compliance(level1_exactly_json)
+
+@pytest.fixture()
+def compliance_0(level0_nothing_json):
+    return Compliance(level0_nothing_json)

@@ -46,8 +46,22 @@ class Compliance(object):
         self._http_features = None
         self._compliance_uri = None
 
-    @property
-    def level(self):
+    # make it possible to do comparisons with an int w/o casting:
+    def __lt__(self, an_int):
+        return int(self) < an_int
+    def __le__(self, an_int):
+        return int(self) <= an_int
+    def __eq__(self, an_int):
+        return int(self) == an_int
+    def __ne__(self, an_int):
+        return int(self) != an_int
+    def __gt__(self, an_int):
+        return int(self) > an_int
+    def __ge__(self, an_int):
+        return int(self) >= an_int
+
+    # make it possible to do int(self)
+    def __int__(self):
         # Determine the compliance level based on
         if self._level is None:
             self._level = min(
@@ -63,8 +77,7 @@ class Compliance(object):
     @property
     def compliance_uri(self):
         if self._compliance_uri is None:
-            level = self.level
-            uri = 'http://iiif.io/api/image/2/level{}.json'.format(level)
+            uri = 'http://iiif.io/api/image/2/level{}.json'.format(int(self))
             self._compliance_uri = uri
         return self._compliance_uri
 
@@ -75,9 +88,9 @@ class Compliance(object):
         # level. For listing in profile[1]['supports'].
         if self._additional_features is None:
             level_features = set(()) # 0
-            if self.level == 2:
+            if int(self) == 2:
                 level_features = set(Compliance.ALL_LEVEL_2)
-            elif self.level == 1:
+            elif int(self) == 1:
                 level_features = set(Compliance.ALL_LEVEL_1)
             self._additional_features = set(self.all_enabled_features) - level_features
         return st(self._additional_features)

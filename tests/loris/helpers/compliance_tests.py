@@ -536,30 +536,30 @@ class TestCompliance(object):
     # these tests use fixtures defined in tests/conftest.py
     def test_level_2_if_everything(self, everything_enabled_json):
         compliance = Compliance(everything_enabled_json)
-        assert compliance.level == 2
+        assert int(compliance) == 2
 
     def test_service_compliance_1(self, everything_but_sizeByConfinedWh_json):
         compliance = Compliance(everything_but_sizeByConfinedWh_json)
-        assert compliance.level == 1
+        assert int(compliance) == 1
 
     def test_service_compliance_0(self, everything_but_regionByPx_json):
         compliance = Compliance(everything_but_regionByPx_json)
-        assert compliance.level == 0
+        assert int(compliance) == 0
 
     def test_additional_features_two_plus(self, level2_plus_json):
         compliance = Compliance(level2_plus_json)
         extras = ('max', 'regionSquare')
-        assert compliance.level == 2
+        assert int(compliance) == 2
         assert compliance.additional_features == extras
 
     def test_additional_features_one_plus_sizeByConfinedWh(self, level1_plus_sizeByConfinedWh_json):
         extras = ('sizeByConfinedWh',)
         compliance = Compliance(level1_plus_sizeByConfinedWh_json)
-        assert compliance.level == 1
+        assert int(compliance) == 1
         assert compliance.additional_features == extras
 
     def test_additional_features_0_plus_sizeByW(self, level0_plus_sizeByW_json):
         extras = ('sizeByW',)
         compliance = Compliance(level0_plus_sizeByW_json)
-        assert compliance.level == 0
+        assert int(compliance) == 0
         assert compliance.additional_features == extras

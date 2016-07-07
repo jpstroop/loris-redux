@@ -11,6 +11,7 @@ class Jp2Extractor(AbstractExtractor):
     #
     def __init__(self, compliance, app_configs):
         super().__init__(compliance, app_configs)
+        self._include_tiles_and_sizes = None
 
     def extract(self, path, http_identifier):
         metadata = Jp2Parser(path).metadata
@@ -18,17 +19,34 @@ class Jp2Extractor(AbstractExtractor):
         info_data.width = metadata['image_width']
         info_data.height = metadata['image_height']
         info_data.identifier = http_identifier
-        info_data.tiles = Jp2Extractor._format_tiles(metadata)
-        _max_size = Jp2Extractor.max_size(info_data.width, info_data.height, \
-            max_area=self.max_area, max_width=self.max_width, \
-            max_height=self.max_height)
-        info_data.sizes = Jp2Extractor._levels_to_sizes(metadata['levels'], \
-            info_data.width, info_data.height, _max_size['width'], \
-            _max_size['height'])
+
+        max_size = Jp2Extractor.max_size(info_data.width, \
+                info_data.height, max_area=self.max_area, \
+                max_width=self.max_width, max_height=self.max_height)
+
+        info_data.sizes = [ max_size ]
+
+        if self.include_tiles_and_sizes:
+            info_data.tiles = Jp2Extractor._format_tiles(metadata)
+            level_sizes = Jp2Extractor._levels_to_sizes( \
+                metadata['levels'], info_data.width, info_data.height, \
+                max_size['width'], max_size['height'])
+            # Don't include the full w/h again:
+            if max_size['width'] == info_data.width:
+                info_data.sizes.extend(level_sizes[1:])
+            else:
+                info_data.sizes.extend(level_sizes)
+
         info_data.profile = self._make_profile(metadata['is_color'])
         return info_data
 
-    # TODO: START HERE W/ TESTS THAT THE max*s SHOW UP
+    @property
+    def include_tiles_and_sizes(self):
+        if self._include_tiles_and_sizes is None:
+            encoded_only = self.app_configs['scale_factors']['jp2']['encoded_only']
+            self._include_tiles_and_sizes = (self.compliance > 0) or encoded_only
+        return self._include_tiles_and_sizes
+
     def _make_profile(self, is_color):
         profile = self.compliance.to_profile(include_color=is_color, \
             max_area=self.max_area, max_width=self.max_width, \
