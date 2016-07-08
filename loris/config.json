@@ -8,7 +8,7 @@
     "max_width": null,
     "max_height": null,
     "scale_factors": {
-      "note0": "This section only applicable if regionByPx and sizeByW are disabled",
+      "note0": "This section only applicable if compliance level is zero",
       "jp2": { "encoded_only": false },
       "other_formats" : {
         "note0": "tiles will be allowed for scale factors > the tile size, and",

@@ -28,7 +28,7 @@ class PillowExtractor(AbstractExtractor):
     def __init__(self, compliance, app_configs):
         super().__init__(compliance, app_configs)
         sf = app_configs['scale_factors']['other_formats']
-        self.include_scale_factors = sf['enabled'] and compliance.level == 0
+        self.include_scale_factors = sf['enabled'] and self.compliance == 0
         if self.include_scale_factors:
             self.tile_w = sf['tile_width']
             self.tile_h = sf['tile_height']
@@ -39,14 +39,17 @@ class PillowExtractor(AbstractExtractor):
         w, h = pillow_image.size
         info_data.width, info_data.height = (w, h)
         info_data.profile = self._make_profile(pillow_image)
-        info_data.sizes = [
-            PillowExtractor.max_size(w, h, max_area=self.max_area, \
+        max_size = PillowExtractor.max_size(w, h, max_area=self.max_area, \
                 max_width=self.max_width, max_height=self.max_height)
-        ]
+        info_data.sizes = [ max_size ]
         if self.include_scale_factors:
-            tiles, sizes = self.level_zero_tiles_and_sizes(w, h, self.tile_w, self.tile_h)
+            tiles, sizes = self.level_zero_tiles_and_sizes(max_size['width'], \
+                max_size['height'], self.tile_w, self.tile_h)
             info_data.tiles = tiles
-            info_data.sizes = info_data.sizes + sizes
+            if info_data.width == max_size['width']:
+                info_data.sizes.extend(sizes[1:])
+            else:
+                info_data.sizes.extend(sizes)
         return info_data
 
     @staticmethod
@@ -55,19 +58,13 @@ class PillowExtractor(AbstractExtractor):
 
     def level_zero_tiles_and_sizes(self, image_w, image_h, tile_w, tile_h):
         # These are designed to work w/ OSd, hence ceil().
-        if self.compliance.level == 0:
-            tiles = PillowExtractor._level_zero_tiles(image_w, image_h, tile_w, tile_h)
-            # there's always a chance that the default tile size is larger
-            # than the image, so
-            smallest_scale = 1
-            if tiles is not None:
-                smallest_scale = tiles[0]['scaleFactors'][-1]
-            sizes = PillowExtractor._level_zero_sizes(smallest_scale, image_w, image_h)
-            return (tiles, sizes)
-        else:
-            # Shouldn't happen, but just to remind ourselves...
-            m = 'level_zero_tiles_and_sizes called, but server compliance is {0}'
-            raise Exception(m.format(self.compliance.level))
+        tiles = PillowExtractor._level_zero_tiles(image_w, image_h, tile_w, tile_h)
+        # Always a chance that the default tile size is larger than the image:
+        smallest_scale = 1
+        if tiles is not None:
+            smallest_scale = tiles[0]['scaleFactors'][-1]
+        sizes = PillowExtractor._level_zero_sizes(smallest_scale, image_w, image_h)
+        return (tiles, sizes)
 
     @classmethod
     def _level_zero_tiles(cls, image_w, image_h, tile_w, tile_h):
@@ -83,9 +80,8 @@ class PillowExtractor(AbstractExtractor):
 
     @classmethod
     def _level_zero_sizes(cls, smallest_scale_factor, image_w, image_h):
-        # smallest_scale_factor is tiles[0]['scaleFactors'][-1]
         sizes = [ ]
-        scale = smallest_scale_factor*2
+        scale = smallest_scale_factor
         w = ceil(image_w / scale)
         h = ceil(image_h / scale)
         while any([d != 1 for d in (w,h)]):
