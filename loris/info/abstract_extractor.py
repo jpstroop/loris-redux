@@ -2,9 +2,9 @@ from abc import ABCMeta
 from abc import abstractmethod
 from math import ceil
 
-BITONAL_QUALITIES = ('bitonal', 'default')
-COLOR_QUALITIES = ('bitonal', 'color', 'default', 'gray')
-GRAY_QUALITIES = ('bitonal', 'default', 'gray')
+BITONAL_QUALITIES = ('bitonal',)
+COLOR_QUALITIES = ('bitonal', 'color', 'gray')
+GRAY_QUALITIES = ('bitonal', 'gray')
 
 class AbstractExtractor(metaclass=ABCMeta):
     #

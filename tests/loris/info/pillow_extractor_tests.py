@@ -1,4 +1,4 @@
-from loris.helpers.compliance import Compliance
+from loris.compliance import Compliance
 from loris.info.abstract_extractor import COLOR_QUALITIES
 from loris.info.abstract_extractor import GRAY_QUALITIES
 from loris.info.pillow_extractor import PillowExtractor

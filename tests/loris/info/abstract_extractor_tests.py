@@ -1,5 +1,5 @@
 from loris.info.abstract_extractor import AbstractExtractor
-from loris.helpers.compliance import Compliance
+from loris.compliance import Compliance
 from unittest.mock import Mock
 import pytest
 

@@ -4,7 +4,7 @@ from loris.handlers import route_patterns
 from loris.handlers.identifier_handler import IdentifierHandler
 from loris.handlers.image_handler import ImageHandler
 from loris.handlers.info_handler import InfoHandler
-from loris.helpers.compliance import Compliance
+from loris.compliance import Compliance
 from loris.helpers.safe_lru_dict import SafeLruDict
 from loris.info.pillow_extractor import PillowExtractor
 from os import path
