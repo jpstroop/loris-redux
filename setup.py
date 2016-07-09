@@ -27,6 +27,7 @@ class PyTest(TestCommand):
 
 PACKAGES=(
     'loris',
+    'loris.compliance',
     'loris.exceptions',
     'loris.handlers',
     'loris.helpers',

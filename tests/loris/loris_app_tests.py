@@ -2,7 +2,7 @@ from loris.loris_app import LorisApp
 from loris.handlers.info_handler import InfoHandler
 from loris.handlers.identifier_handler import IdentifierHandler
 from loris.handlers.image_handler import ImageHandler
-from loris.helpers.compliance import Compliance
+from loris.compliance import Compliance
 import re
 
 class FakeRouter(object):

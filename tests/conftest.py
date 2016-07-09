@@ -1,6 +1,6 @@
 from os import path
 from os import remove
-from loris.helpers.compliance import Compliance
+from loris.compliance import Compliance
 import json
 import pytest
 

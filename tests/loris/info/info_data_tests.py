@@ -1,7 +1,7 @@
 from loris.info.info_data import InfoData
 from loris.info.info_data import CONTEXT
 from loris.info.info_data import PROTOCOL
-from loris.helpers.compliance import Compliance
+from loris.compliance import Compliance
 import pytest
 
 @pytest.fixture()
