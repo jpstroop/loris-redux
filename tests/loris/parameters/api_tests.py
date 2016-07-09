@@ -1,9 +1,10 @@
 from loris.parameters.api import AbstractParameter
+from unittest.mock import Mock
 import pytest
 
 class ProperImpl(AbstractParameter):
-    def __init__(self, uri_slice, features):
-        super(ProperImpl, self).__init__(uri_slice, features)
+    def __init__(self, uri_slice, enabled_features, info_data):
+        super(ProperImpl, self).__init__(uri_slice, enabled_features, info_data)
     @property
     def canonical(self):
         return 'canonical version'
@@ -12,12 +13,11 @@ class TestAbstractParameter(object):
 
     def test_canonical_required(self):
         class WithoutCanonical(AbstractParameter):
-            def __init__(self, uri_slice, features):
-                super(WithoutCanonical, self).__init__(uri_slice, features)
+            def __init__(self, uri_slice, enabled_features, info_data):
+                super(WithoutCanonical, self).__init__(uri_slice, enabled_features, info_data)
         with pytest.raises(TypeError) as type_error:
-            w = WithoutCanonical('abc')
+            w = WithoutCanonical('abc', (), Mock())
         assert "Can't instantiate abstract class" in str(type_error.value)
-
 
     def test_init_required(self):
         class WithoutInit(AbstractParameter):
@@ -25,7 +25,7 @@ class TestAbstractParameter(object):
             def canonical(self):
                 return 'canonical version'
         with pytest.raises(TypeError) as type_error:
-            w = WithoutInit('abc')
+            w = WithoutInit('abc', (), Mock())
         assert "Can't instantiate abstract class" in str(type_error.value)
 
     def test_init_sig_required(self):
@@ -36,24 +36,15 @@ class TestAbstractParameter(object):
             def canonical(self):
                 return 'canonical version'
         with pytest.raises(TypeError) as type_error:
-            w = WrongInitSig()
-        assert "__init__() missing 2 required positional" in str(type_error.value)
+            WrongInitSig()
+        assert "__init__() missing 3 required positional" in str(type_error.value)
 
     def test_proper_impl(self):
-        p = ProperImpl('foo', ())
+        ProperImpl('foo', (), Mock())
 
-    def test_original_request_is_defined(self):
-        p = ProperImpl('foo',())
-        assert p.original_request == 'foo'
+    def test_stuff_is_defined(self):
+        info_data = Mock()
+        p = ProperImpl('foo', (), info_data)
+        assert p.uri_slice == 'foo'
         assert p.enabled_features == ()
-
-    def test_canonical_must_be_property(self):
-        pass
-        # TODO: How?
-        # class CanonicalNotProperty(AbstractParameter):
-        #     def __init__(self, uri_slice):
-        #         super(CanonicalNotProperty, self).__init__(uri_slice)
-        #     def canonical(self):
-        #         return 'canonical version'
-        # with pytest.raises(TypeError) as type_error:
-        #     w = CanonicalNotProperty('foo')
+        assert p.info_data == info_data
