@@ -6,6 +6,17 @@ CONTEXT = 'http://iiif.io/api/image/2/context.json'
 
 class InfoData(object):
     # POPO for info.json
+    __slots__ = (
+        'identifier',
+        'compliance',
+        'width',
+        'height',
+        'tiles',
+        'sizes',
+        'profile',
+        'color_profile_bytes'
+    )
+
     def __init__(self, compliance, http_identifier):
         self.identifier = http_identifier
         self.compliance = compliance
