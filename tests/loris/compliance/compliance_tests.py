@@ -3,6 +3,16 @@ from loris.compliance import Compliance
 
 class TestCompliance(object):
 
+    def test_int_and_comparisons(self, everything_enabled_json):
+        compliance = Compliance(everything_enabled_json)
+        assert int(compliance) == 2
+        assert compliance > 1
+        assert compliance >= 2
+        assert compliance < 3
+        assert compliance <= 2
+        assert compliance != 0
+        assert compliance == 2
+
     def test_uri(self, everything_enabled_json):
         compliance = Compliance(everything_enabled_json)
         assert compliance.uri == 'http://iiif.io/api/image/2/level2.json'
