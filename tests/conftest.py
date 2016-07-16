@@ -20,6 +20,8 @@ COLOR_TIF = path.join(IMAGES_DIR, 'color.tif')
 GRAY_JPG = path.join(IMAGES_DIR, 'gray.jpg')
 GRAY_PNG = path.join(IMAGES_DIR, 'gray.png')
 GRAY_TIF = path.join(IMAGES_DIR, 'gray.tif')
+REGION_TEST_JPG = path.join(IMAGES_DIR, 'region_test.jpg')
+REGION_TEST_JP2 = path.join(IMAGES_DIR, 'region_test.jp2')
 TEST_IMAGES = ( COLOR_JP2, GRAY_JP2, COLOR_PROFILE_JP2, PRECINCTS_JP2,
     COLOR_JPG, COLOR_PNG, COLOR_TIF, GRAY_JPG, GRAY_PNG, GRAY_TIF )
 
@@ -79,8 +81,16 @@ def precincts_jp2():
     return PRECINCTS_JP2
 
 @pytest.fixture(scope='session')
+def region_test_jp2():
+    return  REGION_TEST_JP2
+
+@pytest.fixture(scope='session')
 def color_jpg():
     return COLOR_JPG
+
+@pytest.fixture(scope='session')
+def region_test_jpg():
+    return  REGION_TEST_JPG
 
 @pytest.fixture(scope='session')
 def color_png():
