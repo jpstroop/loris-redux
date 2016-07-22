@@ -36,13 +36,13 @@ class AbstractExtractor(metaclass=ABCMeta):
         # I stole this from @zimeon, sort of:
         w, h = image_width, image_height
         if max_area and max_area < (image_width * image_height):
-            scale = (float(max_area) / float(image_width * image_height)) ** 0.5
+            scale = (max_area / (image_width * image_height)) ** 0.5
             w, h = cls._scale_wh(scale, image_width, image_height)
         if max_width and max_width < w:
-            scale = float(max_width) / float(image_width)
+            scale = max_width / image_width
             w, h = cls._scale_wh(scale, image_width, image_height)
         if max_height and max_height < h:
-            scale = float(max_height) / float(image_height)
+            scale = max_height / image_height
             w, h = cls._scale_wh(scale, image_width, image_height)
         return cls._structure_size(w, h)
 

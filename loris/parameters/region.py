@@ -58,6 +58,7 @@ class RegionParameter(AbstractParameter):
 
     def _deduce_request_type(self):
         if self.uri_slice in (FULL, '0,0,{0},{1}'.format(self.info_data.width, self.info_data.height)):
+            # TODO: https://github.com/jpstroop/loris-redux/issues/70
             return FULL
         elif self.uri_slice == SQUARE:
             return SQUARE

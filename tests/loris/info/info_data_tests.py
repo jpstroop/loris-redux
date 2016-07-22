@@ -29,6 +29,17 @@ class TestInfoData(object):
         info = InfoData(compliance, HTTP_ID)
         assert 'profile' in info._to_dict()
 
+    def test_long_dim(self, compliance):
+        info = InfoData(compliance, HTTP_ID)
+        info.width = 42
+        info.height = 21
+        assert info.long_dim == 42
+
+    def test_short_dim(self, compliance):
+        info = InfoData(compliance, HTTP_ID)
+        info.width = 42
+        info.height = 21
+        assert info.short_dim == 21
 
     # Perhaps More to come, though as a Plain Old Python Object most of the
     # functionality of this class gets tested with the extractors, for better
