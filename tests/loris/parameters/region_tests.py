@@ -4,7 +4,7 @@ from loris.exceptions.syntax_exception import SyntaxException
 from loris.exceptions.feature_not_enabled_exception import FeatureNotEnabledException
 from loris.parameters.region import RegionParameter
 from loris.parameters.region import FULL
-from loris.parameters.region import SQUARE
+from loris.parameters.region import AS_SQUARE
 from loris.parameters.region import PCT
 from loris.parameters.region import PIXEL
 from loris.parameters.region import DECIMAL_ONE
@@ -24,27 +24,24 @@ class TestRegionParameter(object):
         features = ('regionByPct', 'regionSquare')
         with pytest.raises(FeatureNotEnabledException) as fe:
             RegionParameter('4,5,6,7', features, info_data)
-        assert 'This server does not support requesting regions by pixel' == fe.value.message
-        assert fe.value.feature == 'regionByPx'
+        assert "not support the 'regionByPx'" in fe.value.message
 
     def test__check_if_supported_pct_raises(self):
         info_data = Mock(width=4637, height=7201, tiles=[{'width':512}])
         features = ('regionByPx', 'regionSquare')
         with pytest.raises(FeatureNotEnabledException) as fe:
             RegionParameter('pct:8,9,10,11', features, info_data)
-        assert 'This server does not support requesting regions by percent' == fe.value.message
-        assert fe.value.feature == 'regionByPct'
+        assert "not support the 'regionByPct'" in fe.value.message
 
     def test__check_if_supported_square_raises(self):
         info_data = Mock(width=4637, height=7201, tiles=[{'width':512}])
         features = ('regionByPx', 'regionByPct')
         with pytest.raises(FeatureNotEnabledException) as fe:
             RegionParameter('square', features, info_data)
-        assert 'This server does not support the "square" keyword' == fe.value.message
-        assert fe.value.feature == 'regionSquare'
+        assert "not support the 'regionSquare'" in fe.value.message
 
     def test__init_full_request(self):
-        info_data = Mock(width=4637, height=7201)
+        info_data = Mock(width=4637, height=7201, tiles=[])
         features = ('regionByPct', 'regionSquare', 'regionByPx')
         rp = RegionParameter('full', features, info_data)
         assert rp.canonical is FULL
@@ -61,7 +58,7 @@ class TestRegionParameter(object):
         info_data = Mock(width=4638, height=7201)
         features = ('regionByPct', 'regionSquare', 'regionByPx')
         rp = RegionParameter('square', features, info_data)
-        assert rp.request_type is SQUARE
+        assert rp.request_type is AS_SQUARE
         assert rp.canonical == '0,1281,4638,4638'
         assert rp.pixel_x == 0
         assert rp.pixel_y == 1281
@@ -73,11 +70,11 @@ class TestRegionParameter(object):
         assert rp.decimal_h == Decimal('0.6440772114984029995833911957')
 
     def test__init_square_request_landscape(self):
-        info_data = Mock(width=8400, height=3000)
+        info_data = Mock(width=8400, height=3000, tiles=[])
         features = ('regionByPct', 'regionSquare', 'regionByPx')
         rp = RegionParameter('square', features, info_data)
         assert rp.canonical == '2700,0,3000,3000'
-        assert rp.request_type is SQUARE
+        assert rp.request_type is AS_SQUARE
         assert rp.pixel_x == 2700
         assert rp.pixel_y == 0
         assert rp.pixel_w == 3000
@@ -152,7 +149,7 @@ class TestRegionParameter(object):
         assert rp.canonical == '0,0,500,7200'
 
     def test_requests_tall_adjusts_to_in_bounds(self):
-        info_data = Mock(width=3456, height=7200)
+        info_data = Mock(width=3456, height=7200, tiles=[])
         features = ('regionByPct', 'regionSquare', 'regionByPx')
         rp = RegionParameter('0,0,3457,200', features, info_data)
         assert rp.canonical == '0,0,3456,200'

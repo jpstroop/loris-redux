@@ -217,6 +217,8 @@ class SizeParameter(AbstractParameter):
 
     def _check_if_supported(self):
         # raises FeatureNotEnabledException
+        if self.request_type is FULL:
+            return
         try:
             if self._request_type not in self.enabled_features:
                 raise FeatureNotEnabledException(self._request_type)
