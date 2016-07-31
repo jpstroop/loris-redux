@@ -5,7 +5,6 @@ from loris.exceptions.feature_not_enabled_exception import FeatureNotEnabledExce
 from loris.parameters.api import AbstractParameter
 from math import floor
 import re
-
 # Maximum approximation error between the original dimensions and smaller
 # requests before we consider a w,h request THAT IS NOT THE SIZES LIST
 # to be 'sizeByDistortedWh', e.g.:
@@ -38,7 +37,7 @@ BY_PCT = 'sizeByPct'
 BY_CONFINED_WH = 'sizeByConfinedWh'
 BY_DISTORTED_WH = 'sizeByDistortedWh'
 BY_WH = 'sizeByWh'
-
+SIZE_ABOVE_FULL = 'sizeAboveFull'
 DECIMAL_ONE_HUNDRED = Decimal(100.0)
 
 W_REGEX = re.compile(r'^\d+,$')
@@ -54,28 +53,17 @@ class SizeParameter(AbstractParameter):
         self.region_h = region_h
         self.width = None
         self.height = None
-        self.max_width = self.info_data.profile[1].get('maxWidth', region_w)
-        self.max_height = self.info_data.profile[1].get('maxHeight', region_h)
-        self.max_area = self.info_data.profile[1].get('maxArea', region_w * region_h)
+        self.max_width = self.info_data.profile[1].get('maxWidth')
+        self.max_height = self.info_data.profile[1].get('maxHeight')
+        self.max_area = self.info_data.profile[1].get('maxArea')
         self._canonical = None
         self._request_type = None
         self._distort_aspect = False
 
         # raises SyntaxException, RequestException
         self._initialize_properites()
-
-        # raises RequestException
-        # self._check_size_above_full()
-
-        # raises FeatureNotEnabledException
-        # Note that this has to happen after we know the w/h in case this is
-        # a level 0 config with tile support enabled.
-
-        self._check_if_supported()
-        # Re ^^ check features (can probably do in a loop) and also we don't
-        # adjust for max* so need to check and raise RequestException
-
-        self._adjust_if_actually_full() # TODO what about MAX? Same? Spec doesn't say??
+        # raises FeatureNotEnabledException, RequestException
+        self._run_checks()
 
     @property
     def request_type(self):
@@ -83,15 +71,46 @@ class SizeParameter(AbstractParameter):
         # raises FeatureNotEnabledException
         if self._request_type is None:
             self._request_type = self._deduce_request_type()
-            self._check_if_supported()
         return self._request_type
 
     @property
     def canonical(self):
         if self._canonical is None:
-            # TODO
-            pass
+            if self.request_type is FULL:
+                self._canonical = FULL
+            elif self._distort_aspect:
+                self._canonical = self.uri_slice
+            else:
+                self._canonical = '{0},'.format(self.width)
         return self._canonical
+
+    def _initialize_properites(self):
+        # raises SyntaxException, RequestException
+        if self.request_type is FULL:
+            self._init_full_request(); return
+        if self.request_type is MAX:
+            self._init_max_request(); return
+        if self.request_type is BY_W:
+            self._init_by_w_request(); return
+        if self.request_type is BY_H:
+            self._init_by_h_request(); return
+        if self.request_type is BY_PCT:
+            self._init_by_pct_request(); return
+        if self.request_type is BY_CONFINED_WH:
+            self._init_by_confined_wh_request(); return
+        if self.request_type is BY_WH:
+            self._init_wh_request(distort_aspect=False); return
+        if self.request_type is BY_DISTORTED_WH:
+            self._init_wh_request(distort_aspect=True); return
+
+    def _run_checks(self):
+        # raises RequestException
+        self._check_size_above_full()
+        # raises FeatureNotEnabledException
+        self._check_if_supported()
+        # raises RequestException
+        self._check_if_larger_than_max()
+        self._adjust_if_actually_full()
 
     def _deduce_request_type(self):
         if self.uri_slice == FULL:
@@ -137,24 +156,6 @@ class SizeParameter(AbstractParameter):
             self._request_type = FULL
             self._canonical = FULL
 
-    def _initialize_properites(self):
-        # raises SyntaxException, RequestException
-        if self.request_type is FULL:
-            self._init_full_request(); return
-        if self.request_type is MAX:
-            self._init_max_request(); return
-        if self.request_type is BY_W:
-            self._init_by_w_request(); return
-        if self.request_type is BY_H:
-            self._init_by_h_request(); return
-        if self.request_type is BY_PCT:
-            self._init_by_pct_request(); return
-        if self.request_type is BY_CONFINED_WH:
-            self._init_by_confined_wh_request(); return
-        if self.request_type is BY_WH:
-            self._init_wh_request(distort_aspect=False); return
-        if self.request_type is BY_DISTORTED_WH:
-            self._init_wh_request(distort_aspect=True); return
 
     def _init_full_request(self):
         self.width = self.region_w
@@ -163,17 +164,17 @@ class SizeParameter(AbstractParameter):
     def _init_max_request(self):
         self.width = self.region_w
         self.height = self.region_h
-        if (self.width * self.height) > self.max_area:
+        if self.max_area and (self.width * self.height) > self.max_area:
             # TODO: seems like this could be more precise. Test is often
             # 1px short (on the long dim?)
             scale = (self.max_area / (self.width * self.height))**0.5
             self.width = floor(self.region_w * scale)
             self.height = floor(self.region_h * scale)
-        if self.width > self.max_width:
+        if self.max_width and self.width > self.max_width:
             scale = self.max_width / self.region_w
             self.width = floor(self.region_w * scale)
             self.height = floor(self.region_h * scale)
-        if self.height > self.max_height:
+        if self.max_height and self.height > self.max_height:
             scale = self.max_height / self.region_h
             self.width = floor(self.region_w * scale)
             self.height = floor(self.region_h * scale)
@@ -215,6 +216,12 @@ class SizeParameter(AbstractParameter):
     def _pct_to_decimal(n):
         return Decimal(float(n)) / DECIMAL_ONE_HUNDRED
 
+    def _check_size_above_full(self):
+        allowed = SIZE_ABOVE_FULL in self.enabled_features
+        larger = self.width > self.region_w or self.height > self.region_h
+        if larger and not allowed:
+            raise FeatureNotEnabledException(SIZE_ABOVE_FULL)
+
     def _check_if_supported(self):
         # raises FeatureNotEnabledException
         if self.request_type is FULL:
@@ -223,13 +230,36 @@ class SizeParameter(AbstractParameter):
             if self._request_type not in self.enabled_features:
                 raise FeatureNotEnabledException(self._request_type)
         except FeatureNotEnabledException as fe:
-            if self._allowed_level0_size_request():
-                pass
+            if fe.feature is BY_W and self._allowed_level0_size_request():
+                return
             else:
                 raise
 
+    def _check_if_larger_than_max(self):
+        area = self.width * self.height
+        if self.max_area and area > self.max_area:
+            msg = 'Request area ({0}) is greater than max area allowed ({1})'
+            raise RequestException(msg.format(area, self.max_area))
+        if self.max_width and self.width > self.max_width:
+            msg = 'Request width ({0}) is greater than max width allowed ({1})'
+            raise RequestException(msg.format(self.width, self.max_width))
+        if self.max_height and self.height > self.max_height:
+            msg = 'Request height ({0}) is greater than max height allowed ({1})'
+            raise RequestException(msg.format(self.height, self.max_height))
+
     def _allowed_level0_size_request(self):
-        if self.info_data.sizes: # calc the scales, see if the size is one of them
-            pass
+        if self.info_data.tiles:
+            image_width = self.info_data.width
+            image_height = self.info_data.height
+            tile_width = self.info_data.tiles[0]['width']
+            tile_height = self.info_data.tiles[0].get('height', tile_width)
+            right_col_width = image_width % tile_width
+            bottom_row_height = self.info_data.height % tile_height
+            tile_requirements = (
+                self.width in (tile_width, right_col_width),
+                self.height in (tile_height, bottom_row_height)
+            )
+            size = { 'width' : self.width, 'height' : self.height }
+            return all(tile_requirements) or size in self.info_data.sizes
         else:
             return False

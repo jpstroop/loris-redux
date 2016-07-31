@@ -33,14 +33,8 @@ class RegionParameter(AbstractParameter):
         # raises SyntaxException, RequestException
         self._initialize_properites()
 
-        # raises RequestException
-        self._check_for_oob_errors()
-        self._adjust_to_in_bounds()
-
-        # raises FeatureNotEnabledException
-        self._check_if_supported()
-
-        self._adjust_if_actually_full()
+        # raises RequestException, FeatureNotEnabledException
+        self._run_checks()
 
     @property
     def request_type(self):
@@ -59,19 +53,6 @@ class RegionParameter(AbstractParameter):
                 self._canonical = FULL
         return self._canonical
 
-    def _deduce_request_type(self):
-        if self.uri_slice is FULL:
-            return FULL
-        elif self.uri_slice == SQUARE:
-            return AS_SQUARE
-        elif all([n.isdigit() for n in self.uri_slice.split(',')]):
-            # For PIXEL and PCT we'll raise later if there are too many ',' tokens
-            return PIXEL
-        elif self.uri_slice.split(':')[0] == 'pct':
-            return PCT
-        msg = 'Region syntax "{0}" is not valid.'.format(self.uri_slice)
-        raise SyntaxException(msg)
-
     def _initialize_properites(self):
         # raises SyntaxException
         # raises RequestException
@@ -85,6 +66,27 @@ class RegionParameter(AbstractParameter):
         if self.request_type is PCT:
             xywh = tuple(map(float, self.uri_slice.split(':')[1].split(',')))
             self._init_pct_request(xywh, self.info_data); return
+
+    def _run_checks(self):
+        # raises RequestException
+        self._check_for_oob_errors()
+        self._adjust_to_in_bounds()
+        # raises FeatureNotEnabledException
+        self._check_if_supported()
+        self._adjust_if_actually_full()
+
+    def _deduce_request_type(self):
+        if self.uri_slice is FULL:
+            return FULL
+        elif self.uri_slice == SQUARE:
+            return AS_SQUARE
+        elif all([n.isdigit() for n in self.uri_slice.split(',')]):
+            # For PIXEL and PCT we'll raise later if there are too many ',' tokens
+            return PIXEL
+        elif self.uri_slice.split(':')[0] == 'pct':
+            return PCT
+        msg = 'Region syntax "{0}" is not valid.'.format(self.uri_slice)
+        raise SyntaxException(msg)
 
     def _init_full_request(self, info_data):
         self.pixel_x = 0
@@ -182,7 +184,7 @@ class RegionParameter(AbstractParameter):
             # If app configs allow for a set of tiles / sizes this will be in
             # info_data. We check scale factors in the SizeParameter
             if self._allowed_level0_tile_request():
-                pass
+                return
             else:
                 raise
 
@@ -198,7 +200,11 @@ class RegionParameter(AbstractParameter):
             tile_height = self.info_data.tiles[0].get('height', tile_width)
             image_width = self.info_data.width
             image_height = self.info_data.height
-            x, y, w, h = tuple(map(int, self.canonical.split(',')))
+            x, y, w, h = map(int, self.canonical.split(','))
+            # TODO: We should really be checking scale factors...:
+            # (w / tile_width) in scale_factors or w / (image_width % tile_width) in scale_factors
+            # (h / tile_height) in scale_factors or h / (image_height % tile_height) in scale_factors
+            # ...something like that.
             requirements = (
                 x % tile_width == 0,
                 y % tile_height == 0,
