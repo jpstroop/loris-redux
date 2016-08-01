@@ -1,7 +1,11 @@
 from loris.exceptions.request_exception import RequestException
 
+COMPLIANCE_PAGE = 'http://iiif.io/api/image/2.1/compliance/#compliance'
+
 class FeatureNotEnabledException(RequestException):
-    # Use for requests that require IIIF features that disabled in the config. 
-    def __init__(self, message, feature, http_status_code=400):
+    # Use for requests that require IIIF features that disabled in the config.
+    def __init__(self, feature):
         self.feature = feature
-        super().__init__(message, http_status_code)
+        message = "Server does not support the '{0}' feature.".format(feature)
+        message += ' See {0} for details.'.format(COMPLIANCE_PAGE)
+        super().__init__(message)

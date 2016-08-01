@@ -6,9 +6,10 @@ from loris.parameters.api import AbstractParameter
 from math import floor
 
 FULL = 'full'
+AS_SQUARE = 'regionSquare'
 SQUARE = 'square'
-PCT = 'pct'
-PIXEL = 'pixel'
+PCT = 'regionByPct'
+PIXEL = 'regionByPx'
 DECIMAL_ONE = Decimal(1)
 DECIMAL_ONE_HUNDRED = Decimal(100.0)
 
@@ -32,12 +33,8 @@ class RegionParameter(AbstractParameter):
         # raises SyntaxException, RequestException
         self._initialize_properites()
 
-        # raises RequestException
-        self._check_for_oob_errors()
-        self._adjust_to_in_bounds()
-
-        # raises FeatureNotEnabledException
-        self._check_if_supported()
+        # raises RequestException, FeatureNotEnabledException
+        self._run_checks()
 
     @property
     def request_type(self):
@@ -56,11 +53,33 @@ class RegionParameter(AbstractParameter):
                 self._canonical = FULL
         return self._canonical
 
+    def _initialize_properites(self):
+        # raises SyntaxException
+        # raises RequestException
+        if self.request_type is FULL:
+            self._init_full_request(self.info_data); return
+        if self.request_type is AS_SQUARE:
+            self._init_square_request(self.info_data); return
+        if self.request_type is PIXEL:
+            xywh = tuple(map(int, self.uri_slice.split(',')))
+            self._init_pixel_request(xywh, self.info_data); return
+        if self.request_type is PCT:
+            xywh = tuple(map(float, self.uri_slice.split(':')[1].split(',')))
+            self._init_pct_request(xywh, self.info_data); return
+
+    def _run_checks(self):
+        # raises RequestException
+        self._check_for_oob_errors()
+        self._adjust_to_in_bounds()
+        # raises FeatureNotEnabledException
+        self._check_if_supported()
+        self._adjust_if_actually_full()
+
     def _deduce_request_type(self):
-        if self.uri_slice in (FULL, '0,0,{0},{1}'.format(self.info_data.width, self.info_data.height)):
+        if self.uri_slice is FULL:
             return FULL
         elif self.uri_slice == SQUARE:
-            return SQUARE
+            return AS_SQUARE
         elif all([n.isdigit() for n in self.uri_slice.split(',')]):
             # For PIXEL and PCT we'll raise later if there are too many ',' tokens
             return PIXEL
@@ -68,23 +87,6 @@ class RegionParameter(AbstractParameter):
             return PCT
         msg = 'Region syntax "{0}" is not valid.'.format(self.uri_slice)
         raise SyntaxException(msg)
-
-    def _initialize_properites(self):
-        # raises SyntaxException
-        # raises RequestException
-        if self.request_type is FULL:
-            self._init_full_request(self.info_data)
-            return
-        if self.request_type is SQUARE:
-            self._init_square_request(self.info_data)
-            return
-        if self.request_type is PIXEL:
-            xywh = tuple(map(int, self.uri_slice.split(',')))
-            self._init_pixel_request(xywh, self.info_data)
-            return
-        if self.request_type is PCT:
-            xywh = tuple(map(float, self.uri_slice.split(':')[1].split(',')))
-            self._init_pct_request(xywh, self.info_data)
 
     def _init_full_request(self, info_data):
         self.pixel_x = 0
@@ -173,27 +175,24 @@ class RegionParameter(AbstractParameter):
             raise RequestException(msg.format(self.info_data.height))
 
     def _check_if_supported(self):
+        if self.request_type is FULL:
+            return
         try:
-            # 'regionByPx'
-            if self.request_type is PIXEL and 'regionByPx' not in self.enabled_features:
-                msg = 'This server does not support requesting regions by pixel'
-                raise FeatureNotEnabledException(msg, 'regionByPx')
-            # 'regionByPct'
-            if self.request_type is PCT and 'regionByPct' not in self.enabled_features:
-                msg = 'This server does not support requesting regions by percent'
-                raise FeatureNotEnabledException(msg, 'regionByPct')
-            # 'regionSquare'
-            if self.request_type is SQUARE and 'regionSquare' not in self.enabled_features:
-                msg = 'This server does not support the "square" keyword'
-                raise FeatureNotEnabledException(msg, 'regionSquare')
+            if self._request_type not in self.enabled_features:
+                raise FeatureNotEnabledException(self._request_type)
         except FeatureNotEnabledException as fe:
             # If app configs allow for a set of tiles / sizes this will be in
-            # info_data. We'll need to check scale factors when we do size if
-            # sizeByPx is disabled
+            # info_data. We check scale factors in the SizeParameter
             if self._allowed_level0_tile_request():
-                pass
+                return
             else:
                 raise
+
+    def _adjust_if_actually_full(self):
+        px = '0,0,{0},{1}'.format(self.info_data.width, self.info_data.height)
+        if self.uri_slice == px:
+            self._request_type = FULL
+            self._canonical = FULL
 
     def _allowed_level0_tile_request(self):
         if self.info_data.tiles:
@@ -201,7 +200,11 @@ class RegionParameter(AbstractParameter):
             tile_height = self.info_data.tiles[0].get('height', tile_width)
             image_width = self.info_data.width
             image_height = self.info_data.height
-            x, y, w, h = tuple(map(int, self.canonical.split(',')))
+            x, y, w, h = map(int, self.canonical.split(','))
+            # TODO: We should really be checking scale factors...:
+            # (w / tile_width) in scale_factors or w / (image_width % tile_width) in scale_factors
+            # (h / tile_height) in scale_factors or h / (image_height % tile_height) in scale_factors
+            # ...something like that.
             requirements = (
                 x % tile_width == 0,
                 y % tile_height == 0,

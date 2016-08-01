@@ -14,7 +14,9 @@ class InfoData(object):
         'tiles',
         'sizes',
         'profile',
-        'color_profile_bytes'
+        'color_profile_bytes',
+        '_long_dim',
+        '_short_dim'
     )
 
     def __init__(self, compliance, http_identifier):
@@ -26,12 +28,26 @@ class InfoData(object):
         self.sizes = None
         self.profile = None
         self.color_profile_bytes = None
+        self._long_dim = None
+        self._short_dim = None
 
     def __str__(self):
         return json.dumps(self._to_dict())
 
     def __repr__(self):
         return repr(self._to_dict())
+
+    @property
+    def long_dim(self):
+        if not self._long_dim:
+            self._long_dim =  max(self.width, self.height)
+        return self._long_dim
+
+    @property
+    def short_dim(self):
+        if not self._short_dim:
+            self._short_dim =  min(self.width, self.height)
+        return self._short_dim
 
     def _to_dict(self):
         d = OrderedDict()
