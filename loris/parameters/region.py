@@ -18,7 +18,8 @@ class RegionParameter(AbstractParameter):
     # around was starting to get messy.
 
     def __init__(self, uri_slice, enabled_features, info_data):
-        super().__init__(uri_slice, enabled_features, info_data)
+        super().__init__(uri_slice, enabled_features)
+        self.info_data = info_data
         self.decimal_x = None
         self.decimal_y = None
         self.decimal_w = None
@@ -27,7 +28,6 @@ class RegionParameter(AbstractParameter):
         self.pixel_y = None
         self.pixel_w = None
         self.pixel_h = None
-        self._canonical = None
         self._request_type = None
 
         # raises SyntaxException, RequestException

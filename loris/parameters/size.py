@@ -48,7 +48,8 @@ CONFINED_REGEX = re.compile(r'^!\d+,\d+$')
 class SizeParameter(AbstractParameter):
 
     def __init__(self, uri_slice, enabled_features, info_data, region_w, region_h):
-        super().__init__(uri_slice, enabled_features, info_data)
+        super().__init__(uri_slice, enabled_features)
+        self.info_data = info_data
         self.region_w = region_w
         self.region_h = region_h
         self.width = None
@@ -56,7 +57,6 @@ class SizeParameter(AbstractParameter):
         self.max_width = self.info_data.profile[1].get('maxWidth')
         self.max_height = self.info_data.profile[1].get('maxHeight')
         self.max_area = self.info_data.profile[1].get('maxArea')
-        self._canonical = None
         self._request_type = None
         self._distort_aspect = False
 
