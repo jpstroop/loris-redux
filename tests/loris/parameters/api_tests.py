@@ -3,8 +3,8 @@ from unittest.mock import Mock
 import pytest
 
 class ProperImpl(AbstractParameter):
-    def __init__(self, uri_slice, enabled_features, info_data):
-        super(ProperImpl, self).__init__(uri_slice, enabled_features, info_data)
+    def __init__(self, uri_slice, enabled_features):
+        super(ProperImpl, self).__init__(uri_slice, enabled_features)
     @property
     def canonical(self):
         return 'canonical version'
@@ -13,8 +13,8 @@ class TestAbstractParameter(object):
 
     def test_canonical_required(self):
         class WithoutCanonical(AbstractParameter):
-            def __init__(self, uri_slice, enabled_features, info_data):
-                super(WithoutCanonical, self).__init__(uri_slice, enabled_features, info_data)
+            def __init__(self, uri_slice, enabled_features):
+                super(WithoutCanonical, self).__init__(uri_slice, enabled_features)
         with pytest.raises(TypeError) as type_error:
             w = WithoutCanonical('abc', (), Mock())
         assert "Can't instantiate abstract class" in str(type_error.value)
@@ -37,14 +37,12 @@ class TestAbstractParameter(object):
                 return 'canonical version'
         with pytest.raises(TypeError) as type_error:
             WrongInitSig()
-        assert "__init__() missing 3 required positional" in str(type_error.value)
+        assert "__init__() missing 2 required positional" in str(type_error.value)
 
     def test_proper_impl(self):
-        ProperImpl('foo', (), Mock())
+        ProperImpl('foo', ())
 
     def test_stuff_is_defined(self):
-        info_data = Mock()
-        p = ProperImpl('foo', (), info_data)
+        p = ProperImpl('foo', ())
         assert p.uri_slice == 'foo'
         assert p.enabled_features == ()
-        assert p.info_data == info_data

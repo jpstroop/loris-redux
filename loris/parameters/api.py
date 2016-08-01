@@ -9,10 +9,9 @@ from abc import abstractmethod
 class AbstractParameter(metaclass=ABCMeta):
 
     @abstractmethod
-    def __init__(self, uri_slice, enabled_features, info_data):
+    def __init__(self, uri_slice, enabled_features):
         self.uri_slice = uri_slice
         self.enabled_features = enabled_features
-        self.info_data = info_data
         self._canonical = None
         return
 
