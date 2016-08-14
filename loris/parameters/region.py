@@ -11,7 +11,7 @@ SQUARE = 'square'
 PCT = 'regionByPct'
 PIXEL = 'regionByPx'
 DECIMAL_ONE = Decimal(1)
-DECIMAL_ONE_HUNDRED = Decimal(100.0)
+DECIMAL_ONE_HUNDRED = Decimal(100)
 
 class RegionParameter(AbstractParameter):
     # Almost all of the methods here could be static, but passing stuff

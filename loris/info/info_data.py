@@ -1,6 +1,8 @@
 from collections import OrderedDict
 import json
 
+# TODO: replace w/ named tuple? 
+
 PROTOCOL = 'http://iiif.io/api/image'
 CONTEXT = 'http://iiif.io/api/image/2/context.json'
 
