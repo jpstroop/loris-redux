@@ -1,5 +1,5 @@
 from logging import getLogger
-from loris.exceptions.unsupported_format import UnsupportedFormat
+from loris.exceptions import UnsupportedFormat
 from loris.helpers.classproperty import classproperty
 from loris.helpers.safe_lru_dict import SafeLruDict
 from magic import from_file
