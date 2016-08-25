@@ -1,5 +1,5 @@
-from loris.exceptions.syntax_exception import SyntaxException
-from loris.exceptions.feature_not_enabled_exception import FeatureNotEnabledException
+from loris.exceptions import SyntaxException
+from loris.exceptions import FeatureNotEnabledException
 from loris.parameters.quality import QualityParameter
 
 import pytest

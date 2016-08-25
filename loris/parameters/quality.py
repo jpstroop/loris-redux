@@ -1,6 +1,6 @@
-from loris.exceptions.request_exception import RequestException
-from loris.exceptions.syntax_exception import SyntaxException
-from loris.exceptions.feature_not_enabled_exception import FeatureNotEnabledException
+from loris.exceptions import RequestException
+from loris.exceptions import SyntaxException
+from loris.exceptions import FeatureNotEnabledException
 from loris.parameters.api import AbstractParameter
 
 DEFAULT = 'default'
