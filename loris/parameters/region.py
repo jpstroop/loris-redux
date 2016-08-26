@@ -1,17 +1,17 @@
 from decimal import Decimal
-from loris.exceptions import RequestException
-from loris.exceptions import SyntaxException
-from loris.exceptions import FeatureNotEnabledException
-from loris.parameters.api import AbstractParameter
 from math import floor
 
-FULL = 'full'
-AS_SQUARE = 'regionSquare'
-SQUARE = 'square'
-PCT = 'regionByPct'
-PIXEL = 'regionByPx'
-DECIMAL_ONE = Decimal(1)
-DECIMAL_ONE_HUNDRED = Decimal(100)
+from loris.constants import DECIMAL_ONE
+from loris.constants import DECIMAL_ONE_HUNDRED
+from loris.constants import FULL
+from loris.constants import REGION_BY_PCT
+from loris.constants import REGION_BY_PIXEL
+from loris.constants import REGION_SQUARE
+from loris.constants import SQUARE
+from loris.exceptions import FeatureNotEnabledException
+from loris.exceptions import RequestException
+from loris.exceptions import SyntaxException
+from loris.parameters.api import AbstractParameter
 
 class RegionParameter(AbstractParameter):
     # Almost all of the methods here could be static, but passing stuff
@@ -58,12 +58,12 @@ class RegionParameter(AbstractParameter):
         # raises RequestException
         if self.request_type is FULL:
             self._init_full_request(self.info_data); return
-        if self.request_type is AS_SQUARE:
+        if self.request_type is REGION_SQUARE:
             self._init_square_request(self.info_data); return
-        if self.request_type is PIXEL:
+        if self.request_type is REGION_BY_PIXEL:
             xywh = tuple(map(int, self.uri_slice.split(',')))
             self._init_pixel_request(xywh, self.info_data); return
-        if self.request_type is PCT:
+        if self.request_type is REGION_BY_PCT:
             xywh = tuple(map(float, self.uri_slice.split(':')[1].split(',')))
             self._init_pct_request(xywh, self.info_data); return
 
@@ -79,12 +79,12 @@ class RegionParameter(AbstractParameter):
         if self.uri_slice is FULL:
             return FULL
         elif self.uri_slice == SQUARE:
-            return AS_SQUARE
+            return REGION_SQUARE
         elif all([n.isdigit() for n in self.uri_slice.split(',')]):
-            # For PIXEL and PCT we'll raise later if there are too many ',' tokens
-            return PIXEL
+            # For REGION_BY_PIXEL and REGION_BY_PCT we'll raise later if there are too many ',' tokens
+            return REGION_BY_PIXEL
         elif self.uri_slice.split(':')[0] == 'pct':
-            return PCT
+            return REGION_BY_PCT
         msg = 'Region syntax "{0}" is not valid.'.format(self.uri_slice)
         raise SyntaxException(msg)
 

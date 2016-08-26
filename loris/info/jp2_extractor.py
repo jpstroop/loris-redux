@@ -1,10 +1,11 @@
 from collections import deque
 from io import open
-from loris.info.abstract_extractor import AbstractExtractor
-from loris.info.abstract_extractor import COLOR_QUALITIES
-from loris.info.abstract_extractor import GRAY_QUALITIES
-from loris.info.info_data import InfoData
 from math import ceil
+
+from loris.constants import WIDTH
+from loris.constants import HEIGHT
+from loris.info.abstract_extractor import AbstractExtractor
+from loris.info.info_data import InfoData
 
 class Jp2Extractor(AbstractExtractor):
     # Extracts a JPEG 2000 specific info for an image
@@ -30,9 +31,9 @@ class Jp2Extractor(AbstractExtractor):
             info_data.tiles = Jp2Extractor._format_tiles(metadata)
             level_sizes = Jp2Extractor._levels_to_sizes( \
                 metadata['levels'], info_data.width, info_data.height, \
-                max_size['width'], max_size['height'])
+                max_size[WIDTH], max_size[HEIGHT])
             # Don't include the full w/h again:
-            if max_size['width'] == info_data.width:
+            if max_size[WIDTH] == info_data.width:
                 info_data.sizes.extend(level_sizes[1:])
             else:
                 info_data.sizes.extend(level_sizes)
@@ -95,15 +96,15 @@ class Jp2Extractor(AbstractExtractor):
         # {(128, 128): [4, 8, 16, 32], (512, 512): [1], (256, 256): [2]}
         tiles = []
         for size in sorted(groups.keys(), reverse=True):
-            d = { 'width' : size[0], 'scaleFactors' : groups[size] }
-            if size[0] != size[1]: d['height'] = size[1]
+            d = { WIDTH : size[0], 'scaleFactors' : groups[size] }
+            if size[0] != size[1]: d[HEIGHT] = size[1]
             tiles.append(d)
         return tiles
 
     @staticmethod
     def _tiles_from_tiles(w , h, levels):
-        d = { 'width' : w, 'scaleFactors' : [2**l for l in range(0,6)] }
-        if w != h: d['height'] = h
+        d = { WIDTH : w, 'scaleFactors' : [2**l for l in range(0,6)] }
+        if w != h: d[HEIGHT] = h
         return [d]
 
 class Jp2Parser(object):

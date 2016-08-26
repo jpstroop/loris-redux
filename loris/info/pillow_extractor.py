@@ -1,10 +1,13 @@
-from loris.info.abstract_extractor import AbstractExtractor
-from loris.info.abstract_extractor import BITONAL_QUALITIES
-from loris.info.abstract_extractor import COLOR_QUALITIES
-from loris.info.abstract_extractor import GRAY_QUALITIES
-from loris.info.info_data import InfoData
 from math import ceil
 from PIL import Image
+
+from loris.constants import BITONAL_QUALITIES
+from loris.constants import COLOR_QUALITIES
+from loris.constants import GRAY_QUALITIES
+from loris.constants import WIDTH
+from loris.constants import HEIGHT
+from loris.info.abstract_extractor import AbstractExtractor
+from loris.info.info_data import InfoData
 
 MODES_TO_QUALITIES = {
     '1': BITONAL_QUALITIES,
@@ -43,10 +46,10 @@ class PillowExtractor(AbstractExtractor):
                 max_width=self.max_width, max_height=self.max_height)
         info_data.sizes = [ max_size ]
         if self.include_scale_factors:
-            tiles, sizes = self.level_zero_tiles_and_sizes(max_size['width'], \
-                max_size['height'], self.tile_w, self.tile_h)
+            tiles, sizes = self.level_zero_tiles_and_sizes(max_size[WIDTH], \
+                max_size[HEIGHT], self.tile_w, self.tile_h)
             info_data.tiles = tiles
-            if info_data.width == max_size['width']:
+            if info_data.width == max_size[WIDTH]:
                 info_data.sizes.extend(sizes[1:])
             else:
                 info_data.sizes.extend(sizes)

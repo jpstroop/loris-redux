@@ -1,9 +1,10 @@
-from loris.loris_app import LorisApp
-from loris.handlers.info_handler import InfoHandler
+import re
+
+from loris.compliance import Compliance
 from loris.handlers.identifier_handler import IdentifierHandler
 from loris.handlers.image_handler import ImageHandler
-from loris.compliance import Compliance
-import re
+from loris.handlers.info_handler import InfoHandler
+from loris.loris_app import LorisApp
 
 class FakeRouter(object):
 

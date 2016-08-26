@@ -1,13 +1,11 @@
+from loris.constants import ALL_QUALITIES
+from loris.constants import COLOR
+from loris.constants import DEFAULT
+from loris.constants import GRAY
+from loris.exceptions import FeatureNotEnabledException
 from loris.exceptions import RequestException
 from loris.exceptions import SyntaxException
-from loris.exceptions import FeatureNotEnabledException
 from loris.parameters.api import AbstractParameter
-
-DEFAULT = 'default'
-COLOR = 'color'
-GRAY = 'gray'
-BITONAL = 'bitonal'
-ALL = (DEFAULT, COLOR, GRAY, BITONAL)
 
 class QualityParameter(AbstractParameter):
     # TODO: leave room for compression extensions like dithered, default_low
@@ -18,7 +16,6 @@ class QualityParameter(AbstractParameter):
         self.qualities_available = qualities_available
         self.image_is_color = COLOR in qualities_available
         self._run_checks()
-
 
     @property
     def canonical(self):
@@ -37,7 +34,7 @@ class QualityParameter(AbstractParameter):
         self._check_feature_enabled()
 
     def _is_recognizable(self):
-        if self.uri_slice not in ALL:
+        if self.uri_slice not in ALL_QUALITIES:
             msg = 'Value "{0}" for quality is not recognized'
             raise SyntaxException(msg.format(self.uri_slice))
 
