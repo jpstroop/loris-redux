@@ -1,7 +1,6 @@
 from collections import OrderedDict
+from loris.constants import COMPLIANCE_PAGE
 import json
-
-COMPLIANCE_PAGE = 'http://iiif.io/api/image/2.1/compliance/#compliance'
 
 class _LorisException(Exception):
     def __init__(self, message, http_status_code):

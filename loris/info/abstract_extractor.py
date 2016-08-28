@@ -2,9 +2,12 @@ from abc import ABCMeta
 from abc import abstractmethod
 from math import ceil
 
-BITONAL_QUALITIES = ('bitonal',)
-COLOR_QUALITIES = ('bitonal', 'color', 'gray')
-GRAY_QUALITIES = ('bitonal', 'gray')
+from loris.constants import BITONAL_QUALITIES
+from loris.constants import COLOR_QUALITIES
+from loris.constants import GRAY_QUALITIES
+from loris.constants import HEIGHT
+from loris.constants import SCALE_FACTORS
+from loris.constants import WIDTH
 
 class AbstractExtractor(metaclass=ABCMeta):
     #
@@ -56,10 +59,10 @@ class AbstractExtractor(metaclass=ABCMeta):
 
     @staticmethod
     def _structure_tiles(w, h, scales):
-        d = { 'width' : w, 'scaleFactors' : scales }
-        if w != h: d['height'] = h
+        d = { WIDTH : w, SCALE_FACTORS : scales }
+        if w != h: d[HEIGHT] = h
         return [d]
 
     @classmethod
     def _structure_size(cls, w, h):
-        return { 'width' : w, 'height' : h }
+        return { WIDTH : w, HEIGHT : h }

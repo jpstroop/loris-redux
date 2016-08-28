@@ -1,12 +1,9 @@
+from loris.constants import PNG
+from loris.constants import ALL_OUTPUT_FORMATS
 from loris.exceptions import RequestException
 from loris.exceptions import SyntaxException
 from loris.exceptions import FeatureNotEnabledException
 from loris.parameters.api import AbstractParameter
-
-JPG = 'jpg'
-PNG = 'png'
-WEBP = 'webp'
-ALL = (JPG, PNG, WEBP)
 
 class FormatParameter(AbstractParameter):
 
@@ -21,7 +18,7 @@ class FormatParameter(AbstractParameter):
         return self._canonical
 
     def _run_checks(self):
-        if self.canonical not in ALL:
+        if self.canonical not in ALL_OUTPUT_FORMATS:
             msg = '{0} is not a recognized format'.format(self.canonical)
             raise SyntaxException(msg)
         if self.canonical == PNG and PNG not in self.enabled_features:

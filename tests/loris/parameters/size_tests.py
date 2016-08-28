@@ -1,13 +1,12 @@
-from decimal import Decimal
+from loris.constants import FULL
+from loris.exceptions import FeatureNotEnabledException
 from loris.exceptions import RequestException
 from loris.exceptions import SyntaxException
-from loris.exceptions import FeatureNotEnabledException
 from loris.parameters.size import SizeParameter
-from loris.parameters.size import FULL
-from loris.parameters.size import BY_PCT
-from unittest.mock import Mock
-import pytest
 
+from unittest.mock import Mock
+
+import pytest
 
 class TestSizeParameter(object):
 

@@ -1,10 +1,10 @@
 from collections import OrderedDict
 import json
 
-# TODO: replace w/ named tuple? 
-
-PROTOCOL = 'http://iiif.io/api/image'
-CONTEXT = 'http://iiif.io/api/image/2/context.json'
+from loris.constants import CONTEXT
+from loris.constants import PROTOCOL
+from loris.constants import WIDTH
+from loris.constants import HEIGHT
 
 class InfoData(object):
     # POPO for info.json

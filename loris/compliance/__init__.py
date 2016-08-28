@@ -1,11 +1,15 @@
 from loris.compliance.format import FormatCompliance
+from loris.compliance.helpers import ComparableMixin
 from loris.compliance.helpers import st
 from loris.compliance.http import HttpCompliance
 from loris.compliance.quality import QualityCompliance
 from loris.compliance.region import RegionCompliance
 from loris.compliance.rotation import RotationCompliance
 from loris.compliance.size import SizeCompliance
-from loris.compliance.helpers import ComparableMixin
+from loris.constants import COLOR
+from loris.constants import MAX_AREA
+from loris.constants import MAX_HEIGHT
+from loris.constants import MAX_WIDTH
 
 
 class Compliance(ComparableMixin):
@@ -86,7 +90,7 @@ class Compliance(ComparableMixin):
         d = { }
         qualities = self._quality.features
         if not kwargs.get('include_color', True):
-            qualities = tuple(filter(lambda q: q != 'color', qualities))
+            qualities = tuple(filter(lambda q: q != COLOR, qualities))
         if qualities:
             d['qualities'] = qualities
 
@@ -95,9 +99,9 @@ class Compliance(ComparableMixin):
         if self._format.features:
             d['formats'] = self._format.features
         if kwargs.get('max_area') is not None:
-            d['maxArea'] = kwargs['max_area']
+            d[MAX_AREA] = kwargs['max_area']
         if kwargs.get('max_width') is not None:
-            d['maxWidth'] = kwargs['max_width']
+            d[MAX_WIDTH] = kwargs['max_width']
         if kwargs.get('max_height') is not None:
-            d['maxHeight'] = kwargs['max_height']
+            d[MAX_HEIGHT] = kwargs['max_height']
         return ( self.uri, d )
