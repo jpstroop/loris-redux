@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from operator import methodcaller
 import json
 
 from loris.constants import CONTEXT
@@ -6,7 +7,7 @@ from loris.constants import PROTOCOL
 from loris.constants import WIDTH
 from loris.constants import HEIGHT
 
-class InfoData(object):
+class Info(object):
     # POPO for info.json
     __slots__ = (
         'identifier',
@@ -34,7 +35,7 @@ class InfoData(object):
         self._short_dim = None
 
     def __str__(self):
-        return json.dumps(self._to_dict())
+        return json.dumps(self.to_dict())
 
     def __repr__(self):
         return repr(self._to_dict())
@@ -51,7 +52,7 @@ class InfoData(object):
             self._short_dim =  min(self.width, self.height)
         return self._short_dim
 
-    def _to_dict(self):
+    def to_dict(self):
         d = OrderedDict()
         d['@context'] = CONTEXT
         d['@id'] = self.identifier
@@ -60,7 +61,7 @@ class InfoData(object):
         d['width'] = self.width
         d['height'] = self.height
         if self.tiles:
-            d['tiles'] = self.tiles
+            d['tiles'] =  list(map(methodcaller('to_dict'), sorted(self.tiles)))
         if self.sizes:
-            d['sizes'] = self.sizes
+            d['sizes'] = list(map(methodcaller('to_dict'), sorted(self.sizes)))
         return d

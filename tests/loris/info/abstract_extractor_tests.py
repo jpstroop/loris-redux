@@ -30,25 +30,25 @@ class TestAbstractExtractor(object):
         w = 3000
         h = 2000
         size_entry = ValidExtractor.max_size(w, h, max_area=max_area)
-        assert size_entry['width'] * size_entry['height'] < max_area
-        assert size_entry['width'] == 2449
-        assert size_entry['height'] == 1633
+        assert size_entry.width * size_entry.height < max_area
+        assert size_entry.width == 2449
+        assert size_entry.height == 1633
 
     def test_max_size_w_only(self):
         max_width = 2760
         w = 3000
         h = 2000
         size_entry = ValidExtractor.max_size(w, h, max_width=max_width)
-        assert size_entry['width'] == 2760
-        assert size_entry['height'] == 1840
+        assert size_entry.width == 2760
+        assert size_entry.height == 1840
 
     def test_max_size_h_only(self):
         max_height = 1000
         w = 3400
         h = 2254
         size_entry = ValidExtractor.max_size(w, h, max_height=max_height)
-        assert size_entry['width'] == 1508
-        assert size_entry['height'] == 1000
+        assert size_entry.width == 1508
+        assert size_entry.height == 1000
 
     def test_max_all_the_things(self):
         max_area = 4000000
@@ -57,12 +57,12 @@ class TestAbstractExtractor(object):
         w = 6000
         h = 3798
         size_entry = ValidExtractor.max_size(w, h, max_area=max_area, max_width=max_width, max_height=max_height)
-        assert size_entry['width'] == 1500
-        assert size_entry['height'] == 950
+        assert size_entry.width == 1500
+        assert size_entry.height == 950
 
     def test_max_none_set(self):
         w = 6000
         h = 3798
         size_entry = ValidExtractor.max_size(w, h)
-        assert size_entry['width'] == w
-        assert size_entry['height'] == h
+        assert size_entry.width == w
+        assert size_entry.height == h

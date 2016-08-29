@@ -19,33 +19,33 @@ class TestJp2Extractor(object):
 
     def test_precinct_tiles(self, compliance_2, precincts_jp2, app_configs):
         info = init_and_extract(precincts_jp2, compliance_2, app_configs)
-        assert info.tiles[0]['width'] == 512
-        assert info.tiles[0]['scaleFactors'] == [1]
-        assert info.tiles[1]['width'] == 256
-        assert info.tiles[1]['scaleFactors'] == [2]
-        assert info.tiles[2]['width'] == 128
-        assert info.tiles[2]['scaleFactors'] == [4, 8, 16, 32]
+        assert info.tiles[0].width == 512
+        assert info.tiles[0].scale_factors == [1]
+        assert info.tiles[1].width == 256
+        assert info.tiles[1].scale_factors == [2]
+        assert info.tiles[2].width == 128
+        assert info.tiles[2].scale_factors == [4, 8, 16, 32]
 
     def test_tiled_tiles(self, compliance_2, tiled_jp2, app_configs):
         info = init_and_extract(tiled_jp2, compliance_2, app_configs)
-        assert info.tiles[0]['width'] == 256
-        assert info.tiles[0]['scaleFactors'] == [1, 2, 4, 8, 16, 32]
+        assert info.tiles[0].width == 256
+        assert info.tiles[0].scale_factors == [1, 2, 4, 8, 16, 32]
 
     def test_sizes_no_max(self, compliance_2, tiled_jp2, app_configs):
         app_configs['max_area'] = None
         info = init_and_extract(tiled_jp2, compliance_2, app_configs)
-        assert info.sizes[0]['width'] == 5906
-        assert info.sizes[0]['height'] == 7200
-        assert info.sizes[1]['width'] == 2953
-        assert info.sizes[1]['height'] == 3600
-        assert info.sizes[2]['width'] == 1477
-        assert info.sizes[2]['height'] == 1800
-        assert info.sizes[3]['width'] == 739
-        assert info.sizes[3]['height'] == 900
-        assert info.sizes[4]['width'] == 370
-        assert info.sizes[4]['height'] == 450
-        assert info.sizes[5]['width'] == 185
-        assert info.sizes[5]['height'] == 225
+        assert info.sizes[0].width == 5906
+        assert info.sizes[0].height == 7200
+        assert info.sizes[1].width == 2953
+        assert info.sizes[1].height == 3600
+        assert info.sizes[2].width == 1477
+        assert info.sizes[2].height == 1800
+        assert info.sizes[3].width == 739
+        assert info.sizes[3].height == 900
+        assert info.sizes[4].width == 370
+        assert info.sizes[4].height == 450
+        assert info.sizes[5].width == 185
+        assert info.sizes[5].height == 225
 
     def test_profile_with_color(self, compliance_2, tiled_jp2, app_configs):
         info = init_and_extract(tiled_jp2, compliance_2, app_configs)
@@ -57,18 +57,18 @@ class TestJp2Extractor(object):
 
     def test_sizes_respects_max(self, compliance_2, tiled_jp2, app_configs):
         info = init_and_extract(tiled_jp2, compliance_2, app_configs)
-        assert info.sizes[0]['width'] == 3623
-        assert info.sizes[0]['height'] == 4417
-        assert info.sizes[1]['width'] == 2953
-        assert info.sizes[1]['height'] == 3600
-        assert info.sizes[2]['width'] == 1477
-        assert info.sizes[2]['height'] == 1800
-        assert info.sizes[3]['width'] == 739
-        assert info.sizes[3]['height'] == 900
-        assert info.sizes[4]['width'] == 370
-        assert info.sizes[4]['height'] == 450
-        assert info.sizes[5]['width'] == 185
-        assert info.sizes[5]['height'] == 225
+        assert info.sizes[0].width == 3623
+        assert info.sizes[0].height == 4417
+        assert info.sizes[1].width == 2953
+        assert info.sizes[1].height == 3600
+        assert info.sizes[2].width == 1477
+        assert info.sizes[2].height == 1800
+        assert info.sizes[3].width == 739
+        assert info.sizes[3].height == 900
+        assert info.sizes[4].width == 370
+        assert info.sizes[4].height == 450
+        assert info.sizes[5].width == 185
+        assert info.sizes[5].height == 225
 
     def test_profile_includes_max_area(self, compliance_2, tiled_jp2, app_configs):
         info = init_and_extract(tiled_jp2, compliance_2, app_configs)
@@ -92,15 +92,15 @@ class TestJp2Extractor(object):
         app_configs['max_width'] = None
         app_configs['max_height'] = None
         info = init_and_extract(tiled_jp2, compliance_0, app_configs)
-        assert info.sizes[0]['width'] == 5906
-        assert info.sizes[0]['height'] == 7200
+        assert info.sizes[0].width == 5906
+        assert info.sizes[0].height == 7200
         with pytest.raises(IndexError):
             _ = info.sizes[1]
 
     def test_max_size_included_in_sizes_at_l0(self, compliance_0, tiled_jp2, app_configs):
         info = init_and_extract(tiled_jp2, compliance_0, app_configs)
-        assert info.sizes[0]['width'] == 3623
-        assert info.sizes[0]['height'] == 4417
+        assert info.sizes[0].width == 3623
+        assert info.sizes[0].height == 4417
         with pytest.raises(IndexError):
             _ = info.sizes[1]
 

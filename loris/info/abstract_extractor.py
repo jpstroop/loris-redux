@@ -5,9 +5,7 @@ from math import ceil
 from loris.constants import BITONAL_QUALITIES
 from loris.constants import COLOR_QUALITIES
 from loris.constants import GRAY_QUALITIES
-from loris.constants import HEIGHT
-from loris.constants import SCALE_FACTORS
-from loris.constants import WIDTH
+from loris.info.structs.size import Size
 
 class AbstractExtractor(metaclass=ABCMeta):
     #
@@ -31,7 +29,7 @@ class AbstractExtractor(metaclass=ABCMeta):
 
     @abstractmethod
     def extract(self, path, http_identifier):  # pragma: no cover
-        # Must return a loris.info.data.InfoData object.
+        # Must return a loris.info.data.Info object.
         return
 
     @classmethod
@@ -47,7 +45,7 @@ class AbstractExtractor(metaclass=ABCMeta):
         if max_height and max_height < h:
             scale = max_height / image_height
             w, h = cls._scale_wh(scale, image_width, image_height)
-        return cls._structure_size(w, h)
+        return Size(w, h)
 
     @classmethod
     def _scale_wh(cls, scale, width, height):
@@ -56,13 +54,3 @@ class AbstractExtractor(metaclass=ABCMeta):
     @staticmethod
     def _scale_dim(dim, scale):
         return int(dim * scale + 0.5)
-
-    @staticmethod
-    def _structure_tiles(w, h, scales):
-        d = { WIDTH : w, SCALE_FACTORS : scales }
-        if w != h: d[HEIGHT] = h
-        return [d]
-
-    @classmethod
-    def _structure_size(cls, w, h):
-        return { WIDTH : w, HEIGHT : h }
