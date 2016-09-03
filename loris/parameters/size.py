@@ -4,7 +4,6 @@ import re
 
 from loris.constants import DECIMAL_ONE_HUNDRED
 from loris.constants import FULL
-from loris.constants import HEIGHT
 from loris.constants import MAX
 from loris.constants import MAX_AREA
 from loris.constants import MAX_HEIGHT
@@ -16,14 +15,14 @@ from loris.constants import SIZE_BY_H
 from loris.constants import SIZE_BY_PCT
 from loris.constants import SIZE_BY_W
 from loris.constants import SIZE_BY_WH
-from loris.constants import WIDTH
+from loris.exceptions import FeatureNotEnabledException
 from loris.exceptions import RequestException
 from loris.exceptions import SyntaxException
-from loris.exceptions import FeatureNotEnabledException
+from loris.info.structs.size import Size
 from loris.parameters.api import AbstractParameter
 
 # Maximum approximation error between the original dimensions and smaller
-# requests before we consider a w,h request THAT IS NOT THE SIZES LIST
+# requests before we consider a w, h request THAT IS NOT THE SIZES LIST
 # to be 'sizeByDistortedWh'...
 MAX_WH_ERROR = 0.01
 # E.g.:
@@ -54,16 +53,16 @@ CONFINED_REGEX = re.compile(r'^!\d+,\d+$')
 
 class SizeParameter(AbstractParameter):
 
-    def __init__(self, uri_slice, enabled_features, info_data, region_w, region_h):
+    def __init__(self, uri_slice, enabled_features, info, region_w, region_h):
         super().__init__(uri_slice, enabled_features)
-        self.info_data = info_data
+        self.info = info
         self.region_w = region_w
         self.region_h = region_h
         self.width = None
         self.height = None
-        self.max_width = self.info_data.profile[1].get(MAX_WIDTH)
-        self.max_height = self.info_data.profile[1].get(MAX_HEIGHT)
-        self.max_area = self.info_data.profile[1].get(MAX_AREA)
+        self.max_width = self.info.profile[1].get(MAX_WIDTH)
+        self.max_height = self.info.profile[1].get(MAX_HEIGHT)
+        self.max_area = self.info.profile[1].get(MAX_AREA)
         self._request_type = None
         self._distort_aspect = False
 
@@ -129,7 +128,7 @@ class SizeParameter(AbstractParameter):
         if re.match(H_REGEX, self.uri_slice):
             return SIZE_BY_H
         if re.match(WH_REGEX, self.uri_slice):
-            if SizeParameter._is_distorted(self.uri_slice, self.info_data):
+            if SizeParameter._is_distorted(self.uri_slice, self.info):
                 return SIZE_BY_DISTORTED_WH
             else:
                 return SIZE_BY_WH
@@ -141,17 +140,13 @@ class SizeParameter(AbstractParameter):
         raise SyntaxException(msg)
 
     @staticmethod
-    def _is_distorted(uri_slice, info_data):
+    def _is_distorted(uri_slice, info):
         # static and passing vals so that we can test this method in isolation
         w, h = map(int, uri_slice.split(','))
-        try:
-            if { WIDTH : w, HEIGHT : h } in info_data.sizes:
-                return False
-        except TypeError:
-             # raised w/ unhashable type: 'dict' if we have exactly one size
-             pass
+        if Size(w, h) in info.sizes:
+            return False
         else:
-            aspect = info_data.long_dim / info_data.short_dim
+            aspect = info.long_dim / info.short_dim
             request_aspect = max(w, h) / min(w, h)
             # we have to account for sizeAboveFull
             larger_aspect = max(aspect, request_aspect)
@@ -162,7 +157,6 @@ class SizeParameter(AbstractParameter):
         if self.region_w == self.width and self.region_h == self.height:
             self._request_type = FULL
             self._canonical = FULL
-
 
     def _init_full_request(self):
         self.width = self.region_w
@@ -255,18 +249,18 @@ class SizeParameter(AbstractParameter):
             raise RequestException(msg.format(self.height, self.max_height))
 
     def _allowed_level0_size_request(self):
-        if self.info_data.tiles:
-            image_width = self.info_data.width
-            image_height = self.info_data.height
-            tile_width = self.info_data.tiles[0][WIDTH]
-            tile_height = self.info_data.tiles[0].get(HEIGHT, tile_width)
+        if self.info.tiles:
+            image_width = self.info.width
+            image_height = self.info.height
+            tile_width = self.info.tiles[0].width
+            tile_height = self.info.tiles[0].height
             right_col_width = image_width % tile_width
-            bottom_row_height = self.info_data.height % tile_height
+            bottom_row_height = self.info.height % tile_height
             tile_requirements = (
                 self.width in (tile_width, right_col_width),
                 self.height in (tile_height, bottom_row_height)
             )
-            size = { WIDTH : self.width, HEIGHT : self.height }
-            return all(tile_requirements) or size in self.info_data.sizes
+            size = Size(self.width, self.height)
+            return all(tile_requirements) or size in self.info.sizes
         else:
             return False

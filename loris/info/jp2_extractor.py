@@ -2,10 +2,10 @@ from collections import deque
 from io import open
 from math import ceil
 
-from loris.constants import WIDTH
-from loris.constants import HEIGHT
 from loris.info.abstract_extractor import AbstractExtractor
-from loris.info.info_data import InfoData
+from loris.info.structs.info import Info
+from loris.info.structs.size import Size
+from loris.info.structs.tile import Tile
 
 class Jp2Extractor(AbstractExtractor):
     # Extracts a JPEG 2000 specific info for an image
@@ -16,30 +16,30 @@ class Jp2Extractor(AbstractExtractor):
 
     def extract(self, path, http_identifier):
         metadata = Jp2Parser(path).metadata
-        info_data = InfoData(self.compliance, http_identifier)
-        info_data.width = metadata['image_width']
-        info_data.height = metadata['image_height']
-        info_data.identifier = http_identifier
+        info = Info(self.compliance, http_identifier)
+        info.width = metadata['image_width']
+        info.height = metadata['image_height']
+        info.identifier = http_identifier
 
-        max_size = Jp2Extractor.max_size(info_data.width, \
-                info_data.height, max_area=self.max_area, \
+        max_size = Jp2Extractor.max_size(info.width, \
+                info.height, max_area=self.max_area, \
                 max_width=self.max_width, max_height=self.max_height)
 
-        info_data.sizes = [ max_size ]
+        info.sizes = [ max_size ]
 
         if self.include_tiles_and_sizes:
-            info_data.tiles = Jp2Extractor._format_tiles(metadata)
+            info.tiles = Jp2Extractor._format_tiles(metadata)
             level_sizes = Jp2Extractor._levels_to_sizes( \
-                metadata['levels'], info_data.width, info_data.height, \
-                max_size[WIDTH], max_size[HEIGHT])
+                metadata['levels'], info.width, info.height, \
+                max_size.width, max_size.height)
             # Don't include the full w/h again:
-            if max_size[WIDTH] == info_data.width:
-                info_data.sizes.extend(level_sizes[1:])
+            if max_size.width == info.width:
+                info.sizes.extend(level_sizes[1:])
             else:
-                info_data.sizes.extend(level_sizes)
+                info.sizes.extend(level_sizes)
 
-        info_data.profile = self._make_profile(metadata['is_color'])
-        return info_data
+        info.profile = self._make_profile(metadata['is_color'])
+        return info
 
     @property
     def include_tiles_and_sizes(self):
@@ -59,7 +59,7 @@ class Jp2Extractor(AbstractExtractor):
         sizes = []
         for _ in range(0, levels):
             if w <= max_w and h <= max_h:
-                sizes.append(Jp2Extractor._structure_size(w, h))
+                sizes.append(Size(w, h))
             # Kakadu uses the ceiling when the number of levels to discard
             # is passed as -reduce, i.e. Given an image that is 7200 x 5906:
             # kdu_expand -i my_img.jp2 -o out.bmp -reduce 3
@@ -76,36 +76,35 @@ class Jp2Extractor(AbstractExtractor):
     def _format_tiles(metadata):
         tiles = None
         if 'precincts' in metadata:
-             tiles = Jp2Extractor._tiles_from_precincts(metadata['precincts'])
+             tiles = Jp2Extractor._tiles_from_jp2_precincts(metadata['precincts'])
         elif 'tile_width' in metadata:
             w = metadata['tile_width']
             h = metadata['tile_height']
             l = metadata['levels']
-            tiles =  Jp2Extractor._tiles_from_tiles(w, h, l)
+            tiles =  Jp2Extractor._tiles_from_jp2_tiles(w, h, l)
         return tiles
 
     @staticmethod
-    def _tiles_from_precincts(precinct_list):
+    def _tiles_from_jp2_precincts(precinct_list):
         # this is just...gross. Starts w/:
         # ( (w,h), (w,h), (w,h), (w,h), (w,h), (w,h) ) sorted by level 1-n
         groups = {}
         for scale, size in [(2**i, e) for i, e in enumerate(precinct_list)]:
-            if size in groups: groups[size].append(scale)
-            else: groups[size] = [scale]
+            if size in groups:
+                groups[size].append(scale)
+            else:
+                groups[size] = [scale]
         # Now we have, e.g.:
         # {(128, 128): [4, 8, 16, 32], (512, 512): [1], (256, 256): [2]}
         tiles = []
         for size in sorted(groups.keys(), reverse=True):
-            d = { WIDTH : size[0], 'scaleFactors' : groups[size] }
-            if size[0] != size[1]: d[HEIGHT] = size[1]
-            tiles.append(d)
+            tiles.append(Tile(size[0], groups[size], size[1]))
         return tiles
 
     @staticmethod
-    def _tiles_from_tiles(w , h, levels):
-        d = { WIDTH : w, 'scaleFactors' : [2**l for l in range(0,6)] }
-        if w != h: d[HEIGHT] = h
-        return [d]
+    def _tiles_from_jp2_tiles(width , height, levels):
+        scale_factors = [ 2**l for l in range(0, levels) ]
+        return [ Tile(width, scale_factors, height) ]
 
 class Jp2Parser(object):
     # Getting metadata out of a jp2 is complex enough, without having to deal

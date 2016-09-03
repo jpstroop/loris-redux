@@ -3,6 +3,8 @@ from loris.exceptions import FeatureNotEnabledException
 from loris.exceptions import RequestException
 from loris.exceptions import SyntaxException
 from loris.parameters.size import SizeParameter
+from loris.info.structs.size import Size
+from loris.info.structs.tile import Tile
 
 from unittest.mock import Mock
 
@@ -13,7 +15,7 @@ class TestSizeParameter(object):
     def mock_info(self, width, height, **kwargs):
         long_dim = max(width, height)
         short_dim = min(width, height)
-        sizes = kwargs.get('sizes', [{ 'width': width, 'height': height }])
+        sizes = kwargs.get('sizes', [ Size(width, height) ])
         tiles = kwargs.get('tiles', None)
         profile = kwargs.get('profile', ['',{}])
         return Mock(width=width, height=height, long_dim=long_dim, \
@@ -32,10 +34,10 @@ class TestSizeParameter(object):
     def test__is_distorted_overridden_by_sizes(self):
         uri_slice = '1192,32'
         sizes = [
-            { 'width': 1192, 'height': 32 },
-            { 'width': 2383, 'height': 63 },
+            Size(1192, 32),
+            Size(2383, 63),
             # ...
-            { 'width': 76250, 'height': 2000 },
+            Size(76250, 2000)
         ]
         info_data = self.mock_info(152500, 4000, sizes=sizes)
         assert SizeParameter._is_distorted(uri_slice, info_data) is False
@@ -379,12 +381,10 @@ class TestSizeParameter(object):
             SizeParameter(uri_slice, features, info_data, region_w, region_h)
         assert "area (48000000) is greater" in re.value.message
 
-
-
     def test_can_get_tiles_without_sizeByW_if_allowed(self):
         uri_slice = '1024,'
         features = ()
-        tiles = [ { 'width' : 1024, 'scaleFactors' : [1, 2, 4, 8, 16] } ]
+        tiles = [ Tile(1024, [1, 2, 4, 8, 16] ) ]
         info_data = self.mock_info(8000, 6000, tiles=tiles)
         region_w, region_h = (1024, 1024)
         sp = SizeParameter(uri_slice, features, info_data, region_w, region_h)
@@ -394,7 +394,7 @@ class TestSizeParameter(object):
     def test_can_get_right_edge_tiles_without_sizeByW_if_allowed(self):
         uri_slice = '30,'
         features = ()
-        tiles = [ { 'width' : 1024, 'scaleFactors' : [1, 2, 4, 8, 16] } ]
+        tiles = [ Tile(1024, [1, 2, 4, 8, 16] ) ]
         info_data = self.mock_info(2078, 6000, tiles=tiles)
         region_w, region_h = (60, 2048)
         sp = SizeParameter(uri_slice, features, info_data, region_w, region_h)
@@ -404,7 +404,7 @@ class TestSizeParameter(object):
     def test_can_get_bottom_row_tiles_without_sizeByW_if_allowed(self):
         uri_slice = '1024,'
         features = ()
-        tiles = [ { 'width' : 1024, 'scaleFactors' : [1, 2, 4, 8, 16] } ]
+        tiles = [ Tile(1024, [1, 2, 4, 8, 16] ) ]
         info_data = self.mock_info(8000, 6000, tiles=tiles)
         region_w, region_h = (4096, 3520)
         sp = SizeParameter(uri_slice, features, info_data, region_w, region_h)
@@ -414,7 +414,7 @@ class TestSizeParameter(object):
     def test_normal_sizeByW_raises(self):
         uri_slice = '1025,' # off by one; could be arbirary
         features = ()
-        tiles = [ { 'width' : 1024, 'scaleFactors' : [1, 2, 4, 8, 16] } ]
+        tiles = [ Tile(1024, [1, 2, 4, 8, 16] ) ]
         info_data = self.mock_info(8000, 6000, tiles=tiles)
         region_w, region_h = (4096, 3520)
         with pytest.raises(FeatureNotEnabledException) as fe:
@@ -424,11 +424,11 @@ class TestSizeParameter(object):
     def test_can_get_small_sizes_without_sizeByW_if_allowed(self):
         uri_slice = '1000,'
         features = ()
-        tiles = [ { 'width' : 1024, 'scaleFactors' : [1, 2, 4, 8, 16] } ]
+        tiles = [ Tile(1024, [1, 2, 4, 8, 16] ) ]
         sizes = [
-            { 'width' : 1000, 'height' : 750 },
-            { 'width' : 500, 'height' : 375 },
-            { 'width' : 250, 'height' : 187 }
+            Size(1000, 750),
+            Size(500, 375),
+            Size(250, 187)
         ]
         info_data = self.mock_info(8000, 6000, sizes=sizes, tiles=tiles)
         region_w, region_h = (8000, 6000)

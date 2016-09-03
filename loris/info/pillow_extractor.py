@@ -4,10 +4,10 @@ from PIL import Image
 from loris.constants import BITONAL_QUALITIES
 from loris.constants import COLOR_QUALITIES
 from loris.constants import GRAY_QUALITIES
-from loris.constants import WIDTH
-from loris.constants import HEIGHT
 from loris.info.abstract_extractor import AbstractExtractor
-from loris.info.info_data import InfoData
+from loris.info.structs.info import Info
+from loris.info.structs.size import Size
+from loris.info.structs.tile import Tile
 
 MODES_TO_QUALITIES = {
     '1': BITONAL_QUALITIES,
@@ -37,23 +37,23 @@ class PillowExtractor(AbstractExtractor):
             self.tile_h = sf['tile_height']
 
     def extract(self, path, http_identifier):
-        info_data = InfoData(self.compliance, http_identifier)
+        info = Info(self.compliance, http_identifier)
         pillow_image = Image.open(path)
         w, h = pillow_image.size
-        info_data.width, info_data.height = (w, h)
-        info_data.profile = self._make_profile(pillow_image)
+        info.width, info.height = (w, h)
+        info.profile = self._make_profile(pillow_image)
         max_size = PillowExtractor.max_size(w, h, max_area=self.max_area, \
                 max_width=self.max_width, max_height=self.max_height)
-        info_data.sizes = [ max_size ]
+        info.sizes = [ max_size ]
         if self.include_scale_factors:
-            tiles, sizes = self.level_zero_tiles_and_sizes(max_size[WIDTH], \
-                max_size[HEIGHT], self.tile_w, self.tile_h)
-            info_data.tiles = tiles
-            if info_data.width == max_size[WIDTH]:
-                info_data.sizes.extend(sizes[1:])
+            tiles, sizes = self.level_zero_tiles_and_sizes(max_size.width, \
+                max_size.height, self.tile_w, self.tile_h)
+            info.tiles = tiles
+            if info.width == max_size.width:
+                info.sizes.extend(sizes[1:])
             else:
-                info_data.sizes.extend(sizes)
-        return info_data
+                info.sizes.extend(sizes)
+        return info
 
     @staticmethod
     def is_color(pillow_image):
@@ -65,7 +65,7 @@ class PillowExtractor(AbstractExtractor):
         # Always a chance that the default tile size is larger than the image:
         smallest_scale = 1
         if tiles is not None:
-            smallest_scale = tiles[0]['scaleFactors'][-1]
+            smallest_scale = tiles[0].scale_factors[-1]
         sizes = PillowExtractor._level_zero_sizes(smallest_scale, image_w, image_h)
         return (tiles, sizes)
 
@@ -79,19 +79,19 @@ class PillowExtractor(AbstractExtractor):
             if (long_image_dimenson / nxt) > long_tile_dimenson:
                 scales.append(nxt)
             else:
-                return cls._structure_tiles(tile_w, tile_h, scales)
+                return [Tile(tile_w, scales, tile_h)]
 
     @classmethod
     def _level_zero_sizes(cls, smallest_scale_factor, image_w, image_h):
         sizes = [ ]
         scale = smallest_scale_factor
-        w = ceil(image_w / scale)
-        h = ceil(image_h / scale)
-        while any([d != 1 for d in (w,h)]):
-            sizes.append(cls._structure_size(w, h))
+        size_w = ceil(image_w / scale)
+        size_h = ceil(image_h / scale)
+        while any([d != 1 for d in (size_w, size_h)]):
+            sizes.append(Size(size_w, size_h))
             scale = scale*2
-            w = ceil(image_w / scale)
-            h = ceil(image_h / scale)
+            size_w = ceil(image_w / scale)
+            size_h = ceil(image_h / scale)
         return sizes
 
     def _make_profile(self, pillow_image):
