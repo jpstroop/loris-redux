@@ -250,11 +250,9 @@ class SizeParameter(AbstractParameter):
 
     def _allowed_level0_size_request(self):
         if self.info.tiles:
-            image_width = self.info.width
-            image_height = self.info.height
             tile_width = self.info.tiles[0].width
             tile_height = self.info.tiles[0].height
-            right_col_width = image_width % tile_width
+            right_col_width = self.info.width % tile_width
             bottom_row_height = self.info.height % tile_height
             tile_requirements = (
                 self.width in (tile_width, right_col_width),

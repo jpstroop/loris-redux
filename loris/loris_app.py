@@ -21,7 +21,8 @@ class LorisApp(object):
         # one should call LorisApp.create_tornado_application(), which will
         # initialize and configure the application.
         cfg_dict = self._load_config_files()
-        _ = self._configure_logging(cfg_dict['logging'])
+        self.debug = debug
+        self._configure_logging(cfg_dict['logging'])
         self.compliance = self._init_compliance(cfg_dict['iiif_features'])
         self.app_configs = cfg_dict['application']
         self.extractors = self._init_extractors()
@@ -106,18 +107,17 @@ class LorisApp(object):
             # TODO: favicon
         )
 
-    @staticmethod
-    def _run_in_debug():  # pragma: no cover
-        debug = False
-        try:
-            debug = sys.argv[1] == 'debug'
-            print('Running in debug mode')
-        except IndexError:
-            pass
-        return debug
+def check_debug():  # pragma: no cover
+    debug = False
+    try:
+        debug = sys.argv[1] == 'debug'
+        print('Running in debug mode')
+    except IndexError:
+        pass
+    return debug
 
 def create_tornado_application():
-    debug_bool = LorisApp._run_in_debug()
+    debug_bool = check_debug()
     loris_app = LorisApp()
     # See http://www.tornadoweb.org/en/stable/web.html#tornado.web.Application.settings
     return Application(loris_app.routes, debug=debug_bool)

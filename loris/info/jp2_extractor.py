@@ -1,5 +1,4 @@
 from collections import deque
-from io import open
 from math import ceil
 
 from loris.info.abstract_extractor import AbstractExtractor
@@ -210,7 +209,7 @@ class Jp2Parser(object):
                 # you'd expect, which is confusing. Instead we reverse so that
                 # the list 2**index is the scale factor
                 info['precincts'] = []
-                for level in range(0, info['levels']):
+                for _ in range(0, info['levels']):
                     info['precincts'].append(Jp2Parser.read_precint_wh(jp2))
                 info['precincts'].reverse()
         return info

@@ -16,7 +16,7 @@ class AbstractTranscoder(metaclass=ABCMeta):
     def __init__(self, config={}):
         self.__dict__ = { **self.__dict__, **config }
         # see https://docs.python.org/dev/whatsnew/3.5.html#pep-448-additional-unpacking-generalizations
-        logger.debug('Initialized %s.%s' % (__name__, self.__class__.__name__))
+        logger.debug('Initialized %s.%s', __name__, self.__class__.__name__)
 
     @abstractmethod
     def transcode(self, src_file_path, target_file_path, image_request):  # pragma: no cover

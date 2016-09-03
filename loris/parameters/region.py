@@ -180,7 +180,7 @@ class RegionParameter(AbstractParameter):
         try:
             if self._request_type not in self.enabled_features:
                 raise FeatureNotEnabledException(self._request_type)
-        except FeatureNotEnabledException as fe:
+        except FeatureNotEnabledException:
             # If app configs allow for a set of tiles / sizes this will be in
             # info_data. We check scale factors in the SizeParameter
             if self._allowed_level0_tile_request():
