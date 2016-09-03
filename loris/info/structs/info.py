@@ -4,8 +4,6 @@ import json
 
 from loris.constants import CONTEXT
 from loris.constants import PROTOCOL
-from loris.constants import WIDTH
-from loris.constants import HEIGHT
 
 class Info(object):
     # POPO for info.json

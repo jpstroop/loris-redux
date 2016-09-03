@@ -3,7 +3,6 @@ from loris.exceptions import UnsupportedFormat
 from loris.helpers.classproperty import classproperty
 from loris.helpers.safe_lru_dict import SafeLruDict
 from magic import from_file
-from loris.helpers.classproperty import classproperty
 
 logger = getLogger('loris')
 
