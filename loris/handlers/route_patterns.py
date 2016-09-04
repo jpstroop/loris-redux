@@ -1,6 +1,9 @@
 # When compiled, these regexes are just enough to route to the proper
 # Handler. The Parameter classes will take care of parsing the arguments and
 # making sure they're valid.
+
+# TODO: These should be static. Constantize formats.
+
 def image_route_pattern(formats=('jpg','png','webp')):
     path_parts = (
         r'/([^/#?@]+)', # identifier

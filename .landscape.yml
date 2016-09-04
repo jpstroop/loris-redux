@@ -1,2 +1,6 @@
 python-targets:
   - 3
+
+pep8:
+  disable:
+    - E116 # Bad indentation of comments
