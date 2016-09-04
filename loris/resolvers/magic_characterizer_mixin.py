@@ -9,10 +9,10 @@ logger = getLogger('loris')
 class MagicCharacterizerMixin(object):
 
     supported_formats = {
-        b'image/jpeg' : 'jpg',
-        b'image/png' : 'png',
-        b'image/tiff' : 'tif',
-        b'image/jp2' : 'jp2'
+        'image/jpeg' : 'jpg',
+        'image/png' : 'png',
+        'image/tiff' : 'tif',
+        'image/jp2' : 'jp2'
         # TODO: jpf?
     }
 

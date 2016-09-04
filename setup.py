@@ -53,12 +53,12 @@ setup(
     cmdclass = {'test': PyTest},
     setup_requires=[ ],
     tests_require=[
-        'pytest==2.9.1',
-        'requests==2.10.0'
+        'pytest==3.0.2'
     ],
     install_requires=[
-        'Pillow>=3.2.0',
-        'tornado>=4.3',
-        'python-magic>=0.4.11'
+        'Pillow==3.3.1',
+        'python-magic==0.4.12',
+        'requests==2.11.1',
+        'tornado==4.4.1'
     ]
 )
