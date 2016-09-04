@@ -22,4 +22,4 @@ class InfoHandler(RequestHandler):
 
     def get(self, identifier):
         self.write('InfoHandler: ' + identifier)
-        self.write('Compliance URI: ' + self.compliance.compliance_uri)
+        self.write('Compliance URI: ' + self.compliance.uri)

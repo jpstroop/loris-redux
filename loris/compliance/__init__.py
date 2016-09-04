@@ -33,12 +33,12 @@ class Compliance(ComparableMixin):
     )
 
     def __init__(self, config):
-        self._format = FormatCompliance(config['formats'])
-        self._http = HttpCompliance(config['http'])
-        self._quality = QualityCompliance(config['quality'])
-        self._region = RegionCompliance(config['region'])
-        self._rotation = RotationCompliance(config['rotation'])
-        self._size = SizeCompliance(config['size'])
+        self.format = FormatCompliance(config['formats'])
+        self.http = HttpCompliance(config['http'])
+        self.quality = QualityCompliance(config['quality'])
+        self.region = RegionCompliance(config['region'])
+        self.rotation = RotationCompliance(config['rotation'])
+        self.size = SizeCompliance(config['size'])
 
         self._additional_features = None
         self._int = None
@@ -47,8 +47,8 @@ class Compliance(ComparableMixin):
     # make it possible to do int(self), and do comparisons
     def __int__(self):
         if self._int is None:
-            ints = map(int, (self._format, self._http, self._quality,
-                self._region, self._rotation, self._size) )
+            ints = map(int, (self.format, self.http, self.quality,
+                self.region, self.rotation, self.size) )
             self._int = min(ints)
         return self._int
 
@@ -63,10 +63,10 @@ class Compliance(ComparableMixin):
         # Note that formats and qualities aren't 'features' and are always
         # listed explicitly in the profile (other that jpg and default)
         return st(
-            self._http.features +
-            self._region.features +
-            self._rotation.features +
-            self._size.features
+            self.http.features +
+            self.region.features +
+            self.rotation.features +
+            self.size.features
         )
 
     @property
@@ -88,7 +88,7 @@ class Compliance(ComparableMixin):
         # Pass include_color=False if the source image is grayscale. Can also
         # pass max_area, max_width, and max_height
         d = { }
-        qualities = self._quality.features
+        qualities = self.quality.features
         if not kwargs.get('include_color', True):
             qualities = tuple(filter(lambda q: q != COLOR, qualities))
         if qualities:
@@ -96,8 +96,8 @@ class Compliance(ComparableMixin):
 
         if self.additional_features:
             d['supports'] = self.additional_features
-        if self._format.features:
-            d['formats'] = self._format.features
+        if self.format.features:
+            d['formats'] = self.format.features
         if kwargs.get('max_area') is not None:
             d[MAX_AREA] = kwargs['max_area']
         if kwargs.get('max_width') is not None:

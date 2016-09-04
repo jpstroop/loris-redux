@@ -53,11 +53,12 @@ CONFINED_REGEX = re.compile(r'^!\d+,\d+$')
 
 class SizeParameter(AbstractParameter):
 
-    def __init__(self, uri_slice, enabled_features, info, region_w, region_h):
+    def __init__(self, uri_slice, enabled_features, info, region_param):
         super().__init__(uri_slice, enabled_features)
         self.info = info
-        self.region_w = region_w
-        self.region_h = region_h
+        # TODO: START HERE: size init args have changed
+        self.region_w = region_param.pixel_w
+        self.region_h = region_param.pixel_h
         self.width = None
         self.height = None
         self.max_width = self.info.profile[1].get(MAX_WIDTH)

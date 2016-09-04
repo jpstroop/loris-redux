@@ -19,6 +19,6 @@ class AbstractTranscoder(metaclass=ABCMeta):
         logger.debug('Initialized %s.%s', __name__, self.__class__.__name__)
 
     @abstractmethod
-    def transcode(self, src_file_path, target_file_path, image_request):  # pragma: no cover
+    def execute(self, image_request):  # pragma: no cover
         # TODO: target_file_path could change or go away since we're not caching
         return
