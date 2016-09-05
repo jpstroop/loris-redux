@@ -4,7 +4,6 @@ from loris.parameters.region import RegionParameter
 from loris.parameters.rotation import RotationParameter
 from loris.parameters.size import SizeParameter
 from hashlib import sha1
-from operator import methodcaller
 from os import stat
 
 class ImageRequest(object):
