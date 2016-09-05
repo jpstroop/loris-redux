@@ -8,7 +8,7 @@ class TestPillowDerivativeMixin(object):
         class MyTranscoder(AbstractTranscoder, PillowDerviativeMixin):
             def __init__(self, config):
                 super(MyTranscoder, self).__init__(config)
-            def transcode(self):
+            def execute(self, image_request):
                 return None # for now
 
         transcoder = MyTranscoder({})

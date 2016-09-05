@@ -76,7 +76,7 @@ class RegionParameter(AbstractParameter):
         self._adjust_if_actually_full()
 
     def _deduce_request_type(self):
-        if self.uri_slice is FULL:
+        if self.uri_slice == FULL:
             return FULL
         elif self.uri_slice == SQUARE:
             return REGION_SQUARE

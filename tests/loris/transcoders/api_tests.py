@@ -4,7 +4,7 @@ import pytest
 class ProperImpl(AbstractTranscoder):
     def __init__(self, config):
         super(ProperImpl, self).__init__(config)
-    def transcode(self):
+    def execute(self):
         return None # for now
 
 class TestAbstractTranscoder(object):
@@ -20,7 +20,7 @@ class TestAbstractTranscoder(object):
     def test_no_need_to_impl_init(self):
         # though you'll probably almost always want to
         class NoInitImpl(AbstractTranscoder):
-            def transcode(self):
+            def execute(self, image_request):
                 return None # for now
         transcoder = NoInitImpl()
 

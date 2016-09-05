@@ -10,11 +10,10 @@ from loris.parameters.api import AbstractParameter
 class QualityParameter(AbstractParameter):
     # TODO: leave room for compression extensions like dithered, default_low
 
-    def __init__(self, uri_slice, enabled_features, qualities_available):
+    def __init__(self, uri_slice, enabled_features, info):
         super().__init__(uri_slice, enabled_features)
-        self._default_conditions = None
-        self.qualities_available = qualities_available
-        self.image_is_color = COLOR in qualities_available
+        self.qualities_available = info.profile[1]['qualities'] + (DEFAULT,)
+        self.image_is_color = COLOR in self.qualities_available
         self._run_checks()
 
     @property
@@ -41,8 +40,10 @@ class QualityParameter(AbstractParameter):
     def _check_quality_available(self):
         if self.uri_slice not in self.qualities_available:
             msg = '{0} quality is not available for this image'
-            raise RequestException(msg.format(self.self.uri_slice))
+            raise RequestException(msg.format(self.uri_slice))
 
     def _check_feature_enabled(self):
+        if self.uri_slice == DEFAULT:
+            return
         if self.uri_slice not in self.enabled_features:
             raise FeatureNotEnabledException(self.uri_slice)

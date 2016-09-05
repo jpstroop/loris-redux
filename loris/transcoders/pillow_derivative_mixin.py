@@ -10,14 +10,13 @@ class PillowDerviativeMixin(object):
     # to write a Transcoder that encodes w/ another library, e.g. VIPS.
 
     # TODO: move and refactor code from Loris. The idea is that, e.g. any
-    # Transcoder would subclass loris.transcoders.api.AbstractTranscoder
+    # Transcoder could subclass loris.transcoders.api.AbstractTranscoder
     # and this.
     # TODO: test coverage
-    # TODO: target_fp may change or go away (return bytes?) since we're
     # not caching.
     # See: http://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image.tobytes
     # and: http://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image.save
-    def derive(self, pil_im, target_path, image_request, rotate=True, crop=True):
+    def derive(self, pil_im, image_request, rotate=True, crop=True):
         '''
         Once you have a PIL.Image, this can be used to do the IIIF operations.
 
