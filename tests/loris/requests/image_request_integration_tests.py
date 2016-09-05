@@ -20,3 +20,13 @@ class TestImageRequest(object):
         iiif_params = 'full/max/0/default.jpg'
         request = self.stage_request(iiif_params, compliance_2, tiled_jp2, app_configs)
         assert request.canonical == 'full/3622,/0/default.jpg'
+
+    def test_etag(self, compliance_2, tiled_jp2, app_configs):
+        # Warning: etag could change if we update the test jp2 in any way, so
+        # instead we're testing whether two equivalent requests yield the same
+        # etag
+        params1 = 'full/max/0/default.jpg'
+        request1 = self.stage_request(params1, compliance_2, tiled_jp2, app_configs)
+        params2 = 'full/3622,/0/default.jpg'
+        request2 = self.stage_request(params2, compliance_2, tiled_jp2, app_configs)
+        assert request2.etag == request1.etag

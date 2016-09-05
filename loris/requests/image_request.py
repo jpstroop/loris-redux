@@ -3,7 +3,9 @@ from loris.parameters.quality import QualityParameter
 from loris.parameters.region import RegionParameter
 from loris.parameters.rotation import RotationParameter
 from loris.parameters.size import SizeParameter
+from hashlib import sha1
 from operator import methodcaller
+from os import stat
 
 class ImageRequest(object):
     __slots__ = (
@@ -15,7 +17,9 @@ class ImageRequest(object):
         'rotation_param',
         'quality_param',
         'format_param',
-        '_canonical'
+        '_canonical',
+        '_etag'
+
     )
 
     def __init__(self, file_path, iiif_params, compliance, info):
@@ -31,6 +35,7 @@ class ImageRequest(object):
         self.quality_param = self._init_quality(quality_s)
         self.format_param = self._init_format(format_s)
         self._canonical = None
+        self._etag = None
 
     @property
     def canonical(self):
@@ -45,6 +50,13 @@ class ImageRequest(object):
             self._canonical = '{0}.{1}'.format(path, self.format_param.canonical)
         return self._canonical
 
+    @property # TODO: info requests might be able to use this as well (superclass or mixin?)
+    def etag(self):
+        if self._etag is None:
+            last_mod = str(stat(self.file_path).st_mtime)
+            b = bytes(last_mod + self.file_path + self.canonical, 'utf-8')
+            self._etag = sha1(b).hexdigest()
+        return self._etag
 
     def _init_region(self, region):
         enabled_features = self.compliance.region.features
