@@ -32,6 +32,7 @@ class TestSafeLruDict(object):
         d = SafeLruDict()
         d['a'] = 'b'
         assert 'a' in d._dict
+        assert 'a' in d
 
     def test__setitem__maintains_size(self):
         size = 3

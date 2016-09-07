@@ -1,6 +1,10 @@
+from loris.compliance import Compliance
+from loris.helpers.safe_lru_dict import SafeLruDict
+from loris.info.jp2_extractor import Jp2Extractor
+from loris.requests.iiif_request import IIIFRequest
+
 from os import path
 from os import remove
-from loris.compliance import Compliance
 import json
 import pytest
 
@@ -172,3 +176,13 @@ def compliance_1(level1_exactly_json):
 @pytest.fixture()
 def compliance_0(level0_nothing_json):
     return Compliance(level0_nothing_json)
+
+# Sets up IIIFRequest as the application would have it.
+@pytest.fixture(autouse=True, scope='function')
+def set_up_iiif_request(app_configs, compliance_2):
+    IIIFRequest.app_configs = app_configs
+    IIIFRequest.extractors = {
+        'jp2' : Jp2Extractor(compliance_2, app_configs)
+    }
+    IIIFRequest.info_cache = SafeLruDict()
+    IIIFRequest.compliance = compliance_2
