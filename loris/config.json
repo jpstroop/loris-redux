@@ -3,7 +3,7 @@
   "note1": "cause errors. Place overrides in /etc/loris/config.json and/or",
   "note2": "~/.loris/config.json",
   "application" : {
-    "server_uri": null,
+    "server_uri": "http://localhost",
     "max_area": 16000000,
     "max_width": null,
     "max_height": null,
