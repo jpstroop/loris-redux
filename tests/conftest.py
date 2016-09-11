@@ -68,6 +68,10 @@ def default_configs():
 def app_configs(default_configs):
     return default_configs['application']
 
+@pytest.fixture(scope='function')
+def fixtures_dir(default_configs):
+    return FIXTURES_DIR
+
 @pytest.fixture(scope='session')
 def tiled_jp2():
     return COLOR_JP2

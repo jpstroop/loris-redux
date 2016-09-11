@@ -44,8 +44,9 @@ class SafeLruDict(object):
     def __setitem__(self, key, val):
         with self._lock:
             while len(self._dict) >= self._size:
-                self._dict.popitem(last=False)
+                self._dict.popitem(last=True)
             self._dict[key] = val
+            self._dict.move_to_end(key, last=False)
 
     def clear(self):
         with self._lock:
