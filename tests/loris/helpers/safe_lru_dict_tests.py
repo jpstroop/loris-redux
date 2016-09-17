@@ -7,7 +7,6 @@ class TestSafeLruDict(object):
     # Note that most of these tests work with the internal _dict that the
     # class is wrapped around so that we're truly only testing one impl.
     # method at a time.
-
     def test_init_sets_size(self):
         d = SafeLruDict(10)
         assert d._size == 10
@@ -34,6 +33,16 @@ class TestSafeLruDict(object):
         assert 'a' in d._dict
         assert 'a' in d
 
+    def test__set_item_adds_to_front(self):
+        size = 3
+        d = SafeLruDict(size)
+        d['a'] = 'b'
+        d['c'] = 'd'
+        d['e'] = 'f'
+        d['g'] = 'h'
+        assert len(d._dict) == size
+        assert 'a' not in d
+
     def test__setitem__maintains_size(self):
         size = 3
         d = SafeLruDict(size)
@@ -42,6 +51,7 @@ class TestSafeLruDict(object):
         d['e'] = 'f'
         d['g'] = 'h'
         assert len(d._dict) == size
+        assert 'a' not in d
 
     def test_clear(self):
         d = SafeLruDict()

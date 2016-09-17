@@ -36,6 +36,7 @@ class TestAbstractResolver(object):
         resolver = ProperImpl({})
 
     def test_arbirtary_configs_added_to_instance(self):
-        resolver = ProperImpl({'foo' : 'bar', 'baz' : 'quux'})
+        config = {'foo' : 'bar', 'baz' : 'quux'}
+        resolver = ProperImpl(config)
         assert resolver.foo == 'bar'
         assert resolver.baz == 'quux'
