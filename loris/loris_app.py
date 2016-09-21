@@ -1,16 +1,15 @@
-#!/usr/bin/env python
-
 from loris.compliance import Compliance
-from loris.handlers import route_patterns
 from loris.handlers.identifier_handler import IdentifierHandler
 from loris.handlers.image_handler import ImageHandler
 from loris.handlers.info_handler import InfoHandler
 from loris.helpers.safe_lru_dict import SafeLruDict
-from loris.info.pillow_extractor import PillowExtractor
 from loris.info.jp2_extractor import Jp2Extractor
+from loris.info.pillow_extractor import PillowExtractor
 from loris.requests.iiif_request import IIIFRequest
+
 from os import path
-from tornado.web import Application
+
+import cherrypy
 import json
 import logging
 import logging.config
@@ -18,14 +17,12 @@ import sys
 
 class LorisApp(object):
 
-    def __init__(self, debug=False):
-        # This should not be used directly, except in testing. Generally
-        # one should call LorisApp.create_tornado_application(), which will
-        # initialize and configure the application.
+    def __init__(self):
         cfg_dict = self._load_config_files()
-        self.debug = debug
         self._configure_logging(cfg_dict['logging'])
-        self.routes = self._create_route_list()
+        self.identifier_handler = IdentifierHandler()
+        self.info_handler = InfoHandler()
+        self.image_handler = ImageHandler()
 
         # This is basically a cheat to keep us from having to pass so much
         # static stuff around.
@@ -41,7 +38,6 @@ class LorisApp(object):
             if app_configs['server_uri'].endswith('/'):
                 app_configs['server_uri'] = app_configs['server_uri'][:-1]
         return app_configs
-
 
     def _load_config_files(self): # Should probably have coverage for this. Mocks?
         cfg_dict = {}
@@ -89,32 +85,31 @@ class LorisApp(object):
             'jp2' : jp2_extractor
         }
 
-    def _create_route_list(self):
-        # From:
-        # http://www.tornadoweb.org/en/stable/guide/structure.html#the-application-object
-        # "... If a dictionary is passed as the third element of the URLSpec,
-        # it supplies the initialization arguments which will be passed to
-        # RequestHandler.initialize. Finally, the URLSpec may have a name, which
-        # will allow it to be used with RequestHandler.reverse_url."
-        return (
-            (route_patterns.info_route_pattern(), InfoHandler, { }),
-            (route_patterns.image_route_pattern(), ImageHandler, { }),
-            (route_patterns.identifier_route_pattern(), IdentifierHandler, { })
-            # TODO: we need a fallback handler (/id/random)
-            # TODO: favicon
-        )
+    def _cp_dispatch(self, vpath):
 
-def check_debug():  # pragma: no cover
-    debug = False
-    try:
-        debug = sys.argv[1] == 'debug'
-        print('Running in debug mode')
-    except IndexError:
-        pass
-    return debug
+        # TODO: len(vpath) == 0
+        # GET is info about the server
+        # POST could allow placement of images on the server.
 
-def create_tornado_application():
-    debug_bool = check_debug()
-    loris_app = LorisApp()
-    # See http://www.tornadoweb.org/en/stable/web.html#tornado.web.Application.settings
-    return Application(loris_app.routes, debug=debug_bool)
+        if len(vpath) == 1:
+            cherrypy.request.params['identifier'] = vpath.pop()
+            return self.identifier_handler
+
+        if len(vpath) == 2:
+            if vpath.pop() != 'info.json':
+                raise
+            cherrypy.request.params['identifier'] = vpath.pop()
+            return self.info_handler
+
+        if len(vpath) == 5:
+            cherrypy.request.params['identifier'] = vpath[0]
+            cherrypy.request.params['iiif_params'] = '/'.join(vpath[1:])
+            vpath[:] = []
+            return self.image_handler
+
+        return vpath
+
+    @cherrypy.expose
+    def index(self):
+        # TODO: link to loris.io
+        return 'This is Loris.'

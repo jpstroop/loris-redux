@@ -43,5 +43,7 @@ class IIIFRequest(metaclass=MetaRequest):
         return self._base_uri
 
     def _resolve_identifier(self):
+        # TODO: work w/ resolvers.resolve, which should probably live in the
+        # metaclass so that we can init at startup
         # should return (file_path str, file_format str, last_mod datetime)
         pass
