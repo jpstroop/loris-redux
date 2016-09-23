@@ -28,7 +28,6 @@ class PyTest(TestCommand):
 PACKAGES=(
     'loris',
     'loris.compliance',
-    'loris.exceptions',
     'loris.handlers',
     'loris.helpers',
     'loris.info',
@@ -37,6 +36,11 @@ PACKAGES=(
     'loris.transcoders'
 )
 
+PACKAGE_DATA={
+    'loris': ['sample.jp2'],
+    'loris': ['config.json']
+}
+
 setup(
     name='Loris',
     version=loris.__version__,
@@ -44,6 +48,7 @@ setup(
     author_email='jpstroop@gmail.com',
     packages=PACKAGES,
     # Include additional files into the package
+    package_data=PACKAGE_DATA,
     include_package_data=True,
     # Details
     #url='http://pypi.python.org/pypi/MyApplication_v010/',
@@ -53,9 +58,11 @@ setup(
     cmdclass = {'test': PyTest},
     setup_requires=[ ],
     tests_require=[
+        'nose==1.3.7',
         'pytest==3.0.2'
     ],
     install_requires=[
+        'CherryPy==8.1.0',
         'Pillow==3.3.1',
         'python-magic==0.4.12',
         'requests==2.11.1',

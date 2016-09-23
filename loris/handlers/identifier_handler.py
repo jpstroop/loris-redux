@@ -1,11 +1,16 @@
-from tornado.web import RequestHandler
+import cherrypy
 
+class IdentifierHandler(object):
+    exposed = True
+    def GET(self, identifier):
+        info_uri = '/{0}/info.json'.format(identifier)
+        del cherrypy.response.headers['Content-Type']
+        cherrypy.response.headers['Location'] = info_uri
+        cherrypy.response.status = 303
 
-class IdentifierHandler(RequestHandler):
+        return None
+    # index._cp_config = {'tools.trailing_slash.on' : False}
 
-    # def initialize(self, compliance): # pylint:disable=arguments-differ
-    #     self.compliance = compliance
-    # Request properties documented here:
-    # http://tornadokevinlee.readthedocs.io/en/latest/httputil.html#tornado.httputil.HTTPServerRequest
-    def get(self, identifier):
-        self.write('IdentifierHandler: ' + repr(self.request.uri))
+    def PURGE(self, identifier):
+        # TODO: to purge any source images that have been cached locally
+        return 'You purged {0}\n'.format(identifier)
