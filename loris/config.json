@@ -19,6 +19,25 @@
       }
     }
   },
+  "resolvers" : [
+    {
+      "class" : "loris.resolvers.file_system_resolver.FileSystemResolver",
+      "prefix" : "a",
+      "config" : {
+        "root" : "/fill/me/in"
+      }
+    }, {
+      "class" : "loris.resolvers.file_system_resolver.FileSystemResolver",
+      "prefix" : "b",
+      "config" : {
+        "root" : "/fill/me/in",
+        "format_suffix" : ".jp2",
+        "cache" : true,
+        "cache_root" : "/tmp",
+        "cache_size" : 100
+      }
+    }
+  ],
   "iiif_features": {
     "note0": "Loris will always be at least level 0 compliant. Enable ",
     "note1": "additional features here.",

@@ -1,6 +1,6 @@
 from loris.compliance import Compliance
-from loris.info.abstract_extractor import COLOR_QUALITIES
-from loris.info.abstract_extractor import GRAY_QUALITIES
+from loris.constants import COLOR_QUALITIES
+from loris.constants import GRAY_QUALITIES
 from loris.info.jp2_extractor import Jp2Parser
 from loris.info.jp2_extractor import Jp2Extractor
 import pytest

@@ -27,6 +27,7 @@ class MetaRequest(type):
     _extractors = None
     _app_configs = None
     _transcoders = None
+    _resolvers = None
 
     def _get_compliance(self):
         return self._compliance
@@ -57,3 +58,9 @@ class MetaRequest(type):
     def _set_transcoders(self, transcoders):
         self._transcoders = transcoders
     transcoders = property(_get_transcoders, _set_transcoders)
+
+    def _get_resolvers(self):
+        return self._resolvers
+    def _set_resolvers(self, resolvers):
+        self._resolvers = resolvers
+    resolvers = property(_get_resolvers, _set_resolvers)

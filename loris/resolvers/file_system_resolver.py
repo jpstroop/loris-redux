@@ -9,7 +9,6 @@ from os import listdir
 from os import makedirs
 from os import remove
 from os import stat
-from os.path import abspath
 from os.path import exists
 from os.path import join
 from shutil import copy2
@@ -84,7 +83,8 @@ class FileSystemResolver(AbstractResolver, MagicCharacterizerMixin):
         fmt = FileSystemResolver.characterize(src_file_path)
         cache_path = self._new_cache_file_path(fmt)
         if len(self._cache_map) >= self._cache_size:
-            last_id, path = self._cache_map.popitem(last=True)
+            # the dict would remove the key anyway, but we need the path
+            last_id, path = self._cache_map.popitem(last=True)  # pylint:disable=unused-variable
             remove(path)
         copy2(src_file_path, cache_path)
         self._cache_map[identifier] = cache_path
