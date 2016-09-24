@@ -4,7 +4,6 @@ from math import ceil
 
 from loris.constants import BITONAL_QUALITIES
 from loris.constants import COLOR_QUALITIES
-from loris.constants import GRAY_QUALITIES
 from loris.info.structs.size import Size
 
 class AbstractExtractor(metaclass=ABCMeta):

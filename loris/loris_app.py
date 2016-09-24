@@ -5,6 +5,7 @@ from loris.handlers.info_handler import InfoHandler
 from loris.helpers.safe_lru_dict import SafeLruDict
 from loris.info.jp2_extractor import Jp2Extractor
 from loris.info.pillow_extractor import PillowExtractor
+from loris.resolvers import Resolvers
 from loris.requests.iiif_request import IIIFRequest
 
 from os import path
@@ -13,7 +14,6 @@ import cherrypy
 import json
 import logging
 import logging.config
-import sys
 
 class LorisApp(object):
 
@@ -29,6 +29,7 @@ class LorisApp(object):
         compliance = self._init_compliance(cfg_dict['iiif_features'])
         app_configs = self._normalize_app_configs(cfg_dict['application'])
         IIIFRequest.extractors = self._init_extractors(compliance, app_configs)
+        IIIFRequest.resolvers = self._init_resolvers(cfg_dict['resolvers'])
         IIIFRequest.info_cache = SafeLruDict(size=400)
         IIIFRequest.compliance = compliance
         IIIFRequest.app_configs = app_configs
@@ -39,7 +40,8 @@ class LorisApp(object):
                 app_configs['server_uri'] = app_configs['server_uri'][:-1]
         return app_configs
 
-    def _load_config_files(self): # Should probably have coverage for this. Mocks?
+    def _load_config_files(self):
+        # Should probably have coverage for this. Mocks?
         cfg_dict = {}
         for cfg_path in self._find_config_files():
             try:
@@ -53,12 +55,15 @@ class LorisApp(object):
         with open(json_path) as p:
             return json.load(p)
 
+    @property
+    def _package_dir(self): # pragma: no cover
+        return path.dirname(path.realpath(__file__))
+
     def _find_config_files(self): # pragma: no cover
         # TODO: https://github.com/jpstroop/loris-redux/issues/44
         # returns paths to the config files in order of preference
         paths = []
-        package_dir = path.dirname(path.realpath(__file__))
-        paths.append(path.join(package_dir, 'config.json'))
+        paths.append(path.join(self._package_dir, 'config.json'))
         paths.append('/etc/loris/config.json')
         paths.append(path.expanduser('~/.loris/config.json'))
         return paths
@@ -69,13 +74,13 @@ class LorisApp(object):
         logger = logging.getLogger('loris')
         logger.debug('Logging configured')
 
-    def _init_compliance(self, cfg_dict):
+    def _init_compliance(self, cfg_dict): # pragma: no cover
         compliance = Compliance(cfg_dict)
         msg = 'Compliance is level {}'.format(int(compliance))
         logger.info(msg)
         return compliance
 
-    def _init_extractors(self, compliance, app_configs):
+    def _init_extractors(self, compliance, app_configs): # pragma: no cover
         pillow_extractor = PillowExtractor(compliance, app_configs)
         jp2_extractor = Jp2Extractor(compliance, app_configs)
         return {
@@ -85,8 +90,18 @@ class LorisApp(object):
             'jp2' : jp2_extractor
         }
 
-    def _cp_dispatch(self, vpath):
+    def _init_resolvers(self, resolver_list): # pragma: no cover
+        resolvers = Resolvers(resolver_list)
+        # add a resolver that resolves to the root of the package for viewing
+        # sample files
+        cfg = { 'root' : self._package_dir }
+        klass = 'loris.resolvers.file_system_resolver.FileSystemResolver'
+        resolvers.add_resolver(klass, 'loris', cfg)
+        return resolvers
 
+    def _cp_dispatch(self, vpath):  # pylint:disable=protected-access
+        # cherrypy calls this method.
+        
         # TODO: len(vpath) == 0
         # GET is info about the server
         # POST could allow placement of images on the server.
