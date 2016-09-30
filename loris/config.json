@@ -24,7 +24,8 @@
       "class" : "loris.resolvers.file_system_resolver.FileSystemResolver",
       "prefix" : "a",
       "config" : {
-        "root" : "/fill/me/in"
+        "root" : "/fill/me/in",
+        "description" : "This is only required configuration value for a FileSystemResolver"
       }
     }, {
       "class" : "loris.resolvers.file_system_resolver.FileSystemResolver",
@@ -34,7 +35,8 @@
         "format_suffix" : ".jp2",
         "cache" : true,
         "cache_root" : "/tmp",
-        "cache_size" : 100
+        "cache_size" : 100,
+        "description" : "These are all of the optional values for a FileSystemResolver"
       }
     }
   ],

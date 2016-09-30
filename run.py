@@ -7,7 +7,7 @@ if __name__ == '__main__':
     cherrypy._cpconfig.environments['staging']['engine.autoreload.on'] = True
     server_conf = {
         # take this as a command line option or value in the config file
-        'environment': 'staging',
+        # 'environment': 'staging', TODO: what is the 'development' env?
         'server.socket_port': 5004,
         'server.socket_host': '127.0.0.1'
         # 'server.socket_host' : 'myserver.edu'
