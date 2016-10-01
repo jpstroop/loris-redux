@@ -2,6 +2,7 @@ from loris.helpers.import_class import import_class
 from loris.resolvers.api import AbstractResolver
 
 from inspect import getmro
+from json import dumps
 from logging import getLogger
 
 logger = getLogger('loris')
@@ -30,6 +31,16 @@ class Resolvers(object):
         self._resolvers[prefix] = instance
         logger.info('Added resolver %s with prefix "%s":', class_name, prefix)
         [ logger.debug('%s: %s', k,v) for k,v in config.items() ] # pylint:disable=expression-not-assigned
+
+    @property
+    def json(self):
+        resolvers = []
+        for prefix, resolver in self._resolvers.items():
+            d = { }
+            d['prefix'] = prefix
+            d['description'] = resolver.description
+            resolvers.append(d)
+        return dumps(resolvers).encode('utf8')
 
     @staticmethod
     def _check_resolver_class(resolver_class):

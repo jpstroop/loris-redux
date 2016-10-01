@@ -9,6 +9,7 @@ logger = getLogger('loris')
 class AbstractResolver(metaclass=ABCMeta):
 
     def __init__(self, config={}):
+        self.description = config.get('description')
         self.__dict__ = { **self.__dict__, **config }
         logger.debug('Initialized %s.%s', __name__, self.__class__.__name__)
 
