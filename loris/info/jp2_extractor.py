@@ -204,7 +204,7 @@ class Jp2Parser(object):
             twth = ('tile_width', 'tile_height')
             no_tiles = all([info.get(d) is None for d in twth])
             b = jp2.read(1)
-            if b == b'\xFF' or no_tiles:
+            if b != b'\xFF' and no_tiles:
                 # These come back in reverse order (smallest first) from what
                 # you'd expect, which is confusing. Instead we reverse so that
                 # the list 2**index is the scale factor

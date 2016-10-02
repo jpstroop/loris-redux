@@ -7,6 +7,9 @@ class InfoRequest(IIIFRequest):
     def __init__(self, identifier):
         super().__init__(identifier, 'info.json')
 
+    def __str__(self):
+        return str(self.info)
+
     @property
     def etag(self):
         if self._etag is None:

@@ -2,7 +2,7 @@ from collections import OrderedDict
 from loris.constants import COMPLIANCE_PAGE
 import json
 
-class _LorisException(Exception):
+class LorisException(Exception):
     def __init__(self, message, http_status_code):
         self.http_status_code = http_status_code
         self.message = message
@@ -19,23 +19,23 @@ class _LorisException(Exception):
         d['description'] = self.message
         return d
 
-class ResolverException(_LorisException):
+class ResolverException(LorisException):
     def __init__(self, identifier):
         http_status_code = 404
         message = 'Could not resolve identifier: {0}'.format(identifier)
         super().__init__(message, http_status_code)
 
-class UnsupportedFormat(_LorisException):
+class UnsupportedFormat(LorisException):
     # The when we can't work with the image on the server.
     def __init__(self, message, http_status_code=500):
         super().__init__(message, http_status_code)
 
-class SyntaxException(_LorisException):
+class SyntaxException(LorisException):
     # Raise when a parameter can't be parsed.
     def __init__(self, value, http_status_code=400):
         super().__init__(value, http_status_code)
 
-class RequestException(_LorisException):
+class RequestException(LorisException):
     # Use for, e.g. out of bounds requests, unavailable qualities
     def __init__(self, message, http_status_code=400):
         super().__init__(message, http_status_code)

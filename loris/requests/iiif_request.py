@@ -1,14 +1,13 @@
 from loris.requests.meta_request import MetaRequest
 
 from logging import getLogger
-from urllib.parse import quote_plus
 
 logger = getLogger('loris')
 
 class IIIFRequest(metaclass=MetaRequest):
 
     def __init__(self, identifier, iiif_params=None):
-        self.identifier = quote_plus(identifier)
+        self.identifier = identifier # MUST BE URL ENCODED
         self.iiif_params = iiif_params
 
         resolver_data = self._resolve_identifier(self.identifier)
@@ -42,8 +41,6 @@ class IIIFRequest(metaclass=MetaRequest):
             self._base_uri = '/'.join((server_uri, self.identifier))
         return self._base_uri
 
-    def _resolve_identifier(self):
-        # TODO: work w/ resolvers.resolve, which should probably live in the
-        # metaclass so that we can init at startup
-        # should return (file_path str, file_format str, last_mod datetime)
-        pass
+    # TODO: make this static. May break some test mocks.
+    def _resolve_identifier(self, identifier):
+        return IIIFRequest.resolvers.resolve(identifier)

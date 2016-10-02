@@ -34,6 +34,9 @@ class FileSystemResolver(AbstractResolver, MagicCharacterizerMixin):
         return exists(self._get_file_path(identifier))
 
     def resolve(self, identifier):
+        # TODO: Note that the indentifier here lacks the prefix. Maybe it
+        # should be passed in so that we can include it in exceptions? Changes
+        # the whole API.
         file_path = self._get_file_path(identifier)
         if self.cache:
             file_path = self._sync_to_cache(identifier, file_path)
