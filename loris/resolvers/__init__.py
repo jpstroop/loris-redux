@@ -1,3 +1,4 @@
+from loris.exceptions import ResolverException
 from loris.helpers.import_class import import_class
 from loris.resolvers.api import AbstractResolver
 
@@ -20,7 +21,11 @@ class Resolvers(object):
         parts = prefixed_identifier.split(':')
         prefix = parts[0]
         identifier = ':'.join(parts[1:])
-        return self._resolvers[prefix].resolve[identifier]
+        try:
+            return self._resolvers[prefix].resolve(identifier)
+        except KeyError:
+            msg = 'prefix "{0}" is not assigned to a resolver'.format(prefix)
+            raise ResolverException(msg)
 
     def add_resolver(self, class_name, prefix, config):
         ResolverClass = import_class(class_name)

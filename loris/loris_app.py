@@ -1,4 +1,5 @@
 from loris.compliance import Compliance
+from loris.dispatcher_mixin import DispatcherMixin
 from loris.handlers.identifier_handler import IdentifierHandler
 from loris.handlers.image_handler import ImageHandler
 from loris.handlers.info_handler import InfoHandler
@@ -16,7 +17,7 @@ import json
 import logging
 import logging.config
 
-class LorisApp(object):
+class LorisApp(DispatcherMixin):
 
     def __init__(self):
         cfg_dict = self._load_config_files()
@@ -92,50 +93,16 @@ class LorisApp(object):
             'jp2' : jp2_extractor
         }
 
-    def _init_resolvers(self, resolver_list): # pragma: no cover
+    def _init_resolvers(self, resolver_list, include_example=True): # pragma: no cover
         resolvers = Resolvers(resolver_list)
         # add a resolver that resolves to the root of the package for viewing
         # sample files
-        description = '''This is a sample resolver to test that the server is \
-working. Using `sample.jp2` as an identifier should return a test image.'''
-        cfg = { 'root' : self._package_dir, 'description' : description }
-        klass = 'loris.resolvers.file_system_resolver.FileSystemResolver'
-        resolvers.add_resolver(klass, 'loris', cfg)
+        if include_example:
+            description = '''\
+This is a sample resolver to test that the server is working. Using \
+`loris:sample.jp2` as an identifier should return a test image.\
+'''
+            cfg = { 'root' : self._package_dir, 'description' : description }
+            klass = 'loris.resolvers.file_system_resolver.FileSystemResolver'
+            resolvers.add_resolver(klass, 'loris', cfg)
         return resolvers
-
-    def _cp_dispatch(self, vpath):  # pylint:disable=protected-access
-        # This is the routing. cherrypy calls this method.
-
-        # TODO: len(vpath) == 0
-        # GET is info about the server
-        # POST could allow placement of images on the server.
-
-        if len(vpath) == 1:
-            val = vpath.pop()
-            # resolvers / resolvers.json
-            if val in ('resolvers', 'resolvers.json'):
-                cherrypy.request.params['val'] = val
-                return self.resolvers_handler
-            # base URI
-            else:
-                cherrypy.request.params['identifier'] = val
-                return self.identifier_handler
-
-        if len(vpath) == 2:
-            if vpath.pop() != 'info.json':
-                raise
-            cherrypy.request.params['identifier'] = vpath.pop()
-            return self.info_handler
-
-        if len(vpath) == 5:
-            cherrypy.request.params['identifier'] = vpath[0]
-            cherrypy.request.params['iiif_params'] = '/'.join(vpath[1:])
-            vpath[:] = []
-            return self.image_handler
-
-        return vpath
-
-    @cherrypy.expose
-    def index(self):
-        # TODO: link to loris.io
-        return 'This is Loris.'

@@ -1,12 +1,12 @@
-from loris.exceptions import _LorisException
+from loris.exceptions import LorisException
 from loris.exceptions import ResolverException
 
-class Test_LorisException(object):
+class TestLorisException(object):
 
     def test_to_json(self):
         message = 'the message'
-        ex = _LorisException(message, 400)
-        j = '{"error": "_LorisException", "description": "the message"}'
+        ex = LorisException(message, 400)
+        j = '{"error": "LorisException", "description": "the message"}'
         assert ex.to_json() == j
         assert str(ex) == j
 

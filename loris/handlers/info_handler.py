@@ -1,24 +1,35 @@
+from loris.exceptions import LorisException
 from loris.requests.info_request import InfoRequest
-from logging import getLogger
+
 import cherrypy
 import json
-logger = getLogger('loris')
 
 class InfoHandler(object):
+
     exposed = True
 
     def GET(self, identifier):
-        # how to set a header:
+        cherrypy.response.headers['Allow'] = 'GET' # probably a better way ...
+        try:
+            return self._conditional_response(identifier)
+        except LorisException as le:
+            return self._error_response(le)
+
+    def _conditional_response(self, identifier):
+        info_request = InfoRequest(identifier)
+        if self._etag_match(info_request):
+            cherrypy.response.headers.pop('content-type', None)
+            cherrypy.response.status = 304
+            return None
+        else:
+            cherrypy.response.headers['content-type'] = 'application/json'
+            cherrypy.response.headers['etag'] = info_request.etag
+            return str(info_request).encode('utf8')
+
+    def _etag_match(self, info_request):
+        return cherrypy.request.headers.get('if-none-match') == info_request.etag
+
+    def _error_response(self, loris_exception):
         cherrypy.response.headers['Content-Type'] = 'application/json'
-        # how to send JSON
-        body = json.dumps( { '@id' : identifier } ).encode('utf8')
-        # how to get the method of the request:
-        # cherrypy.log(cherrypy.request.method)
-        #
-        # How to get the server url:
-        # cherrypy.log(cherrypy.url())
-        #
-        # how to get the request headers:
-        # for k in cherrypy.request.headers.keys():
-        #     cherrypy.log('{0}: {1}'.format(k, cherrypy.request.headers[k]))
-        return body
+        cherrypy.response.status = loris_exception.http_status_code
+        return str(loris_exception).encode('utf8')

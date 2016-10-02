@@ -31,6 +31,10 @@ class TestJp2Extractor(object):
         assert info.tiles[0].width == 256
         assert info.tiles[0].scale_factors == [1, 2, 4, 8, 16, 32]
 
+    def test_region_test_img_tiles(self, compliance_2, region_test_jp2, app_configs):
+        info = init_and_extract(region_test_jp2, compliance_2, app_configs)
+        assert info.tiles[0].width == 1024
+
     def test_sizes_no_max(self, compliance_2, tiled_jp2, app_configs):
         app_configs['max_area'] = None
         info = init_and_extract(tiled_jp2, compliance_2, app_configs)
@@ -133,6 +137,12 @@ class TestJp2Parser(object):
         info = Jp2Parser(tiled_jp2).metadata
         assert info['tile_width'] == 256
         assert info['tile_height'] == 256
+
+    def test_tiles_for_region_test_jp2(self, region_test_jp2):
+        info = Jp2Parser(region_test_jp2).metadata
+        assert info['tile_width'] == 1024
+        assert info['tile_height'] == 1024
+
 
     def test_levels(self, tiled_jp2):
         info = Jp2Parser(tiled_jp2).metadata

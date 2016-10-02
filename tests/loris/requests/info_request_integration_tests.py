@@ -14,6 +14,6 @@ class TestInfoRequest(object):
         lastmod = datetime(2016, 9, 4, 12, 28, 24, 928635)
         resolver_data = (tiled_jp2, 'jp2', lastmod)
         with patch.object(IIIFRequest, '_resolve_identifier', return_value=resolver_data):
-            request1 = InfoRequest('fakeid')
-            request2 = InfoRequest('fakeid')
+            request1 = InfoRequest('my:fake%2Fid')
+            request2 = InfoRequest('my:fake%2Fid')
             request1.etag == request2.etag
