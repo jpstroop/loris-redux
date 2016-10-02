@@ -59,13 +59,12 @@ setup(
     setup_requires=[ ],
     tests_require=[
         'nose==1.3.7',
-        'pytest==3.0.2'
+        'pytest==3.0.3'
     ],
     install_requires=[
-        'CherryPy==8.1.0',
+        'CherryPy==8.1.2',
         'Pillow==3.3.1',
         'python-magic==0.4.12',
         'requests==2.11.1',
-        'tornado==4.4.1'
     ]
 )
