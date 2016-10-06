@@ -1,9 +1,5 @@
 from loris.compliance import Compliance
 from loris.dispatcher_mixin import DispatcherMixin
-from loris.handlers.identifier_handler import IdentifierHandler
-from loris.handlers.image_handler import ImageHandler
-from loris.handlers.info_handler import InfoHandler
-from loris.handlers.resolvers_handler import ResolversHandler
 from loris.helpers.safe_lru_dict import SafeLruDict
 from loris.info.jp2_extractor import Jp2Extractor
 from loris.info.pillow_extractor import PillowExtractor
@@ -11,21 +7,36 @@ from loris.requests.iiif_request import IIIFRequest
 from loris.resolvers import Resolvers
 
 from os import path
+from pkg_resources import resource_filename
 
 import cherrypy
 import json
 import logging
 import logging.config
 
+cherrypy_app_conf = {
+    '/': {
+        'tools.trailing_slash.on': False,  # this should _always_ be False
+        'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
+        'tools.sessions.on': False
+    },
+    '/favicon.ico': {
+        'tools.staticfile.on': True,
+        'tools.staticfile.filename': resource_filename('loris', 'www/favicon.ico'),
+        'tools.response_headers.on': True,
+        'tools.response_headers.headers': [
+            ('cache-control', 'max-age={0}, public'.format(60*60*24*365)),
+            ('allow', 'GET')
+        ]
+    }
+}
+
 class LorisApp(DispatcherMixin):
 
     def __init__(self):
+        super().__init__()
         cfg_dict = self._load_config_files()
         self._configure_logging(cfg_dict['logging'])
-        self.identifier_handler = IdentifierHandler()
-        self.image_handler = ImageHandler()
-        self.info_handler = InfoHandler()
-        self.resolvers_handler = ResolversHandler()
 
         # This is basically a cheat to keep us from having to pass so much
         # static stuff around.
@@ -36,6 +47,11 @@ class LorisApp(DispatcherMixin):
         IIIFRequest.extractors = self._init_extractors(compliance, app_configs)
         IIIFRequest.info_cache = SafeLruDict(size=400)
         IIIFRequest.resolvers = self._init_resolvers(cfg_dict['resolvers'])
+
+    @property
+    def _package_dir(self): # pragma: no cover
+        # Not part of CherryPy, but needed here and in LorisApp
+        return path.dirname(path.realpath(__file__))
 
     def _normalize_app_configs(self, app_configs):
         if app_configs['server_uri'] is not None:
@@ -57,10 +73,6 @@ class LorisApp(DispatcherMixin):
     def _load_json_file(self, json_path): # pragma: no cover
         with open(json_path) as p:
             return json.load(p)
-
-    @property
-    def _package_dir(self): # pragma: no cover
-        return path.dirname(path.realpath(__file__))
 
     def _find_config_files(self): # pragma: no cover
         # TODO: https://github.com/jpstroop/loris-redux/issues/44

@@ -1,2 +1,3 @@
 include loris/config.json
 include loris/sample.jp2
+include loris/www/favicon.ico
