@@ -1,24 +1,19 @@
-# from loris.compliance import Compliance
-# from loris.handlers.identifier_handler import IdentifierHandler
-# from loris.handlers.image_handler import ImageHandler
-# from loris.handlers.info_handler import InfoHandler
 from loris.loris_app import LorisApp
+from loris.loris_app import cherrypy_app_conf
+
 from cherrypy.test import helper
 from json import loads
+
 import cherrypy
 
+# End-to-end integration tests intended to tes handlers. If these are failing
+# chances are the problem is not with LorisApp unless _maybe_ it has to do
+# with headers.
 
 class TestLorisApp(helper.CPWebCase):
     # See http://docs.cherrypy.org/en/latest/advanced.html#testing-your-application
     def setup_server():
-        #TODO: this is also in run.py right now...
-        app_conf = {
-            '/': {
-                'tools.trailing_slash.on': False,  # this should _always_ be False
-                'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
-            }
-        }
-        cherrypy.tree.mount(LorisApp(), '/', config=app_conf)
+        cherrypy.tree.mount(LorisApp(), '/', config=cherrypy_app_conf)
     setup_server = staticmethod(setup_server)
 
     def test_resolvers_redirects(self):
@@ -51,10 +46,9 @@ class TestLorisApp(helper.CPWebCase):
 
     def test_info_exception(self):
         status, headers, body = self.getPage('/loris:nothing.jp2/info.json')
-        headers = dict(headers)
         body = loads(body.decode('utf-8'))
         self.assertStatus(404)
-        assert headers['Content-Type'] == 'application/json'
+        self.assertHeader('Content-Type', 'application/json')
         assert body['error'] == 'ResolverException'
         assert body['description'] == 'Could not resolve identifier: nothing.jp2'
 
@@ -62,9 +56,18 @@ class TestLorisApp(helper.CPWebCase):
         status, headers, body = self.getPage('/loris:sample.jp2/info.json')
         headers = dict(headers)
         assert 'Etag' in headers
-        assert headers['Allow'] == 'GET'
-        assert headers['Content-Type'] == 'application/json'
-        assert headers['Content-Length'] == '760' # careful this could change
+        self.assertHeader('Allow', 'GET')
+        self.assertHeader('Content-Type', 'application/json')
+        self.assertHeader('Content-Length', '760') # careful this could change
+
+    def test_favicon(self):
+        status, headers, body = self.getPage('/favicon.ico')
+        self.assertStatus(200)
+        self.assertHeader('Allow', 'GET')
+        self.assertHeader('Content-Type', 'image/x-icon')
+        self.assertHeader('Cache-Control', 'max-age=31536000, public')
+        self.assertHeader('Content-Length', 156176)
+
 
 
     # temporary. Just makes sure we don't break rounting

@@ -1,11 +1,23 @@
-# This mixing class provides the `_cp_dispatch` method that CherryPy needs to
+# This mixin class provides the `_cp_dispatch` method that CherryPy needs to
 # route requests
+from loris.handlers.identifier_handler import IdentifierHandler
+from loris.handlers.image_handler import ImageHandler
+from loris.handlers.info_handler import InfoHandler
+from loris.handlers.resolvers_handler import ResolversHandler
+
+from os import path
+
 import cherrypy
 
 class DispatcherMixin(object):
+    def __init__(self):
+        self.identifier_handler = IdentifierHandler()
+        self.image_handler = ImageHandler()
+        self.info_handler = InfoHandler()
+        self.resolvers_handler = ResolversHandler()
 
     def _cp_dispatch(self, vpath):  # pylint:disable=protected-access
-        # This is the routing. cherrypy calls this method.
+        # This is the routing. CherryPy calls this method.
 
         # TODO: len(vpath) == 0
         # GET is info about the server
@@ -17,6 +29,7 @@ class DispatcherMixin(object):
             if val in ('resolvers', 'resolvers.json'):
                 cherrypy.request.params['val'] = val
                 return self.resolvers_handler
+                return self.favicon_handler
             # base URI
             else:
                 cherrypy.request.params['identifier'] = val
@@ -24,7 +37,7 @@ class DispatcherMixin(object):
 
         if len(vpath) == 2:
             if vpath.pop() != 'info.json':
-                raise
+                raise # TODO: raise what?
             cherrypy.request.params['identifier'] = vpath.pop()
             return self.info_handler
 
@@ -35,8 +48,3 @@ class DispatcherMixin(object):
             return self.image_handler
 
         return vpath
-
-    @cherrypy.expose
-    def index(self):
-        # TODO: link to loris.io
-        return 'This is Loris.'

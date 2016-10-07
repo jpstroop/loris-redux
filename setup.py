@@ -33,12 +33,13 @@ PACKAGES=(
     'loris.info',
     'loris.parameters',
     'loris.resolvers',
-    'loris.transcoders'
+    'loris.transcoders',
+    'loris.www'
 )
 
 PACKAGE_DATA={
-    'loris': ['sample.jp2'],
-    'loris': ['config.json']
+    'loris': ['sample.jp2','config.json'],
+    'loris.www': ['www/favicon.ico']
 }
 
 setup(
