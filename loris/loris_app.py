@@ -37,11 +37,11 @@ class LorisApp(DispatcherMixin):
         super().__init__()
         cfg_dict = self._load_config_files()
         self._configure_logging(cfg_dict['logging'])
-
-        # This is basically a cheat to keep us from having to pass so much
-        # static stuff around.
         compliance = self._init_compliance(cfg_dict['iiif_features'])
         app_configs = self._normalize_app_configs(cfg_dict['application'])
+        # Below is a cheat to keep us from having to pass so much static stuff
+        # around. See requests.iiif_request.IIIFRequest and
+        # requests.meta_request.MetaRequest to understand what's going on.
         IIIFRequest.app_configs = app_configs
         IIIFRequest.compliance = compliance
         IIIFRequest.extractors = self._init_extractors(compliance, app_configs)
@@ -50,7 +50,6 @@ class LorisApp(DispatcherMixin):
 
     @property
     def _package_dir(self): # pragma: no cover
-        # Not part of CherryPy, but needed here and in LorisApp
         return path.dirname(path.realpath(__file__))
 
     def _normalize_app_configs(self, app_configs):

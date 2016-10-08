@@ -9,7 +9,7 @@ class InfoHandler(object):
     exposed = True
 
     def GET(self, identifier):
-        cherrypy.response.headers['Allow'] = 'GET' # probably a better way ...
+        cherrypy.response.headers['Allow'] = 'GET'
         try:
             return self._conditional_response(identifier)
         except LorisException as le:
@@ -26,6 +26,7 @@ class InfoHandler(object):
             cherrypy.response.headers['etag'] = info_request.etag
             return str(info_request).encode('utf8')
 
+    # TODO: These can be moved into a mixin. Not sure about _conditional_response
     def _etag_match(self, info_request):
         return cherrypy.request.headers.get('if-none-match') == info_request.etag
 
