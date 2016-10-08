@@ -4,17 +4,12 @@
 
 from PIL import Image
 from PIL import ImageDraw
+from PIL import ImageFont
 import unittest
 
 IMAGE_WIDTH = 6000
 IMAGE_HEIGHT = 8000
 
-TOP_LEFT_QUADRANT = (0, 0, 2999 , 3999)
-TOP_RIGHT_QUADRANT = (3000, 0, 5999, 3999)
-BOTTOM_LEFT_QUADRANT = (0, 4000, 2999, 7999)
-BOTTOM_RIGHT_QUADRANT = (3000, 4000, 5999, 7999)
-RANDOM_RECTANGLE_1 = (2000, 5000, 4999, 6999)
-RANDOM_RECTANGLE_2 = (1000, 1500, 2499, 4499)
 
 GREEN = (0, 150, 0)
 RED = (150, 0, 0)
@@ -22,17 +17,40 @@ BLUE = (0, 0, 150)
 ORANGE = (255, 165, 0)
 PURPLE = (128, 0, 128)
 DARK_SLATE = (49, 79, 79)
+BLACK = (0 ,0 ,0)
+WHITE = (255 ,255 ,255)
+
+# /usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf
+FONT = ImageFont.truetype('DejaVuSansMono.ttf', 120)
 
 def create_image():
     # start with a black image
     image = Image.new(mode='RGB', size=(IMAGE_WIDTH, IMAGE_HEIGHT))
     draw = ImageDraw.Draw(image)
-    draw.rectangle(TOP_LEFT_QUADRANT, fill=GREEN)
-    draw.rectangle(TOP_RIGHT_QUADRANT, fill=RED)
-    draw.rectangle(BOTTOM_LEFT_QUADRANT, fill=BLUE)
-    draw.rectangle(BOTTOM_RIGHT_QUADRANT, fill=ORANGE)
-    draw.rectangle(RANDOM_RECTANGLE_1, fill=PURPLE)
-    draw.rectangle(RANDOM_RECTANGLE_2, fill=DARK_SLATE)
+
+    # TOP LEFT QUADRANT
+    draw.rectangle((0, 0, 2999, 3999), fill=GREEN)
+    draw.text((200, 200), '0,0,3000,4000', font=FONT, fill=BLACK)
+
+    # TOP_RIGHT_QUADRANT
+    draw.rectangle((3000, 0, 5999, 3999), fill=RED)
+    draw.text((3200, 200), '3000,0,3000,4000', font=FONT, fill=BLACK)
+
+    # BOTTOM_LEFT_QUADRANT
+    draw.rectangle((0, 4000, 2999, 7999), fill=BLUE)
+    draw.text((200, 4600), '0,4000,3000,4000', font=FONT, fill=WHITE)
+
+    # BOTTOM_RIGHT_QUADRANT
+    draw.rectangle((3000, 4000, 5999, 7999), fill=ORANGE)
+    draw.text((3200, 4200), '3000,4000,3000,4000', font=FONT, fill=BLACK)
+
+    # RANDOM_RECTANGLE_1
+    draw.rectangle((2000, 5000, 4999, 6999), fill=PURPLE)
+    draw.text((2200, 5200), '2000,5000,3000,2000', font=FONT, fill=BLACK)
+
+    # RANDOM_RECTANGLE_2
+    draw.rectangle((1000, 1500, 2499, 4499), fill=DARK_SLATE)
+    draw.text((1050,1700), '1000,1500,1500,3000', font=FONT, fill=BLACK)
 
     return image
 
