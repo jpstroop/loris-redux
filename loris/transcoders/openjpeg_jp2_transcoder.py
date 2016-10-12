@@ -4,14 +4,17 @@ from os.path import join
 import platform
 
 from loris.transcoders.api import AbstractTranscoder
+from loris.transcoders.jp2_transcoder_helpers_mixin import Jp2TranscoderHelpersMixin
+
 
 LINUX_OPJ_BIN = 'opj_decompress'
 LINUX_OPJ_LIB = 'libopenjp2.so.2.1.2'
 
-class OpenJpegJp2Transcoder(AbstractTranscoder):
+class OpenJpegJp2Transcoder(AbstractTranscoder, Jp2TranscoderHelpersMixin):
 
     def __init__(self, config):
-        super().__init__(self, config)
+        Jp2TranscoderHelpersMixin.__init__(self)
+        AbstractTranscoder.__init__(self, config)
         if self.lib is None or self.bin is None:
             self.lib, self.bin = OpenJpegJp2Transcoder._find_openjpeg()
 
