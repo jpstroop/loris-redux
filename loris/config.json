@@ -19,6 +19,16 @@
       }
     }
   },
+  "transcoders" : [
+    {
+      "note0" : "If lib or bin are null, Loris will try to us a local copy of",
+      "note1" : "OpenJpeg. Not all operating systems/processors may be supported",
+      "class" : "loris.transcoders.OpenJpegJp2Transcoder",
+      "src_format" : "jp2",
+      "lib" : null,
+      "bin" : null
+    }
+  ],
   "resolvers" : [
     {
       "class" : "loris.resolvers.file_system_resolver.FileSystemResolver",

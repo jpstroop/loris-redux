@@ -1,3 +1,5 @@
 include loris/config.json
 include loris/sample.jp2
 include loris/www/favicon.ico
+include loris/openjpeg/linux/x86_64/opj_decompress
+include loris/openjpeg/linux/x86_64/libopenjp2.so.2.1.2
