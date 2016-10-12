@@ -17,7 +17,8 @@ class Info(object):
         'profile',
         'color_profile_bytes',
         '_long_dim',
-        '_short_dim'
+        '_short_dim',
+        '_all_scales'
     )
 
     def __init__(self, compliance, http_identifier):
@@ -31,6 +32,7 @@ class Info(object):
         self.color_profile_bytes = None
         self._long_dim = None
         self._short_dim = None
+        self._all_scales = None
 
     def __str__(self):
         return json.dumps(self.to_dict())
@@ -49,6 +51,15 @@ class Info(object):
         if not self._short_dim:
             self._short_dim =  min(self.width, self.height)
         return self._short_dim
+
+    @property
+    def all_scales(self):
+        # When dealing with Jp2s, scaleFactors are the same as the baked-in
+        # resolutions. These are easier to deal with than the sizes list when
+        # making derivatives
+        if not self._all_scales:
+            self._all_scales = [s for t in self.tiles for s in t.scale_factors]
+        return self._all_scales
 
     def to_dict(self):
         d = OrderedDict()

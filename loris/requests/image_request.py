@@ -14,24 +14,44 @@ class ImageRequest(IIIFRequest):
         region_s, size_s, rotation_s, quality_fmt = iiif_params.split('/')
         quality_s, format_s = quality_fmt.split('.')
 
-        self.region_param = self._init_region(region_s)
-        self.size_param = self._init_size(size_s)
-        self.rotation_param = self._init_rotation(rotation_s)
-        self.quality_param = self._init_quality(quality_s)
-        self.format_param = self._init_format(format_s)
+        self._region_param = self._init_region(region_s)
+        self._size_param = self._init_size(size_s)
+        self._rotation_param = self._init_rotation(rotation_s)
+        self._quality_param = self._init_quality(quality_s)
+        self._format_param = self._init_format(format_s)
+        self._init_delegations()
         self._canonical = None
+
+    def _init_delegations(self):
+        # This makes mocking a TON easier, plus Law of Demeter, whatever...
+        self.region_request_type = self._region_param.request_type
+        self.region_decimal_x = self._region_param.decimal_x
+        self.region_decimal_y = self._region_param.decimal_y
+        self.region_decimal_w = self._region_param.decimal_w
+        self.region_decimal_h = self._region_param.decimal_h
+        self.region_pixel_x = self._region_param.pixel_x
+        self.region_pixel_y = self._region_param.pixel_y
+        self.region_pixel_w = self._region_param.pixel_w
+        self.region_pixel_h = self._region_param.pixel_h
+        self.size_request_type = self._size_param.request_type
+        self.width = self._size_param.width
+        self.height = self._size_param.height
+        self.mirror = self._rotation_param.mirror
+        self.rotation = self._rotation_param.rotation
+        self.quality = self._quality_param.canonical
+        self.format = self._format_param.canonical
 
     @property
     def canonical(self):
         if self._canonical is None:
             params = (
-                self.region_param.canonical,
-                self.size_param.canonical,
-                self.rotation_param.canonical,
-                self.quality_param.canonical
+                self._region_param,
+                self._size_param,
+                self._rotation_param,
+                self._quality_param
             )
             path = '/'.join(map(str, params)) # str(param) returns the canonical version
-            self._canonical = '{0}.{1}'.format(path, self.format_param.canonical)
+            self._canonical = '{0}.{1}'.format(path, self.format)
         return self._canonical
 
     @property
@@ -51,7 +71,7 @@ class ImageRequest(IIIFRequest):
 
     def _init_size(self, size):
         enabled_features = IIIFRequest.compliance.size.features
-        return SizeParameter(size, enabled_features, self.info, self.region_param)
+        return SizeParameter(size, enabled_features, self.info, self._region_param)
 
     def _init_rotation(self, rotation):
         enabled_features = IIIFRequest.compliance.rotation.features
