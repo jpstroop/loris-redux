@@ -43,3 +43,24 @@ $ python setup.py test
  * https support
  * Store and Delete source files on the server over HTTP (eventually)
  * Enable and disable specific features, and dynamically determine compliance level
+
+ ## JPEG2000 Support with Kakadu
+
+ Kakadu binaries are included in this repository for testing purposes, however, JPEG2000 support is provided via OpenJpeg by default. This results  considerably worse performance, but clearer licensing terms than defaulting to Kakadu. To configure Kakadu, replace the OpenJpeg transcoder configuration in the application config with:
+
+ ```json
+ {
+   "class" : "loris.transcoders.KakaduJp2Transcoder",
+   "src_format" : "jp2",
+   "lib" : "/absolute/path/to/libkdu_vXX.so",
+   "bin" : "/absolute/path/to/kdu_expand"
+ }
+ ```
+
+ ###  Kakadu License Agreement
+
+ The executables available [here](http://kakadusoftware.com/downloads/) are made available for demonstration purposes only. Neither the author, Dr. Taubman, nor UNSW Australia accept any liability arising from their use or re-distribution.
+
+ Copyright is owned by NewSouth Innovations Pty Limited, commercial arm of the UNSW Australia in Sydney. __You are free to trial these executables and even to re-distribute them, so long as such use or re-distribution is accompanied with this copyright notice and is not for commercial gain.__ Note: Binaries can only be used for non-commercial purposes. If in doubt please contact the Kakadu Team at [info@kakadusoftware.com](mailto:info@kakadusoftware.com).
+
+ For further details, please visit the [Kakadu website](http://www.kakadusoftware.com/)

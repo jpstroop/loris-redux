@@ -34,12 +34,15 @@ PACKAGES=(
     'loris.parameters',
     'loris.resolvers',
     'loris.transcoders',
-    'loris.www'
 )
 
 PACKAGE_DATA={
     'loris': ['sample.jp2','config.json'],
-    'loris.www': ['www/favicon.ico']
+    'loris.www': ['www/favicon.ico'],
+    'loris.openjpeg': [
+        'openjpeg/linux/x86_64/opj_decompress',
+        'openjpeg/linux/x86_64/libopenjp2.so.2.1.2'
+    ]
 }
 
 setup(
