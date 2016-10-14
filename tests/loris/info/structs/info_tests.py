@@ -75,3 +75,12 @@ class TestInfo(object):
             OrderedDict([('width', 2048), ('scaleFactors', [16])])
         ]
         assert info.to_dict()['tiles'] == expected
+
+    def test_all_scales(self, compliance):
+        # Integrates w/ Tile. If this is failing, check Size first
+        info = Info(compliance, HTTP_ID)
+        t1 = Tile(512, [1, 2, 4])
+        t2 = Tile(1024, [8], 2048)
+        t3 = Tile(2048, [16])
+        info.tiles = [t1, t2, t3]
+        assert info.all_scales == [1, 2, 4, 8, 16]

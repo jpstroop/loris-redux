@@ -20,5 +20,4 @@ class AbstractTranscoder(metaclass=ABCMeta):
 
     @abstractmethod
     def execute(self, image_request):  # pragma: no cover
-        # TODO: target_file_path could change or go away since we're not caching
         return

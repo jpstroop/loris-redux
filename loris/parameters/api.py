@@ -21,4 +21,4 @@ class AbstractParameter(metaclass=ABCMeta):
         return
 
     def __str__(self): # pragma: no cover
-        return self._canonical
+        return self.canonical
