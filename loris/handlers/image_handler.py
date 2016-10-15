@@ -21,3 +21,12 @@ class ImageHandler(object):
         # similar to the InfoHandler (can probably push the etag and error
         # handling up to a shared Mixin.)
         return 'This must be an image request. id: {0}, Params: {1}'.format(identifier, iiif_params)
+
+        # from PIL import Image
+        # from io import BytesIO
+        # sample_img = '/home/jstroop/me/05509.jpg'
+        # im = Image.open(sample_img)
+        # stream = BytesIO()
+        # im.save(stream, format='jpeg')
+        # cherrypy.response.headers['content-type'] = 'image/jpeg'
+        # return stream.getvalue()
