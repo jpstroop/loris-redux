@@ -28,7 +28,7 @@ class OpenJpegJp2Transcoder(AbstractTranscoder, Jp2TranscoderHelpersMixin):
     def _build_command(self, image_request):
         d_param = OpenJpegJp2Transcoder.decode_area_from_image_request(image_request)
         r_param = OpenJpegJp2Transcoder.reduce_from_image_request(image_request)
-        return ' '.join((self.bin, d_param, r_param))
+        return '"{0}"'.format(' '.join((self.bin, d_param, r_param)))
 
     @staticmethod
     def decode_area_from_image_request(image_request):

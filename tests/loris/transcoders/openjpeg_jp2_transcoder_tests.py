@@ -46,5 +46,5 @@ class TestOpenJpegJp2Transcoder(object):
         }
         image_request = Mock(**mock_data)
         transcoder = OpenJpegJp2Transcoder({})
-        cmd_no_path = 'opj_decompress -d 0,1024,512,512 -r 4'
+        cmd_no_path = 'opj_decompress -d 0,1024,512,512 -r 4"'
         assert transcoder._build_command(image_request).endswith(cmd_no_path)
