@@ -19,6 +19,7 @@ class Jp2TranscoderHelpersMixin(object):
             'PATH' : self.bin
         }
 
+
     def make_named_pipe(self, extension='bmp'):
         # Make a unique named pipe and return the path
         name = ''.join(choice(ascii_lowercase) for x in range(5))

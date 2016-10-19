@@ -44,9 +44,11 @@ class TestKakaduJp2Transcoder(object):
             'region_decimal_y' : Decimal('0.17789195945'),
             'region_decimal_w' : 1,
             'region_decimal_h' : Decimal('0.64407721149'),
-            'info' :  info
+            'info' :  info,
+            'file_path' : '/foo/bar.jp2'
         }
         image_request = Mock(**mock_data)
         transcoder = KakaduJp2Transcoder({})
-        cmd_no_path = 'kdu_expand -region {0.17789195945,0},{0.64407721149,1} -reduce 5"'
-        assert transcoder._build_command(image_request).endswith(cmd_no_path)
+        fake_pipe = '/baz/quux.bmp'
+        cmd_no_path = 'kdu_expand -i /foo/bar.jp2 -o /baz/quux.bmp -region {0.17789195945,0},{0.64407721149,1} -reduce 5"'
+        assert transcoder._build_command(image_request, fake_pipe).endswith(cmd_no_path)
