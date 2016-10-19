@@ -42,9 +42,11 @@ class TestOpenJpegJp2Transcoder(object):
             'region_pixel_y' : 1024,
             'region_pixel_w' : 512,
             'region_pixel_h' : 512,
-            'info' :  info
+            'info' :  info,
+            'file_path' : '/foo/bar.jp2'
         }
         image_request = Mock(**mock_data)
         transcoder = OpenJpegJp2Transcoder({})
-        cmd_no_path = 'opj_decompress -d 0,1024,512,512 -r 4"'
-        assert transcoder._build_command(image_request).endswith(cmd_no_path)
+        fake_pipe = '/baz/quux.bmp'
+        cmd_no_path = 'opj_decompress -i /foo/bar.jp2 -o /baz/quux.bmp -d 0,1024,512,512 -r 4"'
+        assert transcoder._build_command(image_request, fake_pipe).endswith(cmd_no_path)

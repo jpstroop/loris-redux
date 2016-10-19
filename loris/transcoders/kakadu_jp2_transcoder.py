@@ -18,7 +18,8 @@ class KakaduJp2Transcoder(AbstractTranscoder, Jp2TranscoderHelpersMixin):
     def __init__(self, config):
         Jp2TranscoderHelpersMixin.__init__(self, config)
         AbstractTranscoder.__init__(self, config)
-        if self.lib is None or self.bin is None:
+        required_params = (self.lib, self.bin)
+        if any([p is None for p in required_params]):
             self.lib, self.bin = KakaduJp2Transcoder._find_kakadu()
 
     def execute(self, image_request):
@@ -26,10 +27,13 @@ class KakaduJp2Transcoder(AbstractTranscoder, Jp2TranscoderHelpersMixin):
         # Jp2TranscoderHelpersMixin.execute_shellout(cmd, image_request)
         pass
 
-    def _build_command(self, image_request):
+    def _build_command(self, image_request, fifo_path):
+        i_param = '-i {0}'.format(image_request.file_path)
+        o_param = '-o {0}'.format(fifo_path)
         region_param = KakaduJp2Transcoder.region_from_image_request(image_request)
         reduce_param = KakaduJp2Transcoder.reduce_from_image_request(image_request)
-        return '"{0}"'.format(' '.join((self.bin, region_param, reduce_param)))
+        cmd = ' '.join((self.bin, i_param, o_param, region_param, reduce_param))
+        return '"{0}"'.format(cmd)
 
     @staticmethod
     def region_from_image_request(image_request):

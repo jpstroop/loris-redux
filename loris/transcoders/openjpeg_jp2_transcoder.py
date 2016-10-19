@@ -18,17 +18,21 @@ class OpenJpegJp2Transcoder(AbstractTranscoder, Jp2TranscoderHelpersMixin):
     def __init__(self, config):
         Jp2TranscoderHelpersMixin.__init__(self, config)
         AbstractTranscoder.__init__(self, config)
-        if self.lib is None or self.bin is None:
+        required_params = (self.lib, self.bin)
+        if any([p is None for p in required_params]):
             self.lib, self.bin = OpenJpegJp2Transcoder._find_openjpeg()
 
     def execute(self, image_request):
         cmd = self._build_command(image_request)
         # return OpenJpegJp2Transcoder.execute_shellout(cmd)
 
-    def _build_command(self, image_request):
+    def _build_command(self, image_request, fifo_path):
+        i_param = '-i {0}'.format(image_request.file_path)
+        o_param = '-o {0}'.format(fifo_path)
         d_param = OpenJpegJp2Transcoder.decode_area_from_image_request(image_request)
         r_param = OpenJpegJp2Transcoder.reduce_from_image_request(image_request)
-        return '"{0}"'.format(' '.join((self.bin, d_param, r_param)))
+        cmd = ' '.join((self.bin, i_param, o_param, d_param, r_param))
+        return '"{0}"'.format(cmd)
 
     @staticmethod
     def decode_area_from_image_request(image_request):
