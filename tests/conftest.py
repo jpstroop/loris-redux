@@ -26,10 +26,12 @@ GRAY_PNG = path.join(IMAGES_DIR, 'gray.png')
 GRAY_TIF = path.join(IMAGES_DIR, 'gray.tif')
 REGION_TEST_JPG = path.join(IMAGES_DIR, 'region_test.jpg')
 REGION_TEST_JP2 = path.join(IMAGES_DIR, 'region_test.jp2')
+PILLOW_TRANSCODER_TESTS_BMP = path.join(IMAGES_DIR, 'pillow_transcoder_tests.bmp')
 TEST_IMAGES = ( COLOR_JP2, GRAY_JP2, COLOR_PROFILE_JP2, PRECINCTS_JP2,
-    COLOR_JPG, COLOR_PNG, COLOR_TIF, GRAY_JPG, GRAY_PNG, GRAY_TIF )
+    COLOR_JPG, COLOR_PNG, COLOR_TIF, GRAY_JPG, GRAY_PNG, GRAY_TIF,
+    PILLOW_TRANSCODER_TESTS_BMP )
 
-IMAGES_URL = 'http://www.princeton.edu/~jstroop/loris_test_images/images.tar'
+IMAGES_URL = 'http://www.princeton.edu/~jstroop/loris_test_images/images.tgz'
 
 def _download(url, to_dir):
     import requests
@@ -43,7 +45,6 @@ def _download(url, to_dir):
 def _load_json(path):
     with open(path, 'r') as f:
         return json.load(f)
-
 
 @pytest.fixture(scope="session", autouse=True)
 def download_images():
@@ -90,7 +91,7 @@ def precincts_jp2():
 
 @pytest.fixture(scope='session')
 def region_test_jp2():
-    return  REGION_TEST_JP2
+    return REGION_TEST_JP2
 
 @pytest.fixture(scope='session')
 def color_jpg():
@@ -98,7 +99,11 @@ def color_jpg():
 
 @pytest.fixture(scope='session')
 def region_test_jpg():
-    return  REGION_TEST_JPG
+    return REGION_TEST_JPG
+
+@pytest.fixture(scope='session')
+def pillow_transcoder_test_bmp():
+    return PILLOW_TRANSCODER_TESTS_BMP
 
 @pytest.fixture(scope='session')
 def color_png():

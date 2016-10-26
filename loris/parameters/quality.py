@@ -24,7 +24,7 @@ class QualityParameter(AbstractParameter):
                 not self.image_is_color and self.uri_slice == GRAY,
                 self.uri_slice == DEFAULT
             ))
-            self._canonical = DEFAULT if is_default else self.uri_slice
+            self._canonical = DEFAULT if is_default else self.uri_slice # TODO: constants!
         return self._canonical
 
     def _run_checks(self):

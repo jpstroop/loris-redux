@@ -16,7 +16,7 @@ class FormatParameter(AbstractParameter):
 
     @property
     def canonical(self):
-        return self._canonical
+        return self._canonical # TODO: should use the constants (PNG, JPG, etc)
 
     def _run_checks(self):
         if self.uri_slice == JPG:
