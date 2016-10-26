@@ -42,8 +42,8 @@ class OpenJpegJp2Transcoder(AbstractTranscoder, Jp2TranscoderHelpersMixin):
         else:
             x = image_request.region_pixel_x
             y = image_request.region_pixel_y
-            w = image_request.region_pixel_w
-            h = image_request.region_pixel_h
+            w = image_request.region_pixel_x + image_request.region_pixel_w
+            h = image_request.region_pixel_y + image_request.region_pixel_h
             return '-d {0},{1},{2},{3}'.format(x, y, w, h)
 
     @staticmethod

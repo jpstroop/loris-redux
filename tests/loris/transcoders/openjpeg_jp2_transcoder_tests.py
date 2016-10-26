@@ -20,7 +20,7 @@ class TestOpenJpegJp2Transcoder(object):
         }
         image_request = Mock(**args)
         meth = OpenJpegJp2Transcoder.decode_area_from_image_request
-        assert meth(image_request) == '-d 0,1024,512,512'
+        assert meth(image_request) == '-d 0,1024,512,1536'
 
     def test_reduce_from_image_request(self):
         info = Mock(width=5000, height=6500, all_scales=[1, 2, 4, 8, 16, 32, 64])
@@ -48,5 +48,5 @@ class TestOpenJpegJp2Transcoder(object):
         image_request = Mock(**mock_data)
         transcoder = OpenJpegJp2Transcoder({})
         fake_pipe = '/baz/quux.bmp'
-        cmd_no_path = 'opj_decompress -i /foo/bar.jp2 -o /baz/quux.bmp -d 0,1024,512,512 -r 4"'
+        cmd_no_path = 'opj_decompress -i /foo/bar.jp2 -o /baz/quux.bmp -d 0,1024,512,1536 -r 4"'
         assert transcoder._build_command(image_request, fake_pipe).endswith(cmd_no_path)

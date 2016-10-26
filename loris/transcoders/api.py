@@ -19,5 +19,5 @@ class AbstractTranscoder(metaclass=ABCMeta):
         logger.debug('Initialized %s.%s', __name__, self.__class__.__name__)
 
     @abstractmethod
-    def execute(self, image_request):  # pragma: no cover
+    def execute(self, image_request): # pragma: no cover
         return
