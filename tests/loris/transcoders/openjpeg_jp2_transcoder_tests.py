@@ -1,6 +1,7 @@
 from loris.transcoders.openjpeg_jp2_transcoder import OpenJpegJp2Transcoder
 
 from os.path import exists
+from os.path import isdir
 from unittest.mock import Mock
 
 class TestOpenJpegJp2Transcoder(object):
@@ -8,7 +9,7 @@ class TestOpenJpegJp2Transcoder(object):
     def test_it_can_find_openjpeg(self):
         lib, binary = OpenJpegJp2Transcoder._find_openjpeg()
         assert exists(lib)
-        assert lib.endswith('.so.2.1.2')
+        assert isdir(lib)
         assert exists(binary)
 
     def test_decode_area_from_image_request(self):
@@ -48,5 +49,5 @@ class TestOpenJpegJp2Transcoder(object):
         image_request = Mock(**mock_data)
         transcoder = OpenJpegJp2Transcoder({})
         fake_pipe = '/baz/quux.bmp'
-        cmd_no_path = 'opj_decompress -i /foo/bar.jp2 -o /baz/quux.bmp -d 0,1024,512,1536 -r 4"'
+        cmd_no_path = 'opj_decompress -i /foo/bar.jp2 -o /baz/quux.bmp -d 0,1024,512,1536 -r 4'
         assert transcoder._build_command(image_request, fake_pipe).endswith(cmd_no_path)

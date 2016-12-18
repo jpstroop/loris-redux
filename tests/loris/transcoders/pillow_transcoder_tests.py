@@ -8,14 +8,14 @@ import pytest
 from loris.transcoders.pillow_transcoder import PillowTranscoder
 from loris.constants import FULL
 
-GREEN = (0,150,0)
-RED = (150,0,0)
-BLUE = (0,0,150)
-ORANGE = (255,165,0)
-PURPLE = (128,0,128)
-DARK_SLATE = (49,79,79)
-BLACK = (0,0,0)
-WHITE = (255,255,255)
+from tests.loris.transcoders.helpers import GREEN
+from tests.loris.transcoders.helpers import RED
+from tests.loris.transcoders.helpers import BLUE
+from tests.loris.transcoders.helpers import ORANGE
+from tests.loris.transcoders.helpers import PURPLE
+from tests.loris.transcoders.helpers import DARK_SLATE
+from tests.loris.transcoders.helpers import BLACK
+from tests.loris.transcoders.helpers import WHITE
 
 @pytest.fixture(scope='function')
 def pillow_image(pillow_transcoder_test_bmp):

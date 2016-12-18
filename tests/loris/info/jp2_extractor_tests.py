@@ -143,7 +143,6 @@ class TestJp2Parser(object):
         assert info['tile_width'] == 1024
         assert info['tile_height'] == 1024
 
-
     def test_levels(self, tiled_jp2):
         info = Jp2Parser(tiled_jp2).metadata
         assert info['levels'] == 6

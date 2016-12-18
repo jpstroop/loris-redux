@@ -6,13 +6,16 @@ from unittest.mock import Mock
 
 class TestJp2TranscoderHelpersMixin(object):
 
-    def test_make_named_pipe(self):
-        transcoder = Jp2TranscoderHelpersMixin({})
-        try:
-            fifo_path = transcoder.make_named_pipe()
-            assert stat.S_ISFIFO(os.stat(fifo_path).st_mode)
-        finally:
-            os.unlink(fifo_path)
+    def test__named_pipe(self):
+        class ActualJp2Transcoder(Jp2TranscoderHelpersMixin):
+            def _build_command(self, image_request, fifo_path):
+                pass
+        transcoder = ActualJp2Transcoder({})
+        with transcoder._named_pipe() as pipe_path:
+            fifo_path = transcoder._named_pipe()
+            assert stat.S_ISFIFO(os.stat(pipe_path).st_mode)
+            assert pipe_path.endswith('.bmp')
+        assert not os.path.exists(pipe_path)
 
     def test__get_closest_scale(self):
         req_w = 300
