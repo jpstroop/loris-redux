@@ -13,7 +13,7 @@
 
 __WIP!__
 
-A rewrite of loris using [CherryPy](http://cherrypy.org/).
+A rewrite of loris using [CherryPy](http://cherrypy.org/) and Python `>=` 3.5.
 
 ## Stuff you can do now
 
