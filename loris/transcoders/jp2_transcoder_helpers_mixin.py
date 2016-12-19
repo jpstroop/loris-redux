@@ -1,38 +1,67 @@
+from abc import ABCMeta
+from abc import abstractmethod
+from contextlib import contextmanager
 from math import ceil
 from math import log
 from os import makedirs
 from os import mkfifo
+from os import unlink
 from os.path import join
+from PIL import Image
 from random import choice
 from string import ascii_lowercase
+from subprocess import DEVNULL
+from subprocess import Popen
+from shlex import split
 
-class Jp2TranscoderHelpersMixin(object):
+from loris.transcoders.pillow_transcoder import PillowTranscoder
+
+class Jp2TranscoderHelpersMixin(metaclass=ABCMeta):
     # Any code that can be shared between the OpenJpegJp2Transcoder and the
     # KakaduJp2Transcoder goes here.
     def __init__(self, config):
+        self.pillow_transcoder = PillowTranscoder()
         self.tmp = config.get('tmp', '/tmp/loris_tmp')
         makedirs(self.tmp, exist_ok=True) # let errors bubble up for now
-        self.lib = None
-        self.bin = None
-        self.env = {
-            'LD_LIBRARY_PATH' : self.lib,
-            'PATH' : self.bin
-        }
+        # TODO: Subclasses need to do this. Mayke them properties or something
+        # so that we can be sure that they do.
+        # self.lib = None
+        # self.bin = None
+        # self.env = {
+        #     'LD_LIBRARY_PATH' : self.lib,
+        #     'PATH' : self.bin
+        # }
 
-
-    def make_named_pipe(self, extension='bmp'):
-        # Make a unique named pipe and return the path
-        name = ''.join(choice(ascii_lowercase) for x in range(5))
-        pth = '{0}.{1}'.format(join(self.tmp, name), extension)
-        mkfifo(pth)
-        return pth
-
-    @staticmethod
-    def execute_shellout(cmd, image_request):
+    @abstractmethod
+    def _build_command(self, image_request, fifo_path):
         pass
-        # TODO: use run: https://docs.python.org/3/library/subprocess.html#subprocess.run
-        # TODO: do the shellout, finish deriving w/ PIL, return bytes or whatev.
 
+    def execute(self, image_request):
+        with self._named_pipe() as fifo_path:
+            cmd = self._build_command(image_request, fifo_path)
+            self._run_cmd(cmd, fifo_path)
+            pillow_image = self._run_cmd(cmd, fifo_path)
+        return self.pillow_transcoder.execute_with_pil_image(pillow_image, image_request)
+
+    def _run_cmd(self, cmd, fifo_path):
+        # Note: if this is causing trouble, remove stdout and stderr arg for
+        # debugging
+        proc = Popen(split(cmd), stdout=DEVNULL, stderr=DEVNULL, bufsize=-1, env=self.env)
+        # THIS CAN BLOCK. See http://stackoverflow.com/q/40352825/714478
+        pillow_image = Image.open(fifo_path)
+        proc.wait()
+        return pillow_image
+
+    @contextmanager
+    def _named_pipe(self, extension='bmp'):
+        # Make a unique named pipe and return the path
+        try:
+            name = ''.join(choice(ascii_lowercase) for x in range(6))
+            pth = '{0}.{1}'.format(join(self.tmp, name), extension)
+            mkfifo(pth)
+            yield pth
+        finally:
+            unlink(pth)
 
     @staticmethod
     def reduce_arg_from_image_request(image_request):

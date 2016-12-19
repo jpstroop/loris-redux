@@ -13,7 +13,7 @@ class AbstractTranscoder(metaclass=ABCMeta):
     # The application could then have a transcoder registry that finds
     # transcoders dynamically based on the input. Maybe outputs isn't necessary?
 
-    def __init__(self, config={}):
+    def __init__(self, config={}): # pylint:disable=dangerous-default-value
         self.__dict__ = { **self.__dict__, **config }
         # see https://docs.python.org/dev/whatsnew/3.5.html#pep-448-additional-unpacking-generalizations
         logger.debug('Initialized %s.%s', __name__, self.__class__.__name__)

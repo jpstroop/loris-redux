@@ -11,7 +11,7 @@ logger = getLogger('loris')
 
 class PillowTranscoder(object):
 
-    def __init__(self, config):
+    def __init__(self, config={}): # pylint:disable=dangerous-default-value
         AbstractTranscoder.__init__(self, config)
 
     def execute(self, image_request):

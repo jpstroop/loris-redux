@@ -16,7 +16,7 @@ class DispatcherMixin(object):
         self.info_handler = InfoHandler()
         self.resolvers_handler = ResolversHandler()
 
-    def _cp_dispatch(self, vpath):  # pylint:disable=protected-access
+    def _cp_dispatch(self, vpath): # pylint:disable=protected-access
         # This is the routing. CherryPy calls this method.
 
         # TODO: len(vpath) == 0

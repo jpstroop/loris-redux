@@ -9,22 +9,19 @@ from loris.transcoders.api import AbstractTranscoder
 from loris.transcoders.jp2_transcoder_helpers_mixin import Jp2TranscoderHelpersMixin
 
 LINUX_OPJ_BIN = 'opj_decompress'
-LINUX_OPJ_LIB = 'libopenjp2.so.2.1.2'
 
 logger = getLogger('loris')
 
-class OpenJpegJp2Transcoder(AbstractTranscoder, Jp2TranscoderHelpersMixin):
+class OpenJpegJp2Transcoder(Jp2TranscoderHelpersMixin, AbstractTranscoder):
 
     def __init__(self, config):
-        Jp2TranscoderHelpersMixin.__init__(self, config)
         AbstractTranscoder.__init__(self, config)
-        required_params = (self.lib, self.bin)
-        if any([p is None for p in required_params]):
-            self.lib, self.bin = OpenJpegJp2Transcoder._find_openjpeg()
-
-    def execute(self, image_request):
-        cmd = self._build_command(image_request)
-        # return OpenJpegJp2Transcoder.execute_shellout(cmd)
+        Jp2TranscoderHelpersMixin.__init__(self, config)
+        self.lib_dir, self.bin = OpenJpegJp2Transcoder._find_openjpeg()
+        self.env = {
+            'LD_LIBRARY_PATH' : self.lib_dir,
+            'PATH' : self.bin
+        }
 
     def _build_command(self, image_request, fifo_path):
         i_param = '-i {0}'.format(image_request.file_path)
@@ -32,7 +29,7 @@ class OpenJpegJp2Transcoder(AbstractTranscoder, Jp2TranscoderHelpersMixin):
         d_param = OpenJpegJp2Transcoder.decode_area_from_image_request(image_request)
         r_param = OpenJpegJp2Transcoder.reduce_from_image_request(image_request)
         cmd = ' '.join((self.bin, i_param, o_param, d_param, r_param))
-        return '"{0}"'.format(cmd)
+        return '{0}'.format(cmd)
 
     @staticmethod
     def decode_area_from_image_request(image_request):
@@ -58,7 +55,7 @@ class OpenJpegJp2Transcoder(AbstractTranscoder, Jp2TranscoderHelpersMixin):
         package_dir = dirname(dirname(abspath(__file__)))
         opj_dir = join(package_dir, 'openjpeg', system, processor)
         if system == 'linux':
-            return (join(opj_dir, LINUX_OPJ_LIB), join(opj_dir, LINUX_OPJ_BIN))
+            return (opj_dir, join(opj_dir, LINUX_OPJ_BIN))
         else:
             msg = 'OpenJpeg binaries not included for for {0}/{1}'.format(system, processor)
             raise RuntimeError(msg)
