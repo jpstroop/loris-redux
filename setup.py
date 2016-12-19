@@ -63,12 +63,12 @@ setup(
     setup_requires=[ ],
     tests_require=[
         'nose==1.3.7',
-        'pytest==3.0.3'
+        'pytest==3.0.5'
     ],
     install_requires=[
         'CherryPy==8.1.2',
         'Pillow==3.4.2',
         'python-magic==0.4.12',
-        'requests==2.11.1',
+        'requests==2.12.4',
     ]
 )
