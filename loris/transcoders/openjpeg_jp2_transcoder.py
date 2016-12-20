@@ -29,12 +29,12 @@ class OpenJpegJp2Transcoder(Jp2TranscoderHelpersMixin, AbstractTranscoder):
         d_param = OpenJpegJp2Transcoder.decode_area_from_image_request(image_request)
         r_param = OpenJpegJp2Transcoder.reduce_from_image_request(image_request)
         cmd = ' '.join((self.bin, i_param, o_param, d_param, r_param))
-        return '{0}'.format(cmd)
+        return cmd
 
     @staticmethod
     def decode_area_from_image_request(image_request):
         # analogous to kdu_expand -region, but works w/ pixels
-        if image_request.region_param.request_type is FULL:
+        if image_request.region_request_type is FULL:
             return ''
         else:
             x = image_request.region_pixel_x
