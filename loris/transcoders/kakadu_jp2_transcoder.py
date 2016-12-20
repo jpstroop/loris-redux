@@ -29,13 +29,14 @@ class KakaduJp2Transcoder(Jp2TranscoderHelpersMixin, AbstractTranscoder):
         region_param = KakaduJp2Transcoder.region_from_image_request(image_request)
         reduce_param = KakaduJp2Transcoder.reduce_from_image_request(image_request)
         cmd = ' '.join((self.bin, i_param, o_param, region_param, reduce_param))
-        return '{0}'.format(cmd)
+        return cmd
 
     @staticmethod
     def region_from_image_request(image_request):
         # Analogous to opj_decompress -d, but works w/ decimals and expects the
         # y & height dimensions first: {<top>,<left>},{<height>,<width>}
-        if image_request.region_param.request_type is FULL:
+
+        if image_request.region_request_type is FULL:
             return ''
         else:
             top = image_request.region_decimal_y

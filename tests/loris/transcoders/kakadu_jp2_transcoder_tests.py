@@ -1,9 +1,6 @@
-from contextlib import contextmanager
 from decimal import Decimal
-from os import unlink
 from os.path import exists
 from os.path import isdir
-from PIL import Image
 from unittest.mock import Mock
 
 import pytest
@@ -17,21 +14,11 @@ from tests.loris.transcoders.helpers import GREEN
 from tests.loris.transcoders.helpers import ORANGE
 from tests.loris.transcoders.helpers import RED
 from tests.loris.transcoders.helpers import is_close_color
+from tests.loris.transcoders.helpers import tmp_image
 
 @pytest.fixture(scope='module')
 def transcoder():
     return KakaduJp2Transcoder({})
-
-@contextmanager
-def tmp_image(bytes_io, fmt='jpg'):
-    tmp = '/tmp/loris_tmp/img.{0}'.format(fmt)
-    try:
-        with open(tmp, 'wb') as f:
-            f.write(bytes_io.getvalue())
-        i = Image.open(tmp)
-        yield i
-    finally:
-        unlink(tmp)
 
 class TestKakaduJp2Transcoder(object):
 
@@ -96,10 +83,6 @@ class TestKakaduJp2Transcoder(object):
             region_decimal_y = 0,       # _region_param.decimal_y
             region_decimal_w = 1,       # _region_param.decimal_w
             region_decimal_h = 1,       # _region_param.decimal_h
-            region_pixel_x = 0,         # _region_param.pixel_x
-            region_pixel_y = 0,         # _region_param.pixel_y
-            region_pixel_w = 6000,      # _region_param.pixel_w
-            region_pixel_h = 8000,      # _region_param.pixel_h
             size_request_type = FULL,   # _size_param.request_type
             width = 6000,               # _size_param.width
             height = 8000,              # _size_param.height
@@ -130,10 +113,6 @@ class TestKakaduJp2Transcoder(object):
             region_decimal_y = 0,          # _region_param.decimal_y
             region_decimal_w = 1,          # _region_param.decimal_w
             region_decimal_h = 1,          # _region_param.decimal_h
-            region_pixel_x = 0,            # _region_param.pixel_x
-            region_pixel_y = 0,            # _region_param.pixel_y
-            region_pixel_w = 60,           # _region_param.pixel_w
-            region_pixel_h = 80,           # _region_param.pixel_h
             size_request_type = SIZE_BY_W, # _size_param.request_type
             width = 60,                    # _size_param.width
             height = 80,                   # _size_param.height
