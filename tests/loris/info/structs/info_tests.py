@@ -8,8 +8,8 @@ from collections import OrderedDict
 import pytest
 
 @pytest.fixture()
-def compliance(level2_plus_json):
-    return Compliance(level2_plus_json)
+def compliance(level2_plus_yaml):
+    return Compliance(level2_plus_yaml)
 
 HTTP_ID = 'https://example.edu/images/1234'
 

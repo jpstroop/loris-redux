@@ -1,0 +1,54 @@
+formats:
+  png:
+    enabled: false
+  webp:
+    enabled: false
+http:
+  baseUriRedirect:
+    enabled: false
+  canonicalLinkHeader:
+    enabled: false
+  cors:
+    enabled: false
+  jsonldMediaType:
+    enabled: false
+  profileLinkHeader:
+    enabled: false
+quality:
+  bitonal:
+    enabled: false
+  color:
+    enabled: false
+  gray:
+    enabled: false
+region:
+  regionByPct:
+    enabled: false
+  regionByPx:
+    enabled: false
+  regionSquare:
+    enabled: false
+rotation:
+  mirroring:
+    enabled: false
+  rotationArbitrary:
+    enabled: false
+  rotationBy90s:
+    enabled: false
+size:
+  max:
+    enabled: false
+  sizeAboveFull:
+    enabled: false
+  sizeByConfinedWh:
+    enabled: false
+  sizeByDistortedWh:
+    enabled: false
+  sizeByH:
+    enabled: false
+  sizeByPct:
+    enabled: false
+  sizeByW:
+    enabled: false
+  sizeByWh:
+    enabled: false

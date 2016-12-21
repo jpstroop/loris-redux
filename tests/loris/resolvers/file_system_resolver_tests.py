@@ -58,10 +58,6 @@ class TestFileSystemResolver(object):
         resolver = FileSystemResolver({'root' : fixtures_dir})
         relative_path = region_test_jp2.replace(fixtures_dir, '')[1:] # rm leading /
         identifier = quote_plus(relative_path)
-        print('\n'+'*'*80)
-        print(relative_path)
-        print(identifier)
-        print('*'*80)
         info = resolver.resolve(identifier)
         assert info[0] == region_test_jp2
         assert info[1] == 'jp2'

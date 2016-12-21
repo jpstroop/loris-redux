@@ -10,7 +10,7 @@ from os import path
 from pkg_resources import resource_filename
 
 import cherrypy
-import json
+import yaml
 import logging
 import logging.config
 
@@ -63,23 +63,23 @@ class LorisApp(DispatcherMixin):
         cfg_dict = {}
         for cfg_path in self._find_config_files():
             try:
-                cfg_dict.update(self._load_json_file(cfg_path))
+                cfg_dict.update(self._load_yaml_file(cfg_path))
                 print('Config file found at {0}'.format(cfg_path))
             except FileNotFoundError:
                 print('No config file found at {0}'.format(cfg_path))
         return cfg_dict
 
-    def _load_json_file(self, json_path): # pragma: no cover
-        with open(json_path) as p:
-            return json.load(p)
+    def _load_yaml_file(self, yaml_path): # pragma: no cover
+        with open(yaml_path) as p:
+            return yaml.safe_load(p)
 
     def _find_config_files(self): # pragma: no cover
         # TODO: https://github.com/jpstroop/loris-redux/issues/44
         # returns paths to the config files in order of preference
         paths = []
-        paths.append(path.join(self._package_dir, 'config.json'))
-        paths.append('/etc/loris/config.json')
-        paths.append(path.expanduser('~/.loris/config.json'))
+        paths.append(path.join(self._package_dir, 'config.yaml'))
+        paths.append('/etc/loris/config.yaml')
+        paths.append(path.expanduser('~/.loris/config.yaml'))
         return paths
 
     def _configure_logging(self, cfg_dict):  # pragma: no cover
