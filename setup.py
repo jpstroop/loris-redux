@@ -69,6 +69,7 @@ setup(
         'CherryPy==8.1.3',
         'Pillow==3.4.2',
         'python-magic==0.4.12',
+        'pyyaml==3.12',
         'requests==2.12.4',
     ]
 )

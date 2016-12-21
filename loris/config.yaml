@@ -1,0 +1,118 @@
+# This file contains the application defaults. Removing keys will cause errors.
+# Place overrides in /etc/loris/config.yaml and/or ~/.loris/config.yaml
+application:
+  max_area: 16000000
+  max_height: null
+  max_width: null
+  server_uri: http://localhost:5004
+  scale_factors:
+    # This section only applicable if compliance level is zero
+    jp2:
+      encoded_only: false
+    other_formats:
+      # tiles will be allowed for scale factors the tile size, and sizes
+      # will be available for scale factors <= the tile size
+      enabled: true
+      tile_width: 1024
+      tile_height: 1024
+
+resolvers:
+  - class: loris.resolvers.file_system_resolver.FileSystemResolver
+    prefix: a
+    # This is only required configuration value for a FileSystemResolver
+    config:
+      root: /fill/me/in
+  - class: loris.resolvers.file_system_resolver.FileSystemResolver
+    prefix: b
+    # These are all of the optional values for a FileSystemResolver
+    config:
+      cache: true
+      cache_root: /tmp
+      cache_size: 100
+      format_suffix: .jp2
+      root: /fill/me/in
+
+transcoders:
+  - class: loris.transcoders.OpenJpegJp2Transcoder
+    # If lib or bin are null, Loris will try to us a local copy of OpenJpeg.
+    # Not all operating systems/processors may be supported
+    bin: null
+    lib: null
+    src_format: jp2
+
+logging:
+  disable_existing_loggers: false
+  formatters:
+    standard:
+      format: '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+  handlers:
+    default:
+      class: logging.StreamHandler
+      formatter: standard
+      level: DEBUG
+  loggers:
+    loris:
+      handlers: [default]
+      level: DEBUG
+      propagate: false
+  version: 1
+
+iiif_features:
+  # Loris will always be at least level 0 compliant. Manage additional
+  # features here.
+  formats:
+    png:
+      enabled: true
+    webp:
+      enabled: true
+  http:
+    baseUriRedirect:
+      enabled: true
+    canonicalLinkHeader:
+      enabled: true
+    cors:
+      enabled: true
+    jsonldMediaType:
+      enabled: true
+    profileLinkHeader:
+      enabled: true
+  quality:
+    bitonal:
+      enabled: true
+    color:
+      enabled: true
+    gray:
+      enabled: true
+  region:
+    regionByPct:
+      enabled: true
+    regionByPx:
+      enabled: true
+    regionSquare:
+      enabled: true
+  rotation:
+    color:
+      enabled: true
+    mirroring:
+      enabled: true
+    rotationArbitrary:
+      enabled: true
+    rotationBy90s:
+      enabled: true
+  size:
+    max:
+      enabled: true
+    sizeAboveFull:
+      enabled: true
+    sizeByConfinedWh:
+      enabled: true
+    sizeByDistortedWh:
+      enabled: true
+    sizeByH:
+      enabled: true
+    sizeByPct:
+      enabled: true
+    sizeByW:
+      enabled: true
+    sizeByWh:
+      enabled: true

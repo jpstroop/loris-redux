@@ -5,7 +5,7 @@ from loris.requests.iiif_request import IIIFRequest
 
 from os import path
 from os import remove
-import json
+import yaml
 import pytest
 
 HERE = path.abspath(path.dirname(__file__))
@@ -13,7 +13,7 @@ FIXTURES_DIR = path.join(HERE, 'fixtures')
 IMAGES_DIR = path.join(FIXTURES_DIR, 'images')
 COMPLIANCE_DIR = path.join(FIXTURES_DIR, 'compliance')
 
-LORIS_CONFIG_FILE = path.join(HERE, '../loris/config.json')
+LORIS_CONFIG_FILE = path.join(HERE, '../loris/config.yaml')
 COLOR_JP2 = path.join(IMAGES_DIR, 'color.jp2')
 GRAY_JP2 = path.join(IMAGES_DIR, 'gray.jp2')
 COLOR_PROFILE_JP2 = path.join(IMAGES_DIR, 'weird_color_profile.jp2')
@@ -42,9 +42,9 @@ def _download(url, to_dir):
         f.write(r.content)
     return local_filename
 
-def _load_json(path):
+def _load_yaml(path):
     with open(path, 'r') as f:
-        return json.load(f)
+        return yaml.safe_load(f)
 
 @pytest.fixture(scope="session", autouse=True)
 def download_images():
@@ -63,7 +63,7 @@ def download_images():
 def default_configs():
     # wish we didn't have to load this from disk every time, but it seems like
     # the only way to have it reset
-    return _load_json(LORIS_CONFIG_FILE)
+    return _load_yaml(LORIS_CONFIG_FILE)
 
 @pytest.fixture(scope='function')
 def app_configs(default_configs):
@@ -128,63 +128,63 @@ def gray_tif():
 # JSON fixtures for features
 
 @pytest.fixture(scope='session')
-def level0_scales_enabled_json():
-    pth = path.join(COMPLIANCE_DIR, 'level0_scales_enabled.json')
-    return _load_json(pth)
+def level0_scales_enabled_yaml():
+    pth = path.join(COMPLIANCE_DIR, 'level0_scales_enabled.yaml')
+    return _load_yaml(pth)
 
 @pytest.fixture(scope='session')
-def level1_exactly_json():
-    pth = path.join(COMPLIANCE_DIR, 'level1_exactly.json')
-    return _load_json(pth)
+def level1_exactly_yaml():
+    pth = path.join(COMPLIANCE_DIR, 'level1_exactly.yaml')
+    return _load_yaml(pth)
 
 @pytest.fixture(scope='session')
-def everything_enabled_json():
-    pth = path.join(COMPLIANCE_DIR, 'everything_enabled.json')
-    return _load_json(pth)
+def everything_enabled_yaml():
+    pth = path.join(COMPLIANCE_DIR, 'everything_enabled.yaml')
+    return _load_yaml(pth)
 
 @pytest.fixture(scope='session')
-def level0_plus_sizeByW_json():
-    pth = path.join(COMPLIANCE_DIR, 'level0_plus_sizeByW.json')
-    return _load_json(pth)
+def level0_plus_sizeByW_yaml():
+    pth = path.join(COMPLIANCE_DIR, 'level0_plus_sizeByW.yaml')
+    return _load_yaml(pth)
 
 @pytest.fixture(scope='session')
-def level1_plus_sizeByConfinedWh_json():
-    pth = path.join(COMPLIANCE_DIR, 'level1_plus_sizeByConfinedWh.json')
-    return _load_json(pth)
+def level1_plus_sizeByConfinedWh_yaml():
+    pth = path.join(COMPLIANCE_DIR, 'level1_plus_sizeByConfinedWh.yaml')
+    return _load_yaml(pth)
 
 @pytest.fixture(scope='session')
-def level2_plus_json():
-    pth = path.join(COMPLIANCE_DIR, 'level2_plus.json')
-    return _load_json(pth)
+def level2_plus_yaml():
+    pth = path.join(COMPLIANCE_DIR, 'level2_plus.yaml')
+    return _load_yaml(pth)
 
 @pytest.fixture(scope='session')
-def everything_but_regionByPx_json():
-    pth = path.join(COMPLIANCE_DIR, 'everything_but_regionByPx.json')
-    return _load_json(pth)
+def everything_but_regionByPx_yaml():
+    pth = path.join(COMPLIANCE_DIR, 'everything_but_regionByPx.yaml')
+    return _load_yaml(pth)
 
 @pytest.fixture(scope='session')
-def everything_but_sizeByConfinedWh_json():
-    pth = path.join(COMPLIANCE_DIR, 'everything_but_sizeByConfinedWh.json')
-    return _load_json(pth)
+def everything_but_sizeByConfinedWh_yaml():
+    pth = path.join(COMPLIANCE_DIR, 'everything_but_sizeByConfinedWh.yaml')
+    return _load_yaml(pth)
 
 @pytest.fixture(scope='session')
-def level0_nothing_json():
-    pth = path.join(COMPLIANCE_DIR, 'level0.json')
-    return _load_json(pth)
+def level0_nothing_yaml():
+    pth = path.join(COMPLIANCE_DIR, 'level0.yaml')
+    return _load_yaml(pth)
 
 # Compliance Fixtures
 
 @pytest.fixture()
-def compliance_2(everything_enabled_json):
-    return Compliance(everything_enabled_json)
+def compliance_2(everything_enabled_yaml):
+    return Compliance(everything_enabled_yaml)
 
 @pytest.fixture()
-def compliance_1(level1_exactly_json):
-    return Compliance(level1_exactly_json)
+def compliance_1(level1_exactly_yaml):
+    return Compliance(level1_exactly_yaml)
 
 @pytest.fixture()
-def compliance_0(level0_nothing_json):
-    return Compliance(level0_nothing_json)
+def compliance_0(level0_nothing_yaml):
+    return Compliance(level0_nothing_yaml)
 
 # Sets up IIIFRequest as the application would have it.
 @pytest.fixture(autouse=True, scope='function')

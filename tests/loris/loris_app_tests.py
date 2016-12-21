@@ -68,8 +68,6 @@ class TestLorisApp(helper.CPWebCase):
         self.assertHeader('Cache-Control', 'max-age=31536000, public')
         self.assertHeader('Content-Length', 156176)
 
-
-
     # temporary. Just makes sure we don't break rounting
     def test_image_returns200(self):
         self.getPage('/nir%2fvana/full/full/0/default.jpg')
