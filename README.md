@@ -24,7 +24,8 @@ $ pip install -r requirements.txt
 $ python run.py
 ```
 
-The `info.json` service is working. While the server is running go to `http://localhost:5004/loris:sample.jp2/info.json`.
+ * Info: `http://localhost:5004/loris:sample.jp2/info.json`
+ * Pixels: `http://localhost:5004/loris:sample.jp2/full/800,/0/default.jpg`
 
 There is also an extension service, `/resolvers.json` that lists the available resolvers. This is still WIP (see [#101](https://github.com/jpstroop/loris-redux/issues/101)), but the concept is there.
 
@@ -33,6 +34,14 @@ There is also an extension service, `/resolvers.json` that lists the available r
 ```bash
 $ python setup.py test
 ```
+
+If you want to see logging output while running the tests, run them with pytest:
+
+```bash
+$ py.test -s <optional/path/to/test/file.py>
+```
+
+You can also add `-v` to see the names of the tests being run. 
 
 ## Goals
 
@@ -52,7 +61,7 @@ Kakadu binaries are included in this repository for testing purposes, however, J
 ```yaml
 transcoders:
  # ....
-  - class: loris.transcoders.KakaduJp2Transcoder
+  - class: loris.transcoders.kakadu_jp2_transcoder.KakaduJp2Transcoder
     bin: /absolute/path/to/kdu_expand
     lib: /absolute/path/to/THE_DIRECTORY_THAT_CONTAINS_libkdu_vXX.so
     src_format: jp2
