@@ -1,13 +1,13 @@
-from loris.transcoders.jp2_transcoder_helpers_mixin import Jp2TranscoderHelpersMixin
+from loris.transcoders.abstract_jp2_transcoder import AbstractJp2Transcoder
 
 import os
 import stat
 from unittest.mock import Mock
 
-class TestJp2TranscoderHelpersMixin(object):
+class TestAbstractJp2Transcoder(object):
 
     def test__named_pipe(self):
-        class ActualJp2Transcoder(Jp2TranscoderHelpersMixin):
+        class ActualJp2Transcoder(AbstractJp2Transcoder):
             def _build_command(self, image_request, fifo_path):
                 pass
         transcoder = ActualJp2Transcoder({})
@@ -23,7 +23,7 @@ class TestJp2TranscoderHelpersMixin(object):
         full_w = 6000
         full_h = 8000
         scales = [1, 2, 4, 8, 16, 32, 64]
-        meth = Jp2TranscoderHelpersMixin._get_closest_scale
+        meth = AbstractJp2Transcoder._get_closest_scale
         assert meth(req_w, req_h, full_w, full_h, scales) == 16
 
     def test__get_closest_scale_empty_returns_1(self):
@@ -32,7 +32,7 @@ class TestJp2TranscoderHelpersMixin(object):
         full_w = 6000
         full_h = 8000
         scales = []
-        meth = Jp2TranscoderHelpersMixin._get_closest_scale
+        meth = AbstractJp2Transcoder._get_closest_scale
         assert meth(req_w, req_h, full_w, full_h, scales) == 1
 
     def test__scales_to_reduce_arg(self):
@@ -41,7 +41,7 @@ class TestJp2TranscoderHelpersMixin(object):
         full_w = 5999
         full_h = 7600
         scales = [1, 2, 4, 8, 16, 32, 64]
-        meth = Jp2TranscoderHelpersMixin._scales_to_reduce_arg
+        meth = AbstractJp2Transcoder._scales_to_reduce_arg
         assert meth(req_w, req_h, full_w, full_h, scales) == '4'
 
     def test__scales_to_reduce_arg_no_scales_returns_0(self):
@@ -50,7 +50,7 @@ class TestJp2TranscoderHelpersMixin(object):
         full_w = 5999
         full_h = 7600
         scales = []
-        meth = Jp2TranscoderHelpersMixin._scales_to_reduce_arg
+        meth = AbstractJp2Transcoder._scales_to_reduce_arg
         assert meth(req_w, req_h, full_w, full_h, scales) == '0'
 
     def test_reduce_arg_from_image_request_portrait(self):
@@ -62,7 +62,7 @@ class TestJp2TranscoderHelpersMixin(object):
             'info' :  info
         }
         image_request = Mock(**args)
-        meth = Jp2TranscoderHelpersMixin.reduce_arg_from_image_request
+        meth = AbstractJp2Transcoder.reduce_arg_from_image_request
         assert meth(image_request) == '4'
 
     def test_reduce_arg_from_image_request_landscape(self):
@@ -74,5 +74,5 @@ class TestJp2TranscoderHelpersMixin(object):
             'info' :  info
         }
         image_request = Mock(**args)
-        meth = Jp2TranscoderHelpersMixin.reduce_arg_from_image_request
+        meth = AbstractJp2Transcoder.reduce_arg_from_image_request
         assert meth(image_request) == '5'
