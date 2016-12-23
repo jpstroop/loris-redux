@@ -10,9 +10,6 @@ import sys
 # Maybe for init script? http://python-packaging.readthedocs.io/en/latest/command-line-scripts.html#the-console-scripts-entry-point
 
 class PyTest(TestCommand):
-    # TODO: figure out how to get the stuff we have in setup.cfg into this
-    # class instead, if possible, or else get rid of this so that config is all
-    # in one place. See:
     # http://pytest.org/latest/goodpractices.html#manual-integration
     def initialize_options(self):
         TestCommand.initialize_options(self)
@@ -20,7 +17,6 @@ class PyTest(TestCommand):
 
     def run_tests(self):
         import pytest
-        self.pytest_args.insert(0, '--cache-clear')
         errno = pytest.main(self.pytest_args)
         sys.exit(errno)
 
@@ -55,7 +51,7 @@ setup(
     include_package_data=True,
     # Details
     #url='http://pypi.python.org/pypi/MyApplication_v010/',
-    license='LICENSE.txt',
+    license='LICENSE',
     description='Loris IIIF Image Server',
     long_description=open('README.md').read(),
     cmdclass = {'test': PyTest},
