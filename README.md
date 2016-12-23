@@ -47,7 +47,7 @@ $ python setup.py test
 
 ## JPEG2000 Support
 
-Kakadu binaries are included in this repository for testing purposes, however, JPEG2000 support is provided via OpenJpeg by default. This results  considerably worse performance, but clearer licensing terms than defaulting to Kakadu. To configure Kakadu, replace the OpenJpeg transcoder configuration in the application config with:
+Kakadu binaries are included in this repository for testing purposes, however, JPEG2000 support is provided via OpenJpeg by default. This results  considerably worse performance, but clearer licensing terms than defaulting to Kakadu. Please review the [Kakadu Downloadable Executables Copyright and Disclaimer](https://github.com/jpstroop/loris-redux/blob/master/LICENSE-KAKADU) and the [licensing terms for OpenJPEG](https://github.com/jpstroop/loris-redux/blob/master/LICENSE-OPENJPEG). To configure Kakadu, acquire and install a the Kakadu binaries, and replace the OpenJpeg transcoder configuration in the application config with:
 
 ```yaml
 transcoders:
@@ -57,5 +57,3 @@ transcoders:
     lib: /absolute/path/to/THE_DIRECTORY_THAT_CONTAINS_libkdu_vXX.so
     src_format: jp2
 ```
-
-Please review the [Kakadu Downloadable Executables Copyright and Disclaimer](https://github.com/jpstroop/loris-redux/blob/master/LICENSE-KAKADU) and the licensing term for [OpenJPEG](https://github.com/jpstroop/loris-redux/blob/master/LICENSE-OPENJPEG).
