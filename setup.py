@@ -14,7 +14,6 @@ class PyTest(TestCommand):
     # class instead, if possible, or else get rid of this so that config is all
     # in one place. See:
     # http://pytest.org/latest/goodpractices.html#manual-integration
-    user_options = [('pytest-args=', 'a', "Arguments to pass to py.test")]
     def initialize_options(self):
         TestCommand.initialize_options(self)
         self.pytest_args = []
