@@ -58,7 +58,8 @@ setup(
     setup_requires=[ ],
     tests_require=[
         'nose==1.3.7',
-        'pytest==3.0.5'
+        'pytest==3.0.5',
+        'pytest-cov=2.4.0'
     ],
     install_requires=[
         'CherryPy==8.2.0',
