@@ -56,7 +56,6 @@ class SizeParameter(AbstractParameter):
     def __init__(self, uri_slice, enabled_features, info, region_param):
         super().__init__(uri_slice, enabled_features)
         self.info = info
-        # TODO: START HERE: size init args have changed
         self.region_w = region_param.pixel_w
         self.region_h = region_param.pixel_h
         self.width = None
@@ -66,7 +65,6 @@ class SizeParameter(AbstractParameter):
         self.max_area = self.info.profile[1].get(MAX_AREA)
         self._request_type = None
         self._distort_aspect = False
-
         # raises SyntaxException, RequestException
         self._initialize_properites()
         # raises FeatureNotEnabledException, RequestException
@@ -157,7 +155,6 @@ class SizeParameter(AbstractParameter):
     def _adjust_if_actually_full(self):
         if self.region_w == self.width and self.region_h == self.height:
             self._request_type = FULL
-            self._canonical = FULL
 
     def _init_full_request(self):
         self.width = self.region_w

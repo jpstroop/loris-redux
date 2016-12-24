@@ -44,6 +44,12 @@ $ py.test -s <optional/path/to/test/file.py>
 
 You can also add `-v` to see the names of the tests being run.
 
+To check test coverage locally:
+
+```bash
+py.test --cov=loris --cov-report html:cov_html
+```
+
 ## Goals
 
   * Full Image API 2.1 support, including all optional features

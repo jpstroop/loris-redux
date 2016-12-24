@@ -161,13 +161,13 @@ class Jp2Parser(object):
                     info['is_color'] = True
                 elif enum_cs == 17: # grayscale
                     info['is_color'] = False
-                elif enum_cs == 18: # sYCC
+                elif enum_cs == 18: # sYCC pragma: no cover
                     msg = 'Loris does not support sYCC colorspace'
                     raise Exception(msg)
-                else:
+                else:  # pragma: no cover
                     msg = 'Enumerated colorspace is neither "16", "17", or "18"'
                     raise Exception(msg)
-            elif colr_meth == 2 or (colr_meth <= 4 and colr_prec <= 256 and 1 <= colr_approx <= 4):
+            elif colr_meth == 2 or (colr_meth <= 4 and colr_prec <= 256 and 1 <= colr_approx <= 4): # pragma: no cover
                 # This is an assumption, i.e. that if you have a color profile
                 # embedded, you're probably working with color images.
                 # UNTESTED
@@ -176,7 +176,7 @@ class Jp2Parser(object):
                 profile_size = Jp2Parser.read_int(profile_size_bytes)
                 bts = (profile_size_bytes, jp2.read(profile_size-4))
                 info['embedded_color_profile'] = b''.join(bts)
-            else:
+            else: # sYCC
                 raise Exception('Unable to determine color information')
 
             Jp2Parser.read_to_marker(jp2, Jp2Parser.SOC)

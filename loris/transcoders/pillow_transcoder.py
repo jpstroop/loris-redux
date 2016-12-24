@@ -24,7 +24,7 @@ class PillowTranscoder(object):
 
     def execute_with_pil_image(self, pil_image, image_request, crop=False, dither=Image.FLOYDSTEINBERG):
         if crop and image_request.region_request_type is not FULL:
-            pil_image = self._crop(pil_image, image_request, crop=crop)
+            pil_image = self._crop(pil_image, image_request)
         if image_request.size_request_type is not FULL:
             pil_image = self._resize(pil_image, image_request)
         if image_request.mirror:

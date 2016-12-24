@@ -8,6 +8,8 @@ fake.py
 Loris.egg*
 dist/
 build/
+cov_html/
+.coverage
 tests/fixtures/images/*.png
 tests/fixtures/images/*.jpg
 tests/fixtures/images/*.tif

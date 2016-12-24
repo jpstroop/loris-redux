@@ -70,11 +70,11 @@ class LorisApp(DispatcherMixin):
                 print('No config file found at {0}'.format(cfg_path))
         return cfg_dict
 
-    def _load_yaml_file(self, yaml_path): # pragma: no cover
+    def _load_yaml_file(self, yaml_path):
         with open(yaml_path) as p:
             return yaml.safe_load(p)
 
-    def _find_config_files(self): # pragma: no cover
+    def _find_config_files(self):
         # TODO: https://github.com/jpstroop/loris-redux/issues/44
         # returns paths to the config files in order of preference
         paths = []
@@ -83,19 +83,19 @@ class LorisApp(DispatcherMixin):
         paths.append(path.expanduser('~/.loris/config.yaml'))
         return paths
 
-    def _configure_logging(self, cfg_dict):  # pragma: no cover
+    def _configure_logging(self, cfg_dict): # pragma: no cove
         global logger
         logging.config.dictConfig(cfg_dict)
         logger = logging.getLogger('loris')
         logger.debug('Logging configured')
 
-    def _init_compliance(self, cfg_dict): # pragma: no cover
+    def _init_compliance(self, cfg_dict):
         compliance = Compliance(cfg_dict)
         msg = 'Compliance is level {}'.format(int(compliance))
         logger.info(msg)
         return compliance
 
-    def _init_extractors(self, compliance, app_configs): # pragma: no cover
+    def _init_extractors(self, compliance, app_configs):
         pillow_extractor = PillowExtractor(compliance, app_configs)
         jp2_extractor = Jp2Extractor(compliance, app_configs)
         return {
@@ -105,7 +105,7 @@ class LorisApp(DispatcherMixin):
             'jp2' : jp2_extractor
         }
 
-    def _init_resolvers(self, resolver_list, include_example=True): # pragma: no cover
+    def _init_resolvers(self, resolver_list, include_example=True):
         resolvers = Resolvers(resolver_list)
         # add a resolver that resolves to the root of the package for viewing
         # sample files
