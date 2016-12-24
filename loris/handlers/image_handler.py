@@ -42,12 +42,3 @@ class ImageHandler(object):
         cherrypy.response.headers['Content-Type'] = 'application/json'
         cherrypy.response.status = loris_exception.http_status_code
         return str(loris_exception).encode('utf8')
-
-        # from PIL import Image
-        # from io import BytesIO
-        # sample_img = '/home/jstroop/me/05509.jpg'
-        # im = Image.open(sample_img)
-        # stream = BytesIO()
-        # im.save(stream, format='jpeg')
-        # cherrypy.response.headers['content-type'] = 'image/jpeg'
-        # return stream.getvalue()

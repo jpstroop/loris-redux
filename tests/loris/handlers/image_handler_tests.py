@@ -1,5 +1,7 @@
 from tests.loris.handlers.base_handler_test import BaseHandlerTest
 
+from json import loads
+
 class TestImageHandler(BaseHandlerTest):
 
     def test_image_returns200(self):
@@ -27,3 +29,11 @@ class TestImageHandler(BaseHandlerTest):
         etag = dict(headers)['Etag']
         self.getPage(uri, headers=[('if-none-match', etag)])
         self.assertStatus(304)
+
+    def test_400_for_bad_syntax(self):
+        uri = '/loris:sample.jp2/full/pct:10,/0/default.jpg'
+        status, body  = self.getPage(uri)[0::2]
+        body = loads(body.decode('utf-8'))
+        self.assertStatus(400)
+        assert body['error'] == 'SyntaxException'
+        assert body['description'] == "could not convert string to float: '10,'"
