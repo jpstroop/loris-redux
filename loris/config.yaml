@@ -33,12 +33,18 @@ resolvers:
       root: /fill/me/in
 
 transcoders:
-  - class: loris.transcoders.OpenJpegJp2Transcoder
+  - class: loris.transcoders.openjpeg_jp2_transcoder.OpenJpegJp2Transcoder
     # If lib or bin are null, Loris will try to us a local copy of OpenJpeg.
     # Not all operating systems/processors may be supported
     bin: null
     lib: null
     src_format: jp2
+  - class: loris.transcoders.pillow_transcoder.PillowTranscoder
+    src_format: jpg
+  - class: loris.transcoders.pillow_transcoder.PillowTranscoder
+    src_format: tif
+  - class: loris.transcoders.pillow_transcoder.PillowTranscoder
+    src_format: png
 
 logging:
   disable_existing_loggers: false

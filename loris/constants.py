@@ -13,12 +13,14 @@ FULL = 'full'
 GRAY = 'gray'
 HEIGHT = 'height'
 JPG = 'jpg'
+JPG_MEDIA_TYPE = 'image/jpeg'
 JSONLD_MEDIA_TYPE = 'jsonldMediaType'
 MAX = 'max'
 MAX_AREA = 'maxArea'
 MAX_HEIGHT = 'maxHeight'
 MAX_WIDTH = 'maxWidth'
 PNG = 'png'
+PNG_MEDIA_TYPE = 'image/png'
 PROFILE_LINK_HEADER = 'profileLinkHeader'
 PROTOCOL = 'http://iiif.io/api/image'
 REGION_BY_PCT = 'regionByPct'
@@ -37,8 +39,8 @@ SIZE_BY_W = 'sizeByW'
 SIZE_BY_WH = 'sizeByWh'
 SQUARE = 'square'
 WEBP = 'webp'
+WEBP_MEDIA_TYPE = 'image/webp'
 WIDTH = 'width'
-
 
 # numbers and objects
 DECIMAL_ONE = Decimal(1)
@@ -50,3 +52,9 @@ ALL_QUALITIES = (DEFAULT, COLOR, GRAY, BITONAL)
 BITONAL_QUALITIES = (BITONAL,)
 COLOR_QUALITIES = (BITONAL, COLOR, GRAY)
 GRAY_QUALITIES = (BITONAL, GRAY)
+
+MEDIA_TYPE_MAPPING = {
+    JPG : JPG_MEDIA_TYPE,
+    PNG : PNG_MEDIA_TYPE,
+    WEBP : WEBP_MEDIA_TYPE
+}

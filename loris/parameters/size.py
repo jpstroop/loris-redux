@@ -192,7 +192,10 @@ class SizeParameter(AbstractParameter):
         self.width = floor(self.region_w * scale)
 
     def _init_by_pct_request(self):
-        scale = SizeParameter._pct_to_decimal(self.uri_slice.split(':')[1])
+        try:
+            scale = SizeParameter._pct_to_decimal(self.uri_slice.split(':')[1])
+        except ValueError as ve:
+            raise SyntaxException(str(ve))
         if scale <= 0:
             msg = 'Size percentage must be greater than 0 ({0}).'
             raise RequestException(msg.format(self.uri_slice))

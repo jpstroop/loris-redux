@@ -1,11 +1,11 @@
 from loris.compliance import Compliance
 from loris.dispatcher_mixin import DispatcherMixin
+from loris.helpers.import_class import import_class
 from loris.helpers.safe_lru_dict import SafeLruDict
 from loris.info.jp2_extractor import Jp2Extractor
 from loris.info.pillow_extractor import PillowExtractor
 from loris.requests.iiif_request import IIIFRequest
 from loris.resolvers import Resolvers
-
 from os import path
 from pkg_resources import resource_filename
 
@@ -47,6 +47,7 @@ class LorisApp(DispatcherMixin):
         IIIFRequest.extractors = self._init_extractors(compliance, app_configs)
         IIIFRequest.info_cache = SafeLruDict(size=400)
         IIIFRequest.resolvers = self._init_resolvers(cfg_dict['resolvers'])
+        IIIFRequest.transcoders = self._init_transcoders(cfg_dict['transcoders'])
 
     @property
     def _package_dir(self): # pragma: no cover
@@ -117,3 +118,14 @@ This is a sample resolver to test that the server is working. Using \
             klass = 'loris.resolvers.file_system_resolver.FileSystemResolver'
             resolvers.add_resolver(klass, 'loris', cfg)
         return resolvers
+
+    def _init_transcoders(self, transcoder_list):
+        transcoders = {}
+        for entry in transcoder_list:
+            name = entry.pop('class')
+            Klass = import_class(name)
+            src_fmt = entry.pop('src_format')
+            transcoders[src_fmt] = Klass(entry)
+            msg = 'Initialized transcoders[{0}] with {1}'.format(src_fmt, name)
+            logger.info(msg)
+        return transcoders
