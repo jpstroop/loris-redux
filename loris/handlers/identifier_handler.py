@@ -9,6 +9,6 @@ class IdentifierHandler(object):
         cherrypy.response.status = 303
         return None
 
-    def PURGE(self, identifier):
-        # TODO: to purge any source images that have been cached locally
-        return 'You purged {0}\n'.format(identifier)
+    # def PURGE(self, identifier):
+    #     # TODO: to purge any source images that have been cached locally and return 204
+    #     return 'You purged {0}\n'.format(identifier)

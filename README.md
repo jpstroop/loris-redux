@@ -7,6 +7,7 @@
 [![License: New BSD](https://img.shields.io/badge/license-New%20BSD-blue.svg)](https://github.com/jpstroop/loris-redux/blob/master/LICENSE.txt)
 
 [![Python 3.5](https://img.shields.io/badge/python-3.5-yellow.svg)](https://img.shields.io/badge/python-3.5-yellow.svg)
+[![Python 3.6](https://img.shields.io/badge/python-3.5-yellow.svg)](https://img.shields.io/badge/python-3.5-yellow.svg)
 
 [![Ready](https://badge.waffle.io/jpstroop/loris-redux.svg?label=ready&title=Ready)](http://waffle.io/jpstroop/loris-redux)
 
@@ -41,7 +42,7 @@ If you want to see logging output while running the tests, run them with pytest:
 $ py.test -s <optional/path/to/test/file.py>
 ```
 
-You can also add `-v` to see the names of the tests being run. 
+You can also add `-v` to see the names of the tests being run.
 
 ## Goals
 
