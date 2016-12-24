@@ -7,6 +7,7 @@ import pytest
 
 from loris.transcoders.pillow_transcoder import PillowTranscoder
 from loris.constants import FULL
+from loris.constants import REGION_BY_PIXEL
 
 from tests.loris.transcoders.helpers import GREEN
 from tests.loris.transcoders.helpers import RED
@@ -166,6 +167,45 @@ class TestPillowTranscoder(object):
         pillow_image = parse_stream(stream)
         assert pillow_image.mode == 'LA'
         assert pillow_image.getpixel((0,0))[-1] == 0
+
+    def test_crop(self, transcoder, pillow_image):
+        image_request = Mock(
+            region_request_type = REGION_BY_PIXEL,
+            region_pixel_x = 100,
+            region_pixel_y = 200,
+            region_pixel_w = 300,
+            region_pixel_h = 400,
+            size_request_type=FULL,
+            width = 300,
+            height = 400,
+            rotation=0,
+            quality='gray',
+            format='png'
+        )
+        stream = transcoder.execute_with_pil_image(pillow_image, image_request, crop=True)
+        pillow_image = parse_stream(stream)
+        assert pillow_image.size == (300,400)
+        # TODO: might want to check pixels
+
+    def test_execute(self, transcoder, region_test_jpg):
+        image_request = Mock(
+            file_path = region_test_jpg,
+            region_request_type = FULL,
+            region_pixel_x = 0,
+            region_pixel_y = 0,
+            region_pixel_w = 6000,
+            region_pixel_h = 8000,
+            size_request_type=FULL,
+            width = 6000,
+            height = 8000,
+            mirror = False,
+            rotation = 0.0,
+            quality = 'default',
+            format='jpg'
+        )
+        stream = transcoder.execute(image_request)
+        pillow_image = parse_stream(stream)
+        assert pillow_image.size == (6000,8000)
 
     image_formats = (
         ('png', 'PNG'),
