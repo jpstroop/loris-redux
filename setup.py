@@ -61,7 +61,7 @@ setup(
         'pytest==3.0.5'
     ],
     install_requires=[
-        'CherryPy==8.1.3',
+        'CherryPy==8.2.0',
         'Pillow==3.4.2',
         'python-magic==0.4.12',
         'pyyaml==3.12',
