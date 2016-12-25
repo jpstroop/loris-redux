@@ -59,10 +59,11 @@ setup(
     tests_require=[
         'nose==1.3.7',
         'pytest==3.0.5',
-        'pytest-cov=2.4.0'
+        'pytest-cov==2.4.0',
+        'coverage==4.2'
     ],
     install_requires=[
-        'CherryPy==8.2.0',
+        'CherryPy==8.3.0',
         'Pillow==3.4.2',
         'python-magic==0.4.12',
         'pyyaml==3.12',
