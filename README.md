@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/jpstroop/loris-redux.svg?branch=master)](https://travis-ci.org/jpstroop/loris-redux) [![Coverage Status](https://coveralls.io/repos/github/jpstroop/loris-redux/badge.svg?branch=master)](https://coveralls.io/github/jpstroop/loris-redux?branch=master) [![Code Health](https://landscape.io/github/jpstroop/loris-redux/master/landscape.svg?style=flat)](https://landscape.io/github/jpstroop/loris-redux/master) [![Dependency Status](https://gemnasium.com/badges/github.com/jpstroop/loris-redux.svg)](https://gemnasium.com/github.com/jpstroop/loris-redux)
 
-[![License: New BSD](https://img.shields.io/badge/license-New%20BSD-blue.svg)](https://github.com/jpstroop/loris-redux/blob/master/LICENSE.txt)
+[![License: New BSD](https://img.shields.io/badge/license-New%20BSD-blue.svg)](https://github.com/jpstroop/loris-redux/blob/master/LICENSE)
 
 [![Python 3.5](https://img.shields.io/badge/python-3.5-yellow.svg)](https://img.shields.io/badge/python-3.5-yellow.svg)
 [![Python 3.6](https://img.shields.io/badge/python-3.6-yellow.svg)](https://img.shields.io/badge/python-3.6-yellow.svg)
@@ -61,7 +61,7 @@ py.test --cov=loris --cov-report html:cov_html
 
 ## JPEG2000 Support
 
-Kakadu binaries are included in this repository for testing purposes, however, JPEG2000 support is provided via OpenJpeg by default. This results  considerably worse performance, but clearer licensing terms than defaulting to Kakadu. Please review the [Kakadu Downloadable Executables Copyright and Disclaimer](https://github.com/jpstroop/loris-redux/blob/master/LICENSE-KAKADU) and the [licensing terms for OpenJPEG](https://github.com/jpstroop/loris-redux/blob/master/LICENSE-OPENJPEG). To configure Kakadu, acquire and install a the Kakadu binaries, and replace the OpenJpeg transcoder configuration in the application config with:
+Kakadu binaries [are included in this repository](https://github.com/jpstroop/loris-redux/tree/master/tests/kakadu) __for testing purposes__, however, JPEG2000 support is provided using [OpenJpeg](http://www.openjpeg.org/) by default. This results  considerably worse performance, but clearer licensing terms. Please review the [Kakadu Downloadable Executables Copyright and Disclaimer](https://github.com/jpstroop/loris-redux/blob/master/LICENSE#L75) and the [licensing terms for OpenJPEG](https://github.com/jpstroop/loris-redux/blob/master/LICENSE#L33). To configure Kakadu, [acquire and install the Kakadu binaries](http://kakadusoftware.com/), and replace the OpenJpeg transcoder configuration in the application config with:
 
 ```yaml
 transcoders:
