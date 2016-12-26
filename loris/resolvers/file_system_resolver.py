@@ -25,7 +25,7 @@ class FileSystemResolver(AbstractResolver, MagicCharacterizerMixin):
         self.format_suffix = config.get('format_suffix')
         self.cache = config.get('cache', False)
         if self.cache:
-            self.cache_root = join(config.get('cache_root', '/tmp'), 'loris_tmp')
+            self.cache_root = config.get('cache_root', '/tmp/loris_tmp')
             self._cache_size = config.get('cache_size', 100)
             self._cache_map = SafeLruDict(self._cache_size)
             makedirs(self.cache_root, exist_ok=True)
@@ -35,8 +35,8 @@ class FileSystemResolver(AbstractResolver, MagicCharacterizerMixin):
 
     def resolve(self, identifier):
         # TODO: Note that the indentifier here lacks the prefix. Maybe it
-        # should be passed in so that we can include it in exceptions? Changes
-        # the whole API.
+        # should be passed in so that we can include it in exception messages?
+        # Changes the whole API.
         file_path = self._get_file_path(identifier)
         if self.cache:
             file_path = self._sync_to_cache(identifier, file_path)
@@ -102,8 +102,7 @@ class FileSystemResolver(AbstractResolver, MagicCharacterizerMixin):
     def _list_cached_files(self): # newest first
         if self.cache:
             paths = [join(self.cache_root, n) for n in listdir(self.cache_root)]
-            key = self._get_mtime
-            sorted_paths = sorted(paths, key=key)
+            sorted_paths = sorted(paths, key=self._get_mtime)
             return sorted_paths
 
     def _cached_file_is_not_stale(self, src_path, cached_path):

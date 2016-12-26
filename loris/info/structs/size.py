@@ -11,22 +11,25 @@ class Size(object):
         self.height = height
 
     def __lt__(self, other):
-        return self.width < other.width
+        return self.width < other.width and self.height < other.height
 
     def __le__(self, other):
-        return self.width <= other.width
+        return self.width <= other.width and self.height <= other.height
 
     def __eq__(self, other):
-        return (self.width == other.width) and (self.height == other.height)
+        return self.width == other.width and self.height == other.height
 
     def __ge__(self, other):
-        return self.width >= other.width
+        return self.width >= other.width and self.height >= other.height
 
     def __gt__(self, other):
-        return self.width > other.width
+        return self.width > other.width and self.height > other.height
 
     def __ne__(self, other):
         return (self.width != other.width) or (self.height != other.height)
+
+    def __repr__(self):
+        return 'Size({0},{1})'.format(self.width, self.height)
 
     def to_dict(self):
         return OrderedDict(((WIDTH, self.width), (HEIGHT, self.height)))

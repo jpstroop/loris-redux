@@ -91,7 +91,7 @@ class TestJp2Extractor(object):
         assert info.profile[1]['maxHeight'] == 4001
 
     def test_wh_in_sizes_l0_when_no_maxes(self, compliance_0, tiled_jp2, app_configs):
-        app_configs['scale_factors']['jp2']['encoded_only'] = False
+        app_configs['sizes_and_tiles']['jp2']['encoded_only'] = False
         app_configs['max_area'] = None
         app_configs['max_width'] = None
         app_configs['max_height'] = None

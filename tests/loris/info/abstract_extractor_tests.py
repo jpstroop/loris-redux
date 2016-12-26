@@ -25,44 +25,52 @@ class TestAbstractExtractor(object):
         ex = ValidExtractor(compliance, app_configs)
         assert ex.compliance == compliance
 
-    def test_max_size_area_only(self):
-        max_area = 4000000
+    def test_max_size_area_only(self, compliance_2):
+        app_configs = { 'max_area' : 4000000 }
+        ve = ValidExtractor(compliance_2, app_configs)
         w = 3000
         h = 2000
-        size_entry = ValidExtractor.max_size(w, h, max_area=max_area)
-        assert size_entry.width * size_entry.height < max_area
+        size_entry = ve.max_size(w, h)
+        assert size_entry.width * size_entry.height < app_configs['max_area']
         assert size_entry.width == 2449
         assert size_entry.height == 1633
 
-    def test_max_size_w_only(self):
-        max_width = 2760
+    def test_max_size_w_only(self, compliance_2):
+        app_configs = { 'max_width' : 2760 }
+        ve = ValidExtractor(compliance_2, app_configs)
         w = 3000
         h = 2000
-        size_entry = ValidExtractor.max_size(w, h, max_width=max_width)
+        size_entry = ve.max_size(w, h)
         assert size_entry.width == 2760
         assert size_entry.height == 1840
 
-    def test_max_size_h_only(self):
-        max_height = 1000
+    def test_max_size_h_only(self, compliance_2):
+        app_configs = { 'max_height' : 1000 }
+        ve = ValidExtractor(compliance_2, app_configs)
         w = 3400
         h = 2254
-        size_entry = ValidExtractor.max_size(w, h, max_height=max_height)
+        size_entry = ve.max_size(w, h)
         assert size_entry.width == 1508
         assert size_entry.height == 1000
 
-    def test_max_all_the_things(self):
-        max_area = 4000000
-        max_width = 1500
-        max_height = 2700
+    def test_max_all_the_things(self, compliance_2):
+        app_configs = {
+            'max_area' : 4000000,
+            'max_width' : 1500,
+            'max_height' : 2700
+        }
+        ve = ValidExtractor(compliance_2, app_configs)
         w = 6000
         h = 3798
-        size_entry = ValidExtractor.max_size(w, h, max_area=max_area, max_width=max_width, max_height=max_height)
+        size_entry = ve.max_size(w, h)
         assert size_entry.width == 1500
         assert size_entry.height == 950
 
-    def test_max_none_set(self):
+    def test_max_none_set(self, compliance_2):
+        app_configs = {}
+        ve = ValidExtractor(compliance_2, app_configs)
         w = 6000
         h = 3798
-        size_entry = ValidExtractor.max_size(w, h)
+        size_entry = ve.max_size(w, h)
         assert size_entry.width == w
         assert size_entry.height == h
