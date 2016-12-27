@@ -63,7 +63,7 @@ setup(
         'coverage==4.2'
     ],
     install_requires=[
-        'CherryPy==8.3.0',
+        'CherryPy==8.5.0',
         'Pillow==3.4.2',
         'python-magic==0.4.12',
         'pyyaml==3.12',
