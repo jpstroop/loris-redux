@@ -5,39 +5,35 @@ application:
   max_height: null
   max_width: null
   server_uri: http://localhost:5004
-  scale_factors:
-    # This section only applicable if compliance level is zero
+  sizes_and_tiles:
+    # These settings are regardless of configured compliance, i.e., regionByPx
+    # and sizeByW can be disabled and requests that match these criteria will
+    # work.
     jp2:
-      encoded_only: false
+      encoded_only: False     # Only report encoded tiles and scale factors
     other_formats:
-      # tiles will be allowed for scale factors the tile size, and sizes
-      # will be available for scale factors <= the tile size
-      enabled: true
-      tile_width: 1024
-      tile_height: 1024
+      # For other formats, these settings determine the tiles, scale factors,
+      # and sizes that still be reported in info.json
+      enabled: True           # Set to false to report nothing. Otherwise:
+      min_dimension: 80       # images scaled to, e.g., 2✕1 aren't useful
+      all_scale_factors: True # Include scaled sizes larger than the tile size?
+      tile_width: 1024        # At scale. At a scale factor of 1, tiles will be
+      tile_height: 1024       # 1024; scale factor of 2, 512; 4, 256; etc.
 
 resolvers:
   - class: loris.resolvers.file_system_resolver.FileSystemResolver
-    prefix: a
-    # This is only required configuration value for a FileSystemResolver
+    prefix: whatever
     config:
-      root: /fill/me/in
-  - class: loris.resolvers.file_system_resolver.FileSystemResolver
-    prefix: b
-    # These are all of the optional values for a FileSystemResolver
-    config:
-      cache: true
-      cache_root: /tmp
-      cache_size: 100
-      format_suffix: .jp2
-      root: /fill/me/in
+      root: /fill/me/in           # REQUIRED
+      format_suffix: jp2          # Optional, default: null
+      cache: True                 # Optional, default: False
+      cache_root: /tmp/loris_tmp  # Optional, only applies if cache: True
+      cache_size: 200             # Optional, only applies if cache: True
 
 transcoders:
   - class: loris.transcoders.openjpeg_jp2_transcoder.OpenJpegJp2Transcoder
-    # If lib or bin are null, Loris will try to us a local copy of OpenJpeg.
-    # Not all operating systems/processors may be supported
-    bin: null
-    lib: null
+    bin: null # If lib or bin are null, Loris will try to use a local copy of
+    lib: null # OpenJpeg. Not all operating systems/processors may be supported.
     src_format: jp2
   - class: loris.transcoders.pillow_transcoder.PillowTranscoder
     src_format: jpg
@@ -47,7 +43,7 @@ transcoders:
     src_format: png
 
 logging:
-  disable_existing_loggers: false
+  disable_existing_loggers: False
   formatters:
     standard:
       format: '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
@@ -60,7 +56,7 @@ logging:
     loris:
       handlers: [default]
       level: DEBUG
-      propagate: false
+      propagate: False
   version: 1
 
 iiif_features:
@@ -68,57 +64,57 @@ iiif_features:
   # features here.
   formats:
     png:
-      enabled: true
+      enabled: True
     webp:
-      enabled: true
+      enabled: True
   http:
     baseUriRedirect:
-      enabled: true
+      enabled: True
     canonicalLinkHeader:
-      enabled: true
+      enabled: True
     cors:
-      enabled: true
+      enabled: True
     jsonldMediaType:
-      enabled: true
+      enabled: True
     profileLinkHeader:
-      enabled: true
+      enabled: True
   quality:
     bitonal:
-      enabled: true
+      enabled: True
     color:
-      enabled: true
+      enabled: True
     gray:
-      enabled: true
+      enabled: True
   region:
     regionByPct:
-      enabled: true
+      enabled: True
     regionByPx:
-      enabled: true
+      enabled: True
     regionSquare:
-      enabled: true
+      enabled: True
   rotation:
     color:
-      enabled: true
+      enabled: True
     mirroring:
-      enabled: true
+      enabled: True
     rotationArbitrary:
-      enabled: true
+      enabled: True
     rotationBy90s:
-      enabled: true
+      enabled: True
   size:
     max:
-      enabled: true
+      enabled: True
     sizeAboveFull:
-      enabled: true
+      enabled: True
     sizeByConfinedWh:
-      enabled: true
+      enabled: True
     sizeByDistortedWh:
-      enabled: true
+      enabled: True
     sizeByH:
-      enabled: true
+      enabled: True
     sizeByPct:
-      enabled: true
+      enabled: True
     sizeByW:
-      enabled: true
+      enabled: True
     sizeByWh:
-      enabled: true
+      enabled: True

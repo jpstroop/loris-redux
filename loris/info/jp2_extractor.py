@@ -7,7 +7,7 @@ from loris.info.structs.size import Size
 from loris.info.structs.tile import Tile
 
 class Jp2Extractor(AbstractExtractor):
-    # Extracts a JPEG 2000 specific info for an image
+    # Extracts JPEG 2000 specific info for an image
     #
     def __init__(self, compliance, app_configs):
         super().__init__(compliance, app_configs)
@@ -19,13 +19,8 @@ class Jp2Extractor(AbstractExtractor):
         info.width = metadata['image_width']
         info.height = metadata['image_height']
         info.identifier = http_identifier
-
-        max_size = Jp2Extractor.max_size(info.width, \
-                info.height, max_area=self.max_area, \
-                max_width=self.max_width, max_height=self.max_height)
-
+        max_size = self.max_size(info.width, info.height)
         info.sizes = [ max_size ]
-
         if self.include_tiles_and_sizes:
             info.tiles = Jp2Extractor._format_tiles(metadata)
             level_sizes = Jp2Extractor._levels_to_sizes( \
@@ -43,7 +38,7 @@ class Jp2Extractor(AbstractExtractor):
     @property
     def include_tiles_and_sizes(self):
         if self._include_tiles_and_sizes is None:
-            encoded_only = self.app_configs['scale_factors']['jp2']['encoded_only']
+            encoded_only = self.app_configs['sizes_and_tiles']['jp2']['encoded_only']
             self._include_tiles_and_sizes = (self.compliance > 0) or encoded_only
         return self._include_tiles_and_sizes
 

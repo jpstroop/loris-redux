@@ -25,16 +25,16 @@ MODES_TO_QUALITIES = {
 COLOR_MODES = ('RGB', 'RGBA', 'CMYK', 'YCbCr', 'I', 'F')
 
 class PillowExtractor(AbstractExtractor):
-    # See comments in AbstractExtractor (in this module) for how this is
-    # intended to work.
 
     def __init__(self, compliance, app_configs):
         super().__init__(compliance, app_configs)
-        sf = app_configs['scale_factors']['other_formats']
-        self.include_scale_factors = sf['enabled'] and self.compliance == 0
-        if self.include_scale_factors:
+        sf = app_configs['sizes_and_tiles']['other_formats']
+        self.include_sizes_and_tiles = sf['enabled']
+        if self.include_sizes_and_tiles:
             self.tile_w = sf['tile_width']
             self.tile_h = sf['tile_height']
+            self.include_all_factors = sf['all_scale_factors']
+            self.min_dimension = sf['min_dimension']
 
     def extract(self, path, http_identifier):
         info = Info(self.compliance, http_identifier)
@@ -42,57 +42,49 @@ class PillowExtractor(AbstractExtractor):
         w, h = pillow_image.size
         info.width, info.height = (w, h)
         info.profile = self._make_profile(pillow_image)
-        max_size = PillowExtractor.max_size(w, h, max_area=self.max_area, \
-                max_width=self.max_width, max_height=self.max_height)
-        info.sizes = [ max_size ]
-        if self.include_scale_factors:
-            tiles, sizes = self.level_zero_tiles_and_sizes(max_size.width, \
-                max_size.height, self.tile_w, self.tile_h)
-            info.tiles = tiles
-            if info.width == max_size.width:
-                info.sizes.extend(sizes[1:])
-            else:
-                info.sizes.extend(sizes)
+        max_size = self.max_size(w, h)
+        if self.include_sizes_and_tiles:
+            scale_factors = self._scale_factors(w, h)
+            info.tiles = self._calc_tiles(w, h, scale_factors)
+            tile_size = info.tiles[0]
+            info.sizes = self._calc_sizes(w, h, max_size, tile_size, scale_factors)
+        else:
+            info.sizes = [max_size]
         return info
+
+    def _scale_factors(self, image_w, image_h):
+        short_image_dimenson = min(image_w, image_h)
+        scales = []
+        nxt = 1
+        while ceil(short_image_dimenson / nxt) >= self.min_dimension:
+            scales.append(nxt)
+            nxt = scales[-1]*2
+        return scales
+
+    def _calc_tiles(self, image_w, image_h, scale_factors):
+        image_long = max(image_w, image_h)
+        self.tile_long =  max(self.tile_w, self.tile_h)
+        scales = filter(lambda s: (image_long / s) > self.tile_long, scale_factors)
+        return [ Tile(self.tile_w, tuple(scales), self.tile_h) ]
+
+    def _calc_sizes(self, image_w, image_h, max_size, tile_size, scale_factors):
+        # Note: We make heavy use of the fact that Size and Tile structs are
+        # comparable here. See loris.info.structs.size.Size, etc. for details.
+        # It's cool.
+        sizes = [ max_size ]
+        for s in scale_factors:
+            this_size = Size(ceil(image_w / s), ceil(image_h / s))
+            less_than_max = this_size < max_size
+            less_than_tile = this_size < tile_size
+            if self.include_all_factors and less_than_max:
+                sizes.append(this_size)
+            elif not self.include_all_factors and less_than_tile:
+                sizes.append(this_size)
+        return sizes
 
     @staticmethod
     def is_color(pillow_image):
         return pillow_image.mode in COLOR_MODES
-
-    def level_zero_tiles_and_sizes(self, image_w, image_h, tile_w, tile_h):
-        # These are designed to work w/ OSd, hence ceil().
-        tiles = PillowExtractor._level_zero_tiles(image_w, image_h, tile_w, tile_h)
-        # Always a chance that the default tile size is larger than the image:
-        smallest_scale = 1
-        if tiles is not None:
-            smallest_scale = tiles[0].scale_factors[-1]
-        sizes = PillowExtractor._level_zero_sizes(smallest_scale, image_w, image_h)
-        return (tiles, sizes)
-
-    @classmethod
-    def _level_zero_tiles(cls, image_w, image_h, tile_w, tile_h):
-        long_image_dimenson = max(image_w, image_h)
-        long_tile_dimenson =  max(tile_w, tile_h)
-        scales = [1]
-        while (long_image_dimenson / scales[-1]) > long_tile_dimenson:
-            nxt = scales[-1]*2
-            if (long_image_dimenson / nxt) > long_tile_dimenson:
-                scales.append(nxt)
-            else:
-                return [Tile(tile_w, scales, tile_h)]
-
-    @classmethod
-    def _level_zero_sizes(cls, smallest_scale_factor, image_w, image_h):
-        sizes = [ ]
-        scale = smallest_scale_factor
-        size_w = ceil(image_w / scale)
-        size_h = ceil(image_h / scale)
-        while any([d != 1 for d in (size_w, size_h)]):
-            sizes.append(Size(size_w, size_h))
-            scale = scale*2
-            size_w = ceil(image_w / scale)
-            size_h = ceil(image_h / scale)
-        return sizes
 
     def _make_profile(self, pillow_image):
         include_color = PillowExtractor.is_color(pillow_image)

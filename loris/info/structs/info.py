@@ -38,7 +38,7 @@ class Info(object):
         return json.dumps(self.to_dict())
 
     def __repr__(self):
-        return repr(self._to_dict())
+        return repr(self.to_dict())
 
     @property
     def long_dim(self):
