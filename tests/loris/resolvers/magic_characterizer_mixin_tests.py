@@ -26,5 +26,5 @@ class TestMagicCharacterizerMixin(object):
                 fmt = MyResolver.characterize(color_jpg)
                 return (color_jpg, fmt)
 
-        resolver = MyResolver()
+        resolver = MyResolver({})
         assert resolver.resolve(color_jpg) == (color_jpg, 'jpg')
