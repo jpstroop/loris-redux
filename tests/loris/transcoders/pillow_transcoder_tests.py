@@ -98,7 +98,7 @@ class TestPillowTranscoder(object):
     def test_rotate_non_90_expands(self, transcoder, pillow_image):
         image_request = Mock(rotation=135)
         pillow_image = transcoder._rotate(pillow_image, image_request)
-        assert pillow_image.size == (991,990)
+        assert pillow_image.size == (990,990)
 
     def test_rotate_non_90_png_has_transparent_alpha(self, transcoder, pillow_image):
         # TODO: need a similar test for saved images
