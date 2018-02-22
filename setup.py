@@ -58,15 +58,15 @@ setup(
     setup_requires=[ ],
     tests_require=[
         'nose==1.3.7',
-        'pytest==3.0.5',
-        'pytest-cov==2.4.0',
-        'coverage==4.2'
+        'pytest==3.4.1',
+        'pytest-cov==2.5.1',
+        'coverage==4.5.1'
     ],
     install_requires=[
-        'CherryPy==8.5.0',
-        'Pillow==3.4.2',
-        'python-magic==0.4.12',
+        'CherryPy==14.0.0',
+        'Pillow==5.0.0',
+        'python-magic==0.4.15',
         'pyyaml==3.12',
-        'requests==2.12.4',
+        'requests==2.18.4',
     ]
 )
