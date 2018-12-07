@@ -1,5 +1,5 @@
 sudo: required
-dist: xenial
+dist: bionic
 
 language: python
 
@@ -7,8 +7,7 @@ python:
   - 3.5
   - 3.6
   - 3.7
-  # - "nightly"
-  # - "pypy3.5"
+  - 3.8
 
 addons:
   apt:
@@ -42,3 +41,4 @@ notifications:
     on_failure: "always"
     template:
       - "%{repository}//%{branch}@%{commit} by %{author}: %{message} - %{build_url}"
+      

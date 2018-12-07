@@ -8,7 +8,7 @@ from loris.constants import FULL
 from loris.transcoders.api import AbstractTranscoder
 from loris.transcoders.abstract_jp2_transcoder import AbstractJp2Transcoder
 
-LINUX_OPJ_BIN = 'opj_decompress'
+OPJ_DECOMPRESS = 'opj_decompress'
 
 logger = getLogger('loris')
 
@@ -19,7 +19,8 @@ class OpenJpegJp2Transcoder(AbstractJp2Transcoder, AbstractTranscoder):
         AbstractJp2Transcoder.__init__(self, config)
         self.lib_dir, self.bin = OpenJpegJp2Transcoder._find_openjpeg()
         self.env = {
-            'LD_LIBRARY_PATH' : self.lib_dir,
+            'LD_LIBRARY_PATH' : self.lib_dir,   # for linux
+            'DYLD_LIBRARY_PATH' : self.lib_dir, # for darwin 
             'PATH' : self.bin
         }
 
@@ -51,11 +52,11 @@ class OpenJpegJp2Transcoder(AbstractJp2Transcoder, AbstractTranscoder):
     @staticmethod
     def _find_openjpeg():
         system = platform.system().lower()
-        processor = platform.processor() # is this enough?
+        processor = platform.machine() # is this enough?
         package_dir = dirname(dirname(abspath(__file__)))
         opj_dir = join(package_dir, 'openjpeg', system, processor)
-        if system == 'linux':
-            return (opj_dir, join(opj_dir, LINUX_OPJ_BIN))
+        if system in ('linux', 'darwin'):
+            return (opj_dir, join(opj_dir, OPJ_DECOMPRESS))
         else:
             msg = 'OpenJpeg binaries not included for for {0}/{1}'.format(system, processor)
             raise RuntimeError(msg)
