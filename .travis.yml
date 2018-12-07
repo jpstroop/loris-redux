@@ -1,13 +1,12 @@
 sudo: required
-dist: trusty
+dist: xenial
 
 language: python
 
 python:
   - 3.5
-  - "3.5-dev"
   - 3.6
-  - "3.6-dev"
+  - 3.7
   # - "nightly"
   # - "pypy3.5"
 
@@ -19,18 +18,16 @@ addons:
     - libjpeg-turbo8-dev
     - libfreetype6
     - libfreetype6-dev
+    - zlib1g
     - zlib1g-dev
     - liblcms2-2
     - liblcms2-dev
-    - liblcms-utils
-    - libtiff4-dev
+    - liblcms2-utils
+    - libtiff5-dev
     - libwebp-dev
 
 install:
-  - pip install -r requirements.txt
-  - pip install pytest
-  - pip install pytest-cov
-  - pip install python-coveralls
+  - pipenv install --dev
 
 # See https://pypi.python.org/pypi/pytest-cov
 script: py.test --cov=loris
