@@ -58,7 +58,7 @@ setup(
     setup_requires=[ ],
     tests_require=[
         'nose==1.3.7',
-        'pytest==3.4.1',
+        'pytest==4.0.1',
         'pytest-cov==2.6.0',
         'coverage==4.5.2'
     ],
