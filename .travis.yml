@@ -1,15 +1,10 @@
 sudo: required
 dist: xenial
-
 language: python
-
 python:
-  - 3.5
-  - 3.6
-  - 3.7
-  # - "nightly"
-  # - "pypy3.5"
-
+- 3.5
+- 3.6
+- 3.7
 addons:
   apt:
     packages:
@@ -26,25 +21,22 @@ addons:
     - libtiff5-dev
     - libwebp-dev
   sonarcloud:
-    organization: "jpstroop-github" # the key of the org you chose at step #3
+    organization: jpstroop-github
     token:
-      secure: "f4Uz9D81KoszIVu3yJXsvCDiVpgmq9YY6H1vM/Y30kH3mUkMMgc/Qny85+5753XLNZxv3+lhYETFmh7wT1/4r0eZ4jY4zzr31h0d+0E40/2t5ZyllAeehmBAj9I/oxWg59PqaiYOK9M//t7HNDy4qY7TG+SnQdMkMnrgnVOUqHXWRtEsfybOlknWPrYC2EYcI2nNIQMY83EUW3NYi8s4VYiHkGCj9s3uNu0kqPw8cBwnFrwsHNYIGDtXjdcVF/xRDh2LjyhXOlsUqRDgEmJZ8/fwYIEkdC+DXRVlsBQ1bBz+t7mWeP6zrKbz1KFHYrgnY/8JD9yAxOrCJmZCG36qfFSbdaCSA+LKJhQrytGPhto8Wii2HF8EoU6PU55gOBY4/r+9i806wgOPLUg43xsnmwV0nS2y97Z4tn8Kjo8UivlzLaMX4gZn9AGzNNUUmvvNzuei5PFEZz+7ZuBMGiYFJl/Y5BfGY6OZMc41OE9Q6PKIOjroKOsTQrMZNt0kuz4jJEzo/nNtLdlBJcjOMTDEk1zICkH3Kyf6lD4Rc+AC5uF0iFfybLCdvq0RyL3BIEYBAyVr0KbNWyvPamfyR51EBaP0d8KyaLq8URCIVcnBKcZbyCWnc+1Km0OUcEFHeUcNEB2aolo9YdAP94KYOkXCAhjDoPIrp4Z/M0TcifSzNBk="
-
+      secure: f4Uz9D81KoszIVu3yJXsvCDiVpgmq9YY6H1vM/Y30kH3mUkMMgc/Qny85+5753XLNZxv3+lhYETFmh7wT1/4r0eZ4jY4zzr31h0d+0E40/2t5ZyllAeehmBAj9I/oxWg59PqaiYOK9M//t7HNDy4qY7TG+SnQdMkMnrgnVOUqHXWRtEsfybOlknWPrYC2EYcI2nNIQMY83EUW3NYi8s4VYiHkGCj9s3uNu0kqPw8cBwnFrwsHNYIGDtXjdcVF/xRDh2LjyhXOlsUqRDgEmJZ8/fwYIEkdC+DXRVlsBQ1bBz+t7mWeP6zrKbz1KFHYrgnY/8JD9yAxOrCJmZCG36qfFSbdaCSA+LKJhQrytGPhto8Wii2HF8EoU6PU55gOBY4/r+9i806wgOPLUg43xsnmwV0nS2y97Z4tn8Kjo8UivlzLaMX4gZn9AGzNNUUmvvNzuei5PFEZz+7ZuBMGiYFJl/Y5BfGY6OZMc41OE9Q6PKIOjroKOsTQrMZNt0kuz4jJEzo/nNtLdlBJcjOMTDEk1zICkH3Kyf6lD4Rc+AC5uF0iFfybLCdvq0RyL3BIEYBAyVr0KbNWyvPamfyR51EBaP0d8KyaLq8URCIVcnBKcZbyCWnc+1Km0OUcEFHeUcNEB2aolo9YdAP94KYOkXCAhjDoPIrp4Z/M0TcifSzNBk=
 install:
-  - pipenv install --dev
-
-# See https://pypi.python.org/pypi/pytest-cov
+- pipenv install --dev
 script:
-  - py.test --cov=loris
-  - sonar-scanner
-
-after_success:
-  coveralls
-
+- py.test --cov=loris
+- sonar-scanner
+after_success: coveralls
 notifications:
   email:
-    recipients: "jpstroop@gmail.com"
-    on_success: "always"
-    on_failure: "always"
+    recipients: jpstroop@gmail.com
+    on_success: always
+    on_failure: always
     template:
-      - "%{repository}//%{branch}@%{commit} by %{author}: %{message} - %{build_url}"
+    - "%{repository}//%{branch}@%{commit} by %{author}: %{message} - %{build_url}"
+env:
+  global:
+    secure: lm55y6damzlg2xl2j3suPxNRsnEKmdmx3FquEIqbSgUQiP+9btXfIN59qMtjiL6ezqBb+cAtTd33II5FErJWvk6ZD3AaPlc0yjEqhdZ/WSYOlAy/1DBTpFa6/eDtEX1/2cP7sQbux/U9bjiCXhy0oETvVdvR5lgc6qC/xtf4zCf1pF+u2d2XeFwIpLfdjv1BVfzn6JYT/GxPhtDve1XRNzqPb0OBe/8c7PZoH3PyCzPEQczLM7IXy7WsjFTVzAqNwgvD+kBsmW1uwjILZhUD5DN/Hg3jEtRhg2u2EHTGNeRVQ1xNvIoNvXc0FHtTrQ8S7TjXgOUAU1lmdmaTqyV1vtbP2kzeSH3Bxabpf+W4VGVkCK2+s+UcUPs5+TidQWOgcmr26LYwNvXHHnI/Q2t6FBGvp3cnfYYerhFFqQf4I7ytI6drIUYvtHFFdzmjlwHKvojUVgmTgF0zUaREyI7xj2YjwBT8ZIXKet+GJgLjWgl8SiTOSm9bOkbeT2xTWAvN9XUGStG6c8uzCtyTnvaymEXcwxtmb9Sqmbl3QfqaEO0JtQJl5FR7qtVcH6d1/zOVCRL5F2vRaRSqwlPcWpUF2P5dx/ZqdHvfVrl8ZnuswCNCCmLczzLvljRSBZ+TLBgPo52wbI0XlWnO1E8+wvl2X7j2rJWbWvQ3CPoFAU+z8kk=
