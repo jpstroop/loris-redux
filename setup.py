@@ -64,7 +64,7 @@ setup(
     ],
     install_requires=[
         'CherryPy==18.0.1',
-        'Pillow==5.3.0',
+        'Pillow==6.2.0',
         'python-magic==0.4.15',
         'pyyaml==3.13',
         'requests==2.20.1',
