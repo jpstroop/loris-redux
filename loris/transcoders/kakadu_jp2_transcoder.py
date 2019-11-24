@@ -9,6 +9,7 @@ from loris.transcoders.api import AbstractTranscoder
 from loris.transcoders.abstract_jp2_transcoder import AbstractJp2Transcoder
 
 LINUX_KDU_BIN = 'kdu_expand'
+DARWIN_KDU_BIN = 'kdu_expand'
 
 logger = getLogger('loris')
 
@@ -59,6 +60,8 @@ class KakaduJp2Transcoder(AbstractJp2Transcoder, AbstractTranscoder):
         kdu_dir = join(project_dir, 'tests', 'kakadu', system, processor)
         if system == 'linux':
             return (kdu_dir, join(kdu_dir, LINUX_KDU_BIN))
+        elif system == 'darwin':
+            return (kdu_dir, join(kdu_dir, DARWIN_KDU_BIN))
         else:
             msg = 'Kakadu binaries not included for {0}/{1}'.format(system, processor)
             raise RuntimeError(msg)
