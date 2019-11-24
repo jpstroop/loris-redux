@@ -1,12 +1,8 @@
 from tests.loris.handlers.base_handler_test import BaseHandlerTest
 
 from json import loads
-from sys import version_info
-
-PYTHON_VERSION = '.'.join(map(str, version_info[0:3]))
 
 class TestImageHandler(BaseHandlerTest):
-
 
     def test_image_returns200(self):
         uri = '/loris:sample.jp2/full/200,/0/default.jpg'
@@ -20,10 +16,7 @@ class TestImageHandler(BaseHandlerTest):
         assert 'Etag' in headers
         self.assertHeader('Allow', 'GET')
         self.assertHeader('Content-Type', 'image/jpeg')
-        if PYTHON_VERSION == '3.5.2':
-            self.assertHeader('Content-Length', '5962') # careful, this could change
-        elif PYTHON_VERSION == '3.6.0': # not sure why, but everything seems fine
-            self.assertHeader('Content-Length', '5904')
+        self.assertHeader('Content-Length', '5962')
 
     def test_redirect_to_canonical(self):
         uri = '/loris:sample.jp2/full/pct:5/0/default.jpg'
