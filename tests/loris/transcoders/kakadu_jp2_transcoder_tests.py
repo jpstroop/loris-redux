@@ -37,7 +37,7 @@ class TestKakaduJp2Transcoder(object):
         }
         image_request = Mock(**args)
         meth = KakaduJp2Transcoder.region_from_image_request
-        expected = r'-region \{0.1778919594500763782807943341,0\},\{0.6440772114984029995833911957,1\}'
+        expected = '-region \{0.1778919594500763782807943341,0\},\{0.6440772114984029995833911957,1\}'
         assert meth(image_request) == expected
 
     def test_reduce_from_image_request(self):
@@ -65,7 +65,7 @@ class TestKakaduJp2Transcoder(object):
         }
         image_request = Mock(**mock_data)
         fake_pipe = '/baz/quux.bmp'
-        cmd_no_path = r'kdu_expand -i /foo/bar.jp2 -o /baz/quux.bmp -region \{0.17789195945,0\},\{0.64407721149,1\} -reduce 5'
+        cmd_no_path = 'kdu_expand -i /foo/bar.jp2 -o /baz/quux.bmp -region \{0.17789195945,0\},\{0.64407721149,1\} -reduce 5'
         assert transcoder._build_command(image_request, fake_pipe).endswith(cmd_no_path)
 
     def test__execute_simple(self, transcoder, region_test_jp2):
