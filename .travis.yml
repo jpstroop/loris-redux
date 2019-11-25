@@ -4,7 +4,6 @@ dist: bionic
 language: python
 
 python:
-  - 3.5
   - 3.6
   - 3.7
   - 3.8
@@ -29,7 +28,7 @@ install:
   - pipenv install --dev
 
 # See https://pypi.python.org/pypi/pytest-cov
-script: py.test --cov=loris
+script: py.test -s --cov=loris
 
 after_success:
   coveralls
@@ -41,4 +40,3 @@ notifications:
     on_failure: "always"
     template:
       - "%{repository}//%{branch}@%{commit} by %{author}: %{message} - %{build_url}"
-      

@@ -31,7 +31,7 @@ TEST_IMAGES = ( COLOR_JP2, GRAY_JP2, COLOR_PROFILE_JP2, PRECINCTS_JP2,
     COLOR_JPG, COLOR_PNG, COLOR_TIF, GRAY_JPG, GRAY_PNG, GRAY_TIF,
     PILLOW_TRANSCODER_TESTS_BMP )
 
-IMAGES_URL = 'http://www.princeton.edu/~jstroop/loris_test_images/images.tgz'
+IMAGES_URL = 'https://www.princeton.edu/~jstroop/loris_test_images/images.tgz'
 
 def _download(url, to_dir):
     import requests
