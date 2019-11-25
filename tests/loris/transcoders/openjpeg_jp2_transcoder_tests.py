@@ -1,6 +1,7 @@
 from os.path import exists
 from os.path import isdir
 from unittest.mock import Mock
+from platform import system
 
 import pytest
 
@@ -64,6 +65,8 @@ class TestOpenJpegJp2Transcoder(object):
         image_request = Mock(**mock_data)
         fake_pipe = '/baz/quux.bmp'
         cmd_no_path = 'opj_decompress -i /foo/bar.jp2 -o /baz/quux.bmp -d 0,1024,512,1536 -r 4'
+        if system().lower() == 'linux':
+            cmd_no_path = f'"{cmd_no_path}"'
         assert transcoder._build_command(image_request, fake_pipe).endswith(cmd_no_path)
 
     def test__execute_small_full(self, transcoder, region_test_jp2):
