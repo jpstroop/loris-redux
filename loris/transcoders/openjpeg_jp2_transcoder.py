@@ -20,7 +20,7 @@ class OpenJpegJp2Transcoder(AbstractJp2Transcoder, AbstractTranscoder):
         self.lib_dir, self.bin = OpenJpegJp2Transcoder._find_openjpeg()
         self.env = {
             'LD_LIBRARY_PATH' : self.lib_dir,   # for linux
-            'DYLD_LIBRARY_PATH' : self.lib_dir, # for darwin 
+            'DYLD_LIBRARY_PATH' : self.lib_dir, # for darwin
             'PATH' : self.bin
         }
 
@@ -30,6 +30,8 @@ class OpenJpegJp2Transcoder(AbstractJp2Transcoder, AbstractTranscoder):
         d_param = OpenJpegJp2Transcoder.decode_area_from_image_request(image_request)
         r_param = OpenJpegJp2Transcoder.reduce_from_image_request(image_request)
         cmd = ' '.join((self.bin, i_param, o_param, d_param, r_param))
+        if platform.system().lower() == 'linux':
+            cmd = f'"{cmd}"'
         return cmd
 
     @staticmethod

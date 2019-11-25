@@ -30,6 +30,8 @@ class KakaduJp2Transcoder(AbstractJp2Transcoder, AbstractTranscoder):
         region_param = KakaduJp2Transcoder.region_from_image_request(image_request)
         reduce_param = KakaduJp2Transcoder.reduce_from_image_request(image_request)
         cmd = ' '.join((self.bin, i_param, o_param, region_param, reduce_param))
+        if platform.system().lower() == 'linux':
+            cmd = f'"{cmd}"'
         return cmd
 
     @staticmethod
@@ -58,10 +60,8 @@ class KakaduJp2Transcoder(AbstractJp2Transcoder, AbstractTranscoder):
         processor = platform.processor() # this may need be made more specifc
         project_dir = dirname(dirname(dirname(abspath(__file__))))
         kdu_dir = join(project_dir, 'tests', 'kakadu', system, processor)
-        if system == 'linux':
+        if system in ('linux', 'darwin'):
             return (kdu_dir, join(kdu_dir, LINUX_KDU_BIN))
-        elif system == 'darwin':
-            return (kdu_dir, join(kdu_dir, DARWIN_KDU_BIN))
         else:
             msg = 'Kakadu binaries not included for {0}/{1}'.format(system, processor)
             raise RuntimeError(msg)

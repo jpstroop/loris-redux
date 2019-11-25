@@ -2,7 +2,6 @@ from decimal import Decimal
 from os.path import exists
 from os.path import isdir
 from unittest.mock import Mock
-from platform import system
 
 import pytest
 
@@ -67,8 +66,6 @@ class TestKakaduJp2Transcoder(object):
         image_request = Mock(**mock_data)
         fake_pipe = '/baz/quux.bmp'
         cmd_no_path = 'kdu_expand -i /foo/bar.jp2 -o /baz/quux.bmp -region \{0.17789195945,0\},\{0.64407721149,1\} -reduce 5'
-        if system().lower() == 'linux':
-            cmd_no_path = f'"{cmd_no_path}"'
         assert transcoder._build_command(image_request, fake_pipe).endswith(cmd_no_path)
 
     def test__execute_simple(self, transcoder, region_test_jp2):

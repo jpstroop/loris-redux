@@ -8,6 +8,7 @@ nose = "*"
 pytest = "*"
 pytest-cov = "*"
 coverage = "*"
+black = "*"
 
 [packages]
 CherryPy = "*"
