@@ -46,7 +46,8 @@ class KakaduJp2Transcoder(AbstractJp2Transcoder, AbstractTranscoder):
             left = image_request.region_decimal_x
             height = image_request.region_decimal_h
             width = image_request.region_decimal_w
-            template = '-region \{{{0},{1}\}},\{{{2},{3}\}}'
+            template = '-region {{{0},{1}}},{{{2},{3}}}'
+            # template = '-region \{{{0},{1}\}},\{{{2},{3}\}}'
             return template.format(top, left, height, width)
 
     @staticmethod
