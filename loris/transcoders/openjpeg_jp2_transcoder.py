@@ -30,8 +30,6 @@ class OpenJpegJp2Transcoder(AbstractJp2Transcoder, AbstractTranscoder):
         d_param = OpenJpegJp2Transcoder.decode_area_from_image_request(image_request)
         r_param = OpenJpegJp2Transcoder.reduce_from_image_request(image_request)
         cmd = ' '.join((self.bin, i_param, o_param, d_param, r_param))
-        if platform.system().lower() == 'linux':
-            cmd = f'"{cmd}"'
         return cmd
 
     @staticmethod

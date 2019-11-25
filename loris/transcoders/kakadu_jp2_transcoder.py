@@ -30,8 +30,6 @@ class KakaduJp2Transcoder(AbstractJp2Transcoder, AbstractTranscoder):
         region_param = KakaduJp2Transcoder.region_from_image_request(image_request)
         reduce_param = KakaduJp2Transcoder.reduce_from_image_request(image_request)
         cmd = ' '.join((self.bin, i_param, o_param, region_param, reduce_param))
-        if platform.system().lower() == 'linux':
-            cmd = f'"{cmd}"'
         return cmd
 
     @staticmethod

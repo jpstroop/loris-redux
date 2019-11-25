@@ -46,8 +46,8 @@ class AbstractJp2Transcoder(metaclass=ABCMeta):
     def _run_cmd(self, cmd, fifo_path):
         # Note: if this is causing trouble, remove stdout and stderr arg for
         # debugging
-        proc = Popen(split(cmd), bufsize=-1, env=self.env)
-        # proc = Popen(split(cmd), stdout=DEVNULL, stderr=DEVNULL, bufsize=-1, env=self.env)
+        # proc = Popen(split(cmd), bufsize=-1, env=self.env)
+        proc = Popen(split(cmd), stdout=DEVNULL, stderr=DEVNULL, bufsize=-1, env=self.env)
         # THIS CAN BLOCK. See http://stackoverflow.com/q/40352825/714478
         pillow_image = Image.open(fifo_path)
         proc.wait()

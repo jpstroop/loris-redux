@@ -28,7 +28,7 @@ install:
   - pipenv install --dev
 
 # See https://pypi.python.org/pypi/pytest-cov
-script: py.test -s --cov=loris
+script: py.test --cov=loris
 
 after_success:
   coveralls
