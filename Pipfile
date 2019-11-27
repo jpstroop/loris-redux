@@ -1,32 +1,7 @@
 [[source]]
+name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
-name = "pypi"
-
-[packages]
-attrs = "*"
-certifi = "*"
-chardet = "*"
-cheroot = "*"
-cherrypy = "*"
-coverage = "*"
-idna = "*"
-more-itertools = "*"
-nose = "*"
-olefile = "*"
-pillow = "*"
-pluggy = "*"
-portend = "*"
-py = "*"
-pytest = "*"
-pytest-cov = "*"
-python-magic = "*"
-pytz = "*"
-pyyaml = "*"
-requests = "*"
-six = "*"
-tempora = "*"
-"urllib3" = "*"
 
 [dev-packages]
 nose = "*"
@@ -34,7 +9,15 @@ pytest = "*"
 pytest-cov = "*"
 coverage = "*"
 
+[packages]
+CherryPy = "*"
+Pillow = "*"
+python-magic = "*"
+pyyaml = "*"
+requests = "*"
+
 [requires]
 python_version = "3.7"
 
-# HOW TO PIN: https://pipenv.readthedocs.io/en/latest/basics/#specifying-versions-of-a-package
+[pipenv]
+allow_prereleases = true
