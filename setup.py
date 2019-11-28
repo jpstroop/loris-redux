@@ -58,15 +58,16 @@ setup(
     setup_requires=[ ],
     tests_require=[
         'nose==1.3.7',
-        'pytest==3.4.1',
-        'pytest-cov==2.6.0',
-        'coverage==4.5.2'
+        'pytest-cov==2.8.1',
+        'coverage==4.5.4',
+        'pytest>=4.1.1,<4.2.0',  # See note
+        'attrs==19.1.0,<19.2.0', # in Pipfile
     ],
     install_requires=[
-        'CherryPy==18.0.1',
-        'Pillow==5.3.0',
-        'python-magic==0.4.15',
-        'pyyaml==3.13',
-        'requests==2.20.1',
+        'cherrypy>=18.4.0',
+        'pillow>=6.2.1',
+        'python-magic>=0.4.15',
+        'pyyaml>=5.1.2',
+        'requests>=2.22.0',
     ]
 )

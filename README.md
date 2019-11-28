@@ -1,20 +1,18 @@
 # loris-redux
 
-[![Build Status](https://travis-ci.org/jpstroop/loris-redux.svg?branch=master)](https://travis-ci.org/jpstroop/loris-redux) [![Coverage Status](https://coveralls.io/repos/github/jpstroop/loris-redux/badge.svg?branch=master)](https://coveralls.io/github/jpstroop/loris-redux?branch=master) [![Code Health](https://landscape.io/github/jpstroop/loris-redux/master/landscape.svg?style=flat)](https://landscape.io/github/jpstroop/loris-redux/master) [![Requirements Status](https://requires.io/github/jpstroop/loris-redux/requirements.svg)](https://requires.io/github/jpstroop/loris-redux/requirements/)
+[![Build Status](https://travis-ci.org/jpstroop/loris-redux.svg?branch=master)](https://travis-ci.org/jpstroop/loris-redux) [![Coverage Status](https://coveralls.io/repos/github/jpstroop/loris-redux/badge.svg?branch=master)](https://coveralls.io/github/jpstroop/loris-redux?branch=master) [![Maintainability](https://api.codeclimate.com/v1/badges/ffde55935b8967cd546a/maintainability)](https://codeclimate.com/github/jpstroop/loris-redux/maintainability) [![Requirements Status](https://requires.io/github/jpstroop/loris-redux/requirements.svg)](https://requires.io/github/jpstroop/loris-redux/requirements/)
 
 [![License: New BSD](https://img.shields.io/badge/license-New%20BSD-blue.svg)](https://github.com/jpstroop/loris-redux/blob/master/LICENSE)
 
-[![Python 3.5](https://img.shields.io/badge/python-3.5-yellow.svg)](https://img.shields.io/badge/python-3.5-yellow.svg)
 [![Python 3.6](https://img.shields.io/badge/python-3.6-yellow.svg)](https://img.shields.io/badge/python-3.6-yellow.svg)
 [![Python 3.7](https://img.shields.io/badge/python-3.7-yellow.svg)](https://img.shields.io/badge/python-3.7-yellow.svg)
+[![Python 3.8](https://img.shields.io/badge/python-3.8-yellow.svg)](https://img.shields.io/badge/python-3.8-yellow.svg)
 
-
-[![Ready](https://badge.waffle.io/jpstroop/loris-redux.svg?label=ready&title=Ready)](http://waffle.io/jpstroop/loris-redux)
 
 
 __WIP!__
 
-A rewrite of loris using [CherryPy](http://cherrypy.org/) and Python `>=` 3.5.
+A rewrite of loris using [CherryPy](http://cherrypy.org/) and Python `>=` 3.6.
 
 ## Stuff you can do now
 
@@ -33,13 +31,13 @@ There is also an extension service, `/resolvers.json` that lists the available r
 ### Run tests
 
 ```bash
-$ python setup.py test
+$ pipenv run py.test
 ```
 
 If you want to see logging output while running the tests, run them with pytest:
 
 ```bash
-$ py.test -s <optional/path/to/test/file.py>
+$ pipenv run py.test -s <optional/path/to/test/file.py>
 ```
 
 You can also add `-v` to see the names of the tests being run.
