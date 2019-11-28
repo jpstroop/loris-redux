@@ -57,14 +57,17 @@ setup(
     cmdclass = {'test': PyTest},
     setup_requires=[ ],
     tests_require=[
-        'nose>=1.3.7',
-        'pytest-cov>=2.8.1'
+        'nose==1.3.7',
+        'pytest-cov==2.8.1',
+        'coverage==4.5.4',
+        'pytest>=4.1.1,<4.2.0',  # See note
+        'attrs==19.1.0,<19.2.0', # in Pipfile
     ],
     install_requires=[
-        'CherryPy>=18.4.0',
-        'Pillow>=6.2.1',
+        'cherrypy>=18.4.0',
+        'pillow>=6.2.1',
         'python-magic>=0.4.15',
         'pyyaml>=5.1.2',
-        'requests>=2.22.0'
+        'requests>=2.22.0',
     ]
 )
