@@ -18,7 +18,7 @@ name = "pypi"
                                  # TODO: First handler integration test of >=2nd
                                  #  handler suite always fails. Not sure if this
                                  #  is PyTest or CherryPy's problem.
-        'attrs' = '==19.1.0, <19.2.0' # NOT LATEST (19.3.0).
+        'attrs' = '==19.1.0, <19.2.0' # NOT LATEST (19.3.0 - due to upstream)
                                       # See: https://github.com/pytest-dev/pytest/issues/5903
 
 

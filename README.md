@@ -20,7 +20,7 @@ A rewrite of loris using [CherryPy](http://cherrypy.org/) and Python `>=` 3.6.
 
 ```
 $ pipenv install --dev # --dev assumes you'll want to run tests
-$ python run.py
+$ pipenv run python run.py
 ```
 
  * Info: `http://localhost:5004/loris:sample.jp2/info.json`
@@ -31,7 +31,8 @@ There is also an extension service, `/resolvers.json` that lists the available r
 ### Run tests
 
 ```bash
-$ pipenv run py.test
+$ pipenv install --dev --python [path to python >=3.6]
+$ pipenv run py.test # optional: --cov=loris
 ```
 
 If you want to see logging output while running the tests, run them with pytest:
