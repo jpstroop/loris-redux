@@ -1,7 +1,7 @@
 from tests.loris.handlers.base_handler_test import BaseHandlerTest
 
-class TestIdentifierHandler(BaseHandlerTest):
 
+class TestIdentifierHandler(BaseHandlerTest):
     def test_base_id_redirects(self):
         with self.app_server():
             response = self.get("/nir%2fvana", allow_redirects=False)

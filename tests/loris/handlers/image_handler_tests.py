@@ -1,8 +1,7 @@
-from json import loads
 from tests.loris.handlers.base_handler_test import BaseHandlerTest
 
-class TestImageHandler(BaseHandlerTest):
 
+class TestImageHandler(BaseHandlerTest):
     def test_image_returns200(self):
         with self.app_server():
             response = self.get("/loris:sample.jp2/full/200,/0/default.jpg")
@@ -21,8 +20,14 @@ class TestImageHandler(BaseHandlerTest):
 
     def test_redirect_to_canonical(self):
         with self.app_server():
-            response = self.get("/loris:sample.jp2/full/pct:5/0/default.jpg", allow_redirects=False)
-            assert response.headers["Location"] == "/loris:sample.jp2/full/300,/0/default.jpg"
+            response = self.get(
+                "/loris:sample.jp2/full/pct:5/0/default.jpg",
+                allow_redirects=False,
+            )
+            assert (
+                response.headers["Location"]
+                == "/loris:sample.jp2/full/300,/0/default.jpg"
+            )
 
     def test_etag_works(self):
         with self.app_server():
@@ -39,4 +44,7 @@ class TestImageHandler(BaseHandlerTest):
             body = response.json()
             assert response.status_code == 400
             assert body["error"] == "SyntaxException"
-            assert body["description"] == "could not convert string to float: '10,'"
+            assert (
+                body["description"]
+                == "could not convert string to float: '10,'"
+            )
