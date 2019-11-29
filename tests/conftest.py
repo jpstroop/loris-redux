@@ -1,12 +1,16 @@
 from loris.compliance import Compliance
 from loris.helpers.safe_lru_dict import SafeLruDict
 from loris.info.jp2_extractor import Jp2Extractor
+from loris.loris_app import cherrypy_app_conf
+from loris.loris_app import LorisApp
 from loris.requests.iiif_request import IIIFRequest
-
 from os import path
 from os import remove
-import yaml
+from tests.loris.handlers.base_handler_test import SOCKET_HOST
+from tests.loris.handlers.base_handler_test import SOCKET_PORT
+import cherrypy
 import pytest
+import yaml
 
 HERE = path.abspath(path.dirname(__file__))
 FIXTURES_DIR = path.join(HERE, 'fixtures')
@@ -58,6 +62,25 @@ def download_images():
         with tarfile.open(images_tarball, 'r:') as tar:
             tar.extractall(path=IMAGES_DIR)
         remove(images_tarball)
+
+@pytest.fixture(scope="session", autouse=True)
+def app_server():
+    """Test server for handler tests
+    """
+    _configure_test_server()
+    cherrypy.engine.start()
+    cherrypy.engine.wait(cherrypy.engine.states.STARTED)
+    yield
+    cherrypy.engine.exit()
+    cherrypy.engine.block()
+
+def _configure_test_server():
+    server_conf = {
+        "server.socket_port": SOCKET_PORT,
+        "server.socket_host": SOCKET_HOST,
+    }
+    cherrypy.config.update(server_conf)
+    cherrypy.tree.mount(LorisApp(), "/", config=cherrypy_app_conf)
 
 @pytest.fixture(scope='function')
 def default_configs():

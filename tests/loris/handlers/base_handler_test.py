@@ -1,13 +1,19 @@
-from loris.loris_app import LorisApp
-from loris.loris_app import cherrypy_app_conf
-
-from cherrypy.test import helper
-import cherrypy
+from requests import get
+from unittest import TestCase
 
 # This isn't a test; it just takes care of setting up a server for hendler tests
 
-class BaseHandlerTest(helper.CPWebCase):
-    # See http://docs.cherrypy.org/en/latest/advanced.html#testing-your-application
-    def setup_server():
-        cherrypy.tree.mount(LorisApp(), '/', config=cherrypy_app_conf)
-    setup_server = staticmethod(setup_server)
+SOCKET_PORT = 5004
+SOCKET_HOST = "127.0.0.1"
+
+
+class BaseHandlerTest(TestCase):
+    def get(self, path, **kwargs):
+        """Wrapper around requests.get that allows for getting just the path of
+        the server request from the server that is run by the `self.app_server`
+        context manager.
+        """
+        if path.startswith("/"):
+            path = path[1:]
+        uri = f"http://{SOCKET_HOST}:{SOCKET_PORT}/{path}"
+        return get(uri, **kwargs)

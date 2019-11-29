@@ -72,3 +72,9 @@ transcoders:
     lib: /absolute/path/to/THE_DIRECTORY_THAT_CONTAINS_libkdu_vXX.so
     src_format: jp2
 ```
+
+## Style
+
+```
+pipenv run black -t py37 -l 79 loris tests
+```
