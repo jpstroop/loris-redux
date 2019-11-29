@@ -11,6 +11,7 @@ name = "pypi"
 'requests' = '>=2.22.0'
 
 [dev-packages]
+'black' = "*"
 'nose' = '==1.3.7' # top, latest
 'pytest-cov' = '==2.8.1' # latest
     'coverage' = '==4.5.4' # latest
@@ -24,6 +25,9 @@ name = "pypi"
 
 [requires]
 python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true
 
 # Specifying Versions:
 #   https://pipenv.readthedocs.io/en/latest/basics/#specifying-versions-of-a-package
