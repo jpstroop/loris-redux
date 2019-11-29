@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 cherrypy = '>=18.4.0'
+    more-itertools = '>=8.0.0' # We shouldn't need to specify this; waiting
+                               # for various dependencies to catch up.
 pillow = '>=6.2.1'
 python-magic = '>=0.4.15'
 pyyaml = '>=5.1.2'

@@ -62,6 +62,7 @@ setup(
     ],
     install_requires=[
         'cherrypy>=18.4.0',
+            'more-itertools>=8.0.0',
         'pillow>=6.2.1',
         'python-magic>=0.4.15',
         'pyyaml>=5.1.2',
