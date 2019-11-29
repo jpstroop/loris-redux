@@ -22,9 +22,8 @@ class TestInfoHandler(BaseHandlerTest):
             assert response.status_code == 404
             assert response.headers["Content-Type"] == "application/json"
             assert body["error"] == "ResolverException"
-            assert (
-                body["description"] == "Could not resolve identifier: nothing.jp2"
-            )
+            description = "Could not resolve identifier: nothing.jp2"
+            assert body["description"] == description
 
     def test_info_headers(self):
         with self.app_server():
@@ -32,4 +31,5 @@ class TestInfoHandler(BaseHandlerTest):
             assert "Etag" in response.headers
             assert response.headers["Allow"] == "GET"
             assert response.headers["Content-Type"] == "application/json"
-            assert response.headers["Content-Length"] == "760"  # careful this could change
+            # Careful, this could change:
+            assert response.headers["Content-Length"] == "760"

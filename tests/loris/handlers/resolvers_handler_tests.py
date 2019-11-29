@@ -13,4 +13,5 @@ class TestResolversHandler(BaseHandlerTest):
             response = self.get("/resolvers.json")
             assert response.status_code == 200
             assert response.headers["Content-type"] == "application/json"
-            assert any([entry["prefix"] == "loris" for entry in response.json()])
+            included = any([e["prefix"] == "loris" for e in response.json()])
+            assert included
