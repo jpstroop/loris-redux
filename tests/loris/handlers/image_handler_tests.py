@@ -1,4 +1,5 @@
 from tests.loris.handlers.base_handler_test import BaseHandlerTest
+import pytest
 
 
 class TestImageHandler(BaseHandlerTest):
@@ -19,6 +20,7 @@ class TestImageHandler(BaseHandlerTest):
         canonical = "/loris:sample.jp2/full/300,/0/default.jpg"
         assert response.headers["Location"] == canonical
 
+    @pytest.mark.filterwarnings("ignore:the imp module is deprecated")
     def test_etag_works(self):
         path = "/loris:sample.jp2/full/200,/0/default.jpg"
         response = self.get(path)
