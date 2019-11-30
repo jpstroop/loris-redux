@@ -12,9 +12,6 @@ class TestImageHandler(BaseHandlerTest):
         assert response.headers["Allow"] == "GET"
         assert response.headers["Content-Type"] == "image/jpeg"
         assert response.headers["Content-Length"] == "5962"
-        # from sys import version_info
-        # PYTHON_VERSION = ".".join(map(str, version_info[0:3]))
-        # Some versions of python  == 5904 ??
 
     def test_redirect_to_canonical(self):
         path = "/loris:sample.jp2/full/pct:5/0/default.jpg"
