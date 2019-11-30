@@ -42,7 +42,7 @@ class KakaduJp2Transcoder(AbstractJp2Transcoder, AbstractTranscoder):
             left = image_request.region_decimal_x
             height = image_request.region_decimal_h
             width = image_request.region_decimal_w
-            return f'-region \{{{top},{left}\}},\{{{height},{width}\}}'
+            return f'-region {{{top},{left}}},{{{height},{width}}}'
 
     @staticmethod
     def reduce_from_image_request(image_request):
