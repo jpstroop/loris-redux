@@ -44,6 +44,8 @@ class FeatureNotEnabledException(RequestException):
     # Use for requests that require IIIF features that are disabled in the config.
     def __init__(self, feature):
         self.feature = feature
-        message = f"Server does not support the '{feature}' feature."
-        message += f' See {COMPLIANCE_PAGE} for details.'
+        message = (
+            f"Server does not support the '{feature}' feature."
+            f' See {COMPLIANCE_PAGE} for details.'
+        )
         super().__init__(message)
