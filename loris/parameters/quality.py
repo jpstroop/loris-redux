@@ -34,13 +34,13 @@ class QualityParameter(AbstractParameter):
 
     def _is_recognizable(self):
         if self.uri_slice not in ALL_QUALITIES:
-            msg = 'Value "{0}" for quality is not recognized'
-            raise SyntaxException(msg.format(self.uri_slice))
+            msg = f'Value "{self.uri_slice}" for quality is not recognized'
+            raise SyntaxException(msg)
 
     def _check_quality_available(self):
         if self.uri_slice not in self.qualities_available:
-            msg = '{0} quality is not available for this image'
-            raise RequestException(msg.format(self.uri_slice))
+            msg = f'{self.uri_slice} quality is not available for this image'
+            raise RequestException(msg)
 
     def _check_feature_enabled(self):
         if self.uri_slice == DEFAULT:

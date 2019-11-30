@@ -24,7 +24,7 @@ class Resolvers(object):
         try:
             return self._resolvers[prefix].resolve(identifier)
         except KeyError:
-            msg = 'prefix "{0}" is not assigned to a resolver'.format(prefix)
+            msg = f'prefix "{prefix}" is not assigned to a resolver'
             raise ResolverException(msg)
 
     def add_resolver(self, class_name, prefix, config):
@@ -51,7 +51,7 @@ class Resolvers(object):
     def _check_resolver_class(resolver_class):
         if AbstractResolver not in getmro(resolver_class):
             name = resolver_class.__name__
-            msg = '{0} must subclass AbstractResolver'.format(name)
+            msg = f'{name} must subclass AbstractResolver'
             raise TypeError(msg)
 
     @staticmethod
@@ -59,5 +59,5 @@ class Resolvers(object):
         kls = key.__class__
         if kls is not str:
             name = kls.__name__
-            msg = 'Resolver prefixes must be strings, got {0}'.format(name)
+            msg = f'Resolver prefixes must be strings, got {name}'
             raise TypeError(msg)

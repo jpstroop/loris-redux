@@ -8,11 +8,11 @@ from loris.requests.iiif_request import IIIFRequest
 from loris.resolvers import Resolvers
 from os import path
 from pkg_resources import resource_filename
-
+from sys import stderr
 import cherrypy
-import yaml
 import logging
 import logging.config
+import yaml
 
 cherrypy_app_conf = {
     '/': {
@@ -25,7 +25,7 @@ cherrypy_app_conf = {
         'tools.staticfile.filename': resource_filename('loris', 'www/favicon.ico'),
         'tools.response_headers.on': True,
         'tools.response_headers.headers': [
-            ('cache-control', 'max-age={0}, public'.format(60*60*24*365)),
+            ('cache-control', f'max-age={60*60*24*365}, public'),
             ('allow', 'GET')
         ]
     }
@@ -65,9 +65,9 @@ class LorisApp(DispatcherMixin):
         for cfg_path in self._find_config_files():
             try:
                 cfg_dict.update(self._load_yaml_file(cfg_path))
-                print('Config file found at {0}'.format(cfg_path))
+                print(f'Config file found at {cfg_path}')
             except FileNotFoundError:
-                print('No config file found at {0}'.format(cfg_path))
+                print(f'No config file found at {cfg_path}', file=stderr)
         return cfg_dict
 
     def _load_yaml_file(self, yaml_path):
@@ -91,7 +91,7 @@ class LorisApp(DispatcherMixin):
 
     def _init_compliance(self, cfg_dict):
         compliance = Compliance(cfg_dict)
-        msg = 'Compliance is level {}'.format(int(compliance))
+        msg = f'Compliance is level {int(compliance)}'
         logger.info(msg)
         return compliance
 
@@ -126,6 +126,6 @@ This is a sample resolver to test that the server is working. Using \
             Klass = import_class(name)
             src_fmt = entry.pop('src_format')
             transcoders[src_fmt] = Klass(entry)
-            msg = 'Initialized transcoders[{0}] with {1}'.format(src_fmt, name)
+            msg = f'Initialized transcoders[{src_fmt}] with {name}'
             logger.info(msg)
         return transcoders

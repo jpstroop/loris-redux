@@ -50,8 +50,9 @@ class ImageRequest(IIIFRequest):
                 self._rotation_param,
                 self._quality_param
             )
-            path = '/'.join(map(str, params)) # str(param) returns the canonical version
-            self._canonical = '{0}.{1}'.format(path, self.format)
+            # str(param) returns the canonical version:
+            path = '/'.join(map(str, params))
+            self._canonical = f'{path}.{self.format}'
         return self._canonical
 
     @property

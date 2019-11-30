@@ -24,12 +24,11 @@ class KakaduJp2Transcoder(AbstractJp2Transcoder, AbstractTranscoder):
         }
 
     def _build_command(self, image_request, fifo_path):
-        i_param = '-i {0}'.format(image_request.file_path)
-        o_param = '-o {0}'.format(fifo_path)
-        region_param = KakaduJp2Transcoder.region_from_image_request(image_request)
-        reduce_param = KakaduJp2Transcoder.reduce_from_image_request(image_request)
-        cmd = ' '.join((self.bin, i_param, o_param, region_param, reduce_param))
-        return cmd
+        i_param = f'-i {image_request.file_path}'
+        o_param = f'-o {fifo_path}'
+        reg_param = KakaduJp2Transcoder.region_from_image_request(image_request)
+        red_param = KakaduJp2Transcoder.reduce_from_image_request(image_request)
+        return f'{self.bin} {i_param} {o_param} {reg_param} {red_param}'
 
     @staticmethod
     def region_from_image_request(image_request):
@@ -43,13 +42,12 @@ class KakaduJp2Transcoder(AbstractJp2Transcoder, AbstractTranscoder):
             left = image_request.region_decimal_x
             height = image_request.region_decimal_h
             width = image_request.region_decimal_w
-            template = '-region \{{{0},{1}\}},\{{{2},{3}\}}'
-            return template.format(top, left, height, width)
+            return f'-region \{{{top},{left}\}},\{{{height},{width}\}}'
 
     @staticmethod
     def reduce_from_image_request(image_request):
         arg = KakaduJp2Transcoder.reduce_arg_from_image_request(image_request)
-        return '-reduce {0}'.format(arg)
+        return f'-reduce {arg}'
 
     @staticmethod
     def _find_kakadu(): # THIS IS ONLY MEANT FOR TESTS. SUPPLY YOUR OWN!
@@ -57,8 +55,8 @@ class KakaduJp2Transcoder(AbstractJp2Transcoder, AbstractTranscoder):
         processor = platform.processor() # this may need be made more specifc
         project_dir = dirname(dirname(dirname(abspath(__file__))))
         kdu_dir = join(project_dir, 'tests', 'kakadu', system, processor)
-        if system == 'linux':
+        if system in ('linux','darwin'):
             return (kdu_dir, join(kdu_dir, LINUX_KDU_BIN))
         else:
-            msg = 'Kakadu binaries not included for {0}/{1}'.format(system, processor)
+            msg = f'Kakadu binaries not included for {system}/{processor}'
             raise RuntimeError(msg)

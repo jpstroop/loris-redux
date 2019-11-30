@@ -15,7 +15,7 @@ class RotationParameter(AbstractParameter):
     def __init__(self, uri_slice, enabled_features):
         super().__init__(uri_slice, enabled_features)
         if not REGEX.match(uri_slice):
-            msg = 'Could not parse region request ({0})'.format(uri_slice)
+            msg = f'Could not parse region request ({uri_slice})'
             raise SyntaxException(msg)
         self.mirror = self.uri_slice[0] == '!'
         self._rotation = None
@@ -33,9 +33,9 @@ class RotationParameter(AbstractParameter):
     def canonical(self):
         if self._canonical is None:
             if self.mirror:
-                self._canonical = '!{:g}'.format(self.rotation)
+                self._canonical = f'!{self.rotation:g}'
             else:
-                self._canonical = '{:g}'.format(self.rotation)
+                self._canonical = f'{self.rotation:g}'
         return self._canonical
 
     def _run_checks(self):
@@ -45,7 +45,7 @@ class RotationParameter(AbstractParameter):
 
     def _check_range(self):
         if not 0.0 <= self.rotation <= 360.0:
-            msg = 'Rotation must be between 0 and 360 ({0})'.format(self.rotation)
+            msg = f'Rotation must be between 0 and 360 ({self.rotation})'
             raise RequestException(msg)
 
     def _check_mirroring(self):

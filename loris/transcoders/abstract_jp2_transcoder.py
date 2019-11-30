@@ -55,10 +55,10 @@ class AbstractJp2Transcoder(metaclass=ABCMeta):
 
     @contextmanager
     def _named_pipe(self, extension='bmp'):
-        # Make a unique named pipe and return the path
+        # Make a unique named pipe and yield the path
         try:
             name = ''.join(choice(ascii_lowercase) for x in range(6))
-            pth = '{0}.{1}'.format(join(self.tmp, name), extension)
+            pth = f'{join(self.tmp, name)}.{extension}'
             mkfifo(pth)
             yield pth
         finally:
