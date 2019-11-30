@@ -86,7 +86,7 @@ class SizeParameter(AbstractParameter):
             elif self._distort_aspect:
                 self._canonical = self.uri_slice
             else:
-                self._canonical = '{0},'.format(self.width)
+                self._canonical = f'{self.width},'
         return self._canonical
 
     def _initialize_properites(self):
@@ -135,7 +135,7 @@ class SizeParameter(AbstractParameter):
             return SIZE_BY_CONFINED_WH
         if self.uri_slice.split(':')[0] == 'pct':
             return SIZE_BY_PCT
-        msg = 'Size syntax "{0}" is not valid.'.format(self.uri_slice)
+        msg = f'Size syntax "{self.uri_slice}" is not valid.'
         raise SyntaxException(msg)
 
     @staticmethod
@@ -194,8 +194,8 @@ class SizeParameter(AbstractParameter):
         except ValueError as ve:
             raise SyntaxException(str(ve))
         if scale <= 0:
-            msg = 'Size percentage must be greater than 0 ({0}).'
-            raise RequestException(msg.format(self.uri_slice))
+            msg = f'Size percentage must be greater than 0 ({self.uri_slice}).'
+            raise RequestException(msg)
         w_decimal = self.region_w * scale
         h_decimal = self.region_h * scale
         # handle teeny, tiny requests.
@@ -240,14 +240,23 @@ class SizeParameter(AbstractParameter):
     def _check_if_larger_than_max(self):
         area = self.width * self.height
         if self.max_area and area > self.max_area:
-            msg = 'Request area ({0}) is greater than max area allowed ({1})'
-            raise RequestException(msg.format(area, self.max_area))
+            msg = (
+                f'Request area ({area}) is greater '
+                f'than max area allowed ({self.max_area})'
+            )
+            raise RequestException(msg)
         if self.max_width and self.width > self.max_width:
-            msg = 'Request width ({0}) is greater than max width allowed ({1})'
-            raise RequestException(msg.format(self.width, self.max_width))
+            msg = (
+                f'Request width ({self.width}) is greater than'
+                f'max width allowed ({self.max_width})'
+            )
+            raise RequestException(msg)
         if self.max_height and self.height > self.max_height:
-            msg = 'Request height ({0}) is greater than max height allowed ({1})'
-            raise RequestException(msg.format(self.height, self.max_height))
+            msg = (
+                f'Request height ({self.height}) is greater than'
+                f'max height allowed ({self.max_height})'
+            )
+            raise RequestException(msg)
 
     def _allowed_level0_size_request(self):
         if self.info.tiles:

@@ -1,6 +1,4 @@
 from decimal import Decimal
-from math import floor
-
 from loris.constants import DECIMAL_ONE
 from loris.constants import DECIMAL_ONE_HUNDRED
 from loris.constants import FULL
@@ -12,6 +10,7 @@ from loris.exceptions import FeatureNotEnabledException
 from loris.exceptions import RequestException
 from loris.exceptions import SyntaxException
 from loris.parameters.api import AbstractParameter
+from math import floor
 
 class RegionParameter(AbstractParameter):
     # Almost all of the methods here could be static, but passing stuff
@@ -81,11 +80,12 @@ class RegionParameter(AbstractParameter):
         elif self.uri_slice == SQUARE:
             return REGION_SQUARE
         elif all([n.isdigit() for n in self.uri_slice.split(',')]):
-            # For REGION_BY_PIXEL and REGION_BY_PCT we'll raise later if there are too many ',' tokens
+            # For REGION_BY_PIXEL and REGION_BY_PCT we'll raise later if there
+            # are too many ',' tokens
             return REGION_BY_PIXEL
         elif self.uri_slice.split(':')[0] == 'pct':
             return REGION_BY_PCT
-        msg = 'Region syntax "{0}" is not valid.'.format(self.uri_slice)
+        msg = f'Region syntax "{self.uri_slice}" is not valid.'
         raise SyntaxException(msg)
 
     def _init_full_request(self, info_data):
@@ -113,8 +113,11 @@ class RegionParameter(AbstractParameter):
         try:
             self.pixel_x, self.pixel_y, self.pixel_w, self.pixel_h = xywh
         except ValueError:
-            msg = 'Four points are required for pixel regions (request was: {0})'
-            raise SyntaxException(msg.format(self.uri_slice))
+            msg = (
+                'Four points are required for pixel regions '
+                f'(request was: {self.uri_slice})'
+            )
+            raise SyntaxException(msg)
         self.decimal_x = self.pixel_x / Decimal(info_data.width)
         self.decimal_y = self.pixel_y / Decimal(info_data.height)
         self.decimal_w = self.pixel_w / Decimal(info_data.width)
@@ -124,18 +127,27 @@ class RegionParameter(AbstractParameter):
         # raises RequestException
         # raises SyntaxException
         if any(n > DECIMAL_ONE_HUNDRED for n in xywh):
-            msg = 'Region percentages must be less than or equal to 100 (request was: {0})'
-            raise RequestException(msg.format(self.uri_slice))
+            msg = (
+                'Region percentages must be less than or equal to 100 '
+                f'(request was: {self.uri_slice})'
+            )
+            raise RequestException(msg)
         if any((n <= 0) for n in xywh[2:]):
-            msg = 'Width and Height percentages must be greater than 0 (request was: {0})'
-            raise RequestException(msg.format(self.uri_slice))
+            msg = (
+                'Width and Height percentages must be greater than 0 '
+                f'(request was: {self.uri_slice})'
+            )
+            raise RequestException(msg)
 
         try:
             px_xywh = map(RegionParameter._pct_to_decimal, xywh)
             self.decimal_x, self.decimal_y, self.decimal_w, self.decimal_h = px_xywh
         except ValueError:
-            msg = 'Four points are required for pct regions (request was: {0})'
-            raise SyntaxException(msg.format(self.uri_slice))
+            msg = (
+                'Four points are required for pct regions '
+                f'(request was: {self.uri_slice})'
+            )
+            raise SyntaxException(msg)
 
         self.pixel_x = int(floor(self.decimal_x * info_data.width))
         self.pixel_y = int(floor(self.decimal_y * info_data.height))
@@ -162,17 +174,23 @@ class RegionParameter(AbstractParameter):
     def _check_for_oob_errors(self):
         # x and y must be in bounds
         if any(axis < 0 for axis in (self.pixel_x, self.pixel_y)):
-            msg = 'x and y region parameters must be 0 or greater '
-            msg += '(original_request: {0}).'
-            raise RequestException(msg.format(self.uri_value))
+            msg = (
+                'x and y region parameters must be 0 or greater '
+                f'(original_request: {self.uri_value}).'
+            )
+            raise RequestException(msg)
         if self.pixel_x >= self.info_data.width:
-            msg = 'Region x parameter is greater than the width of the image. '
-            msg += 'Image width is {0}.'
-            raise RequestException(msg.format(self.info_data.width))
+            msg = (
+                'Region x parameter is greater than the width of the image. '
+                f'Image width is {self.info_data.width}.'
+            )
+            raise RequestException(msg)
         if self.pixel_y >= self.info_data.height:
-            msg = 'Region y parameter is greater than the height of the image. '
-            msg += 'Image height is {0}.'
-            raise RequestException(msg.format(self.info_data.height))
+            msg = (
+                'Region y parameter is greater than the height of the image. '
+                f'Image height is {self.info_data.height}.'
+            )
+            raise RequestException(msg)
 
     def _check_if_supported(self):
         if self.request_type is FULL:
@@ -189,7 +207,7 @@ class RegionParameter(AbstractParameter):
                 raise
 
     def _adjust_if_actually_full(self):
-        px = '0,0,{0},{1}'.format(self.info_data.width, self.info_data.height)
+        px = f'0,0,{self.info_data.width},{self.info_data.height}'
         if self.uri_slice == px:
             self._request_type = FULL
             self._canonical = FULL

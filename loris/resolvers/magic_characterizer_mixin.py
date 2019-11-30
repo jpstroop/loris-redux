@@ -41,6 +41,8 @@ class MagicCharacterizerMixin(object):
             MagicCharacterizerMixin._cache[file_path] = fmt
             return fmt
         except KeyError:
-            message = '{0} characterized as {1} format, which is not supported'
-            message = message.format(file_path, mime_type)
+            message = (
+                f'{file_path} characterized as {mime_type} format, '
+                f'which is not supported'
+            )
             raise UnsupportedFormat(message, http_status_code=500)

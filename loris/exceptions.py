@@ -22,7 +22,7 @@ class LorisException(Exception):
 class ResolverException(LorisException):
     def __init__(self, identifier):
         http_status_code = 404
-        message = 'Could not resolve identifier: {0}'.format(identifier)
+        message = f'Could not resolve identifier: {identifier}'
         super().__init__(message, http_status_code)
 
 class UnsupportedFormat(LorisException):
@@ -44,6 +44,8 @@ class FeatureNotEnabledException(RequestException):
     # Use for requests that require IIIF features that are disabled in the config.
     def __init__(self, feature):
         self.feature = feature
-        message = "Server does not support the '{0}' feature.".format(feature)
-        message += ' See {0} for details.'.format(COMPLIANCE_PAGE)
+        message = (
+            f"Server does not support the '{feature}' feature."
+            f' See {COMPLIANCE_PAGE} for details.'
+        )
         super().__init__(message)

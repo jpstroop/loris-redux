@@ -22,10 +22,10 @@ class FormatParameter(AbstractParameter):
         if self.uri_slice == JPG:
             return
         if self.canonical not in ALL_OUTPUT_FORMATS:
-            msg = '{0} is not a recognized format'.format(self.canonical)
+            msg = f'{self.canonical} is not a recognized format'
             raise SyntaxException(msg)
         if self.canonical == PNG and PNG not in self.enabled_features:
             raise FeatureNotEnabledException(PNG)
         if self.canonical not in self.formats_available:
-            msg = '{0} is not an available format'.format(self.canonical)
+            msg = f'{self.canonical} is not an available format'
             raise RequestException(msg)

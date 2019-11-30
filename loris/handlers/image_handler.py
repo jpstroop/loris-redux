@@ -23,7 +23,7 @@ class ImageHandler(object):
             cherrypy.response.status = 304
             return None
         elif iiif_params != image_request.canonical:
-            canoncial_uri = '/{0}/{1}'.format(identifier, image_request.canonical)
+            canoncial_uri = f'/{identifier}/{image_request.canonical}'
             cherrypy.response.headers['Location'] = canoncial_uri
             cherrypy.response.status = 303
             return None

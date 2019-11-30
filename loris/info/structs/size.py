@@ -29,7 +29,7 @@ class Size(object):
         return (self.width != other.width) or (self.height != other.height)
 
     def __repr__(self):
-        return 'Size({0},{1})'.format(self.width, self.height)
+        return f'Size({self.width},{self.height})'
 
     def to_dict(self):
         return OrderedDict(((WIDTH, self.width), (HEIGHT, self.height)))
