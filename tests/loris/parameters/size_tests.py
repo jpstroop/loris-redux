@@ -73,7 +73,7 @@ class TestSizeParameter(object):
         sp = SizeParameter(uri_slice, features, info_data, region_param)
         assert sp.width == 4000
         assert sp.height == 1600
-        assert sp.canonical == 'max'
+        assert sp.canonical is MAX
 
     def test__init_max_over_size_h(self):
         uri_slice = 'max'
@@ -84,7 +84,7 @@ class TestSizeParameter(object):
         sp = SizeParameter(uri_slice, features, info_data, region_param)
         assert sp.width == 4444
         assert sp.height == 4000
-        assert sp.canonical == 'max'
+        assert sp.canonical is MAX
 
     def test__init_max_over_size_area(self):
         uri_slice = 'max'
@@ -97,7 +97,7 @@ class TestSizeParameter(object):
         assert sp.width == 4140
         assert sp.height == 5796
         assert (sp.height*sp.width) < max_area
-        assert sp.canonical == 'max'
+        assert sp.canonical is MAX
 
     def test__init_sizeByW(self):
         uri_slice = '1024,'
@@ -107,7 +107,7 @@ class TestSizeParameter(object):
         sp = SizeParameter(uri_slice, features, info_data, region_param)
         assert sp.width == 1024
         assert sp.height == 1024
-        assert sp.canonical == '1024,'
+        assert sp.canonical == '1024,1024'
 
     def test__check_if_supported_sizeByW_raises(self):
         uri_slice = '1024,'
@@ -147,7 +147,7 @@ class TestSizeParameter(object):
         sp = SizeParameter(uri_slice, features, info_data, region_param)
         assert sp.width == 683
         assert sp.height == 1024
-        assert sp.canonical == '683,'
+        assert sp.canonical == '683,1024'
 
     @pytest.mark.skip(reason='test not written')
     def test_full_as_sizeByH_adjusts_request_type(self):
@@ -174,7 +174,7 @@ class TestSizeParameter(object):
         sp = SizeParameter(uri_slice, features, info_data, region_param)
         assert sp.width == 400
         assert sp.height == 600
-        assert sp.canonical == '400,'
+        assert sp.canonical == '400,600'
 
     def test__check_if_supported_sizeByPct_raises(self):
         uri_slice = 'pct:20'
@@ -193,7 +193,7 @@ class TestSizeParameter(object):
         sp = SizeParameter(uri_slice, features, info_data, region_param)
         assert sp.width == 1
         assert sp.height == 1
-        assert sp.canonical == '1,'
+        assert sp.canonical == '1,1'
 
     def test_pct_0_raises(self):
         uri_slice = 'pct:0'
@@ -220,7 +220,7 @@ class TestSizeParameter(object):
         sp = SizeParameter(uri_slice, features, info_data, region_param)
         assert sp.width == 133
         assert sp.height == 200
-        assert sp.canonical == '133,'
+        assert sp.canonical == '133,200'
 
     def test__init_sizeByConfinedWh_landscape(self):
         uri_slice = '!300,300'
@@ -230,7 +230,7 @@ class TestSizeParameter(object):
         sp = SizeParameter(uri_slice, features, info_data, region_param)
         assert sp.width == 300
         assert sp.height == 180
-        assert sp.canonical == '300,'
+        assert sp.canonical == '300,180'
 
     def test__check_if_supported_sizeByConfinedWh_raises(self):
         uri_slice = '!200,200'
@@ -286,7 +286,7 @@ class TestSizeParameter(object):
         assert sp.width == 400
         assert sp.height == 300
         assert not sp._distort_aspect
-        assert sp.canonical == '400,'
+        assert sp.canonical == '400,300'
 
     def test__check_if_supported_sizeByWh_raises(self):
         uri_slice = '400,300'
@@ -313,7 +313,7 @@ class TestSizeParameter(object):
         sp = SizeParameter(uri_slice, features, info_data, region_param)
         assert sp.width == 400
         assert sp.height == 300
-        assert sp.canonical == '400,'
+        assert sp.canonical == '400,300'
 
     def test_sizeAboveFull_raises(self):
         uri_slice = '400,300'

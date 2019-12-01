@@ -17,7 +17,7 @@ class TestImageHandler(BaseHandlerTest):
     def test_redirect_to_canonical(self):
         path = "/loris:sample.jp2/full/pct:5/0/default.jpg"
         response = self.get(path, allow_redirects=False)
-        canonical = "/loris:sample.jp2/full/300,/0/default.jpg"
+        canonical = "/loris:sample.jp2/full/300,400/0/default.jpg"
         assert response.headers["Location"] == canonical
 
     @pytest.mark.filterwarnings("ignore:the imp module is deprecated")
@@ -31,6 +31,7 @@ class TestImageHandler(BaseHandlerTest):
 
     def test_400_for_bad_syntax(self):
         response = self.get("/loris:sample.jp2/full/pct:10,/0/default.jpg")
+        #                                                #^
         body = response.json()
         assert response.status_code == 400
         assert body["error"] == "SyntaxException"
