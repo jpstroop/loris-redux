@@ -3,7 +3,6 @@ from math import floor
 import re
 
 from loris.constants import DECIMAL_ONE_HUNDRED
-from loris.constants import FULL
 from loris.constants import MAX
 from loris.constants import MAX_AREA
 from loris.constants import MAX_HEIGHT
@@ -56,19 +55,32 @@ class SizeParameter(AbstractParameter):
     def __init__(self, uri_slice, enabled_features, info, region_param):
         super().__init__(uri_slice, enabled_features)
         self.info = info
+        # delegations:
         self.region_w = region_param.pixel_w
         self.region_h = region_param.pixel_h
+        self.profile_max_width = self.info.profile[1].get(MAX_WIDTH)
+        self.profile_max_height = self.info.profile[1].get(MAX_HEIGHT)
+        self.profile_max_area = self.info.profile[1].get(MAX_AREA)
+        # calculations:
+        self.image_max_width, self.image_max_height = self._calc_image_max_wh()
         self.width = None
         self.height = None
-        self.max_width = self.info.profile[1].get(MAX_WIDTH)
-        self.max_height = self.info.profile[1].get(MAX_HEIGHT)
-        self.max_area = self.info.profile[1].get(MAX_AREA)
+        # memoized properties:
         self._request_type = None
         self._distort_aspect = False
         # raises SyntaxException, RequestException
-        self._initialize_properites()
+        self._initialize_properties()
         # raises FeatureNotEnabledException, RequestException
         self._run_checks()
+
+        # TODO:
+        # We need to know the max width, height, and area from the profile AND
+        # we need to know the max possible width and height for this specific AND
+        # the FINAL width and height of the image request
+        #  * If the request is just MAX, then we want the max possible
+        #  * If the request is one of the other syntaxes, we calculate the requested
+        #    width and height, and then check: 1) if it's too big (error) and 2) if
+        #    it's actually max.
 
     @property
     def request_type(self):
@@ -81,18 +93,16 @@ class SizeParameter(AbstractParameter):
     @property
     def canonical(self):
         if self._canonical is None:
-            if self.request_type is FULL:
-                self._canonical = FULL
+            if self.request_type is MAX:
+                self._canonical = MAX
             elif self._distort_aspect:
                 self._canonical = self.uri_slice
             else:
                 self._canonical = f'{self.width},'
         return self._canonical
 
-    def _initialize_properites(self):
+    def _initialize_properties(self):
         # raises SyntaxException, RequestException
-        if self.request_type is FULL:
-            self._init_full_request(); return
         if self.request_type is MAX:
             self._init_max_request(); return
         if self.request_type is SIZE_BY_W:
@@ -115,11 +125,9 @@ class SizeParameter(AbstractParameter):
         self._check_if_supported()
         # raises RequestException
         self._check_if_larger_than_max()
-        self._adjust_if_actually_full()
+        self._adjust_if_actually_max()
 
     def _deduce_request_type(self):
-        if self.uri_slice == FULL:
-            return FULL
         if self.uri_slice == MAX:
             return MAX
         if re.match(W_REGEX, self.uri_slice):
@@ -152,41 +160,55 @@ class SizeParameter(AbstractParameter):
             smaller_aspect = min(aspect, request_aspect)
             return larger_aspect - smaller_aspect > MAX_WH_ERROR
 
-    def _adjust_if_actually_full(self):
-        if self.region_w == self.width and self.region_h == self.height:
-            self._request_type = FULL
+    def _adjust_if_actually_max(self):
+        # TODO: we need to calculate max width and height when we init so that
+        # this can adjust if necessary
 
-    def _init_full_request(self):
-        self.width = self.region_w
-        self.height = self.region_h
+        if self.image_max_width == self.width and self.image_max_height == self.height:
+            self._request_type = MAX
+        if self.region_w == self.width and self.region_h == self.height:
+            self._request_type = MAX
+
+
+    def _calc_image_max_wh(self):
+        # remember, region may be the whole image. it doesn't reall
+        max_w = self.region_w
+        max_h = self.region_h
+        if self.profile_max_area:
+            scale = (self.profile_max_area / (max_w * max_h))**0.5
+            max_w = floor(self.region_w * scale)
+            max_h = floor(self.region_h * scale)
+        if self.profile_max_width and max_w > self.profile_max_width:
+            scale = self.profile_max_width / self.region_w
+            max_w = floor(self.region_w * scale)
+            max_h = floor(self.region_h * scale)
+        if self.profile_max_height:
+            scale = self.profile_max_height / self.region_h
+            max_w = floor(self.region_w * scale)
+            max_h = floor(self.region_h * scale)
+        return (max_w, max_h)
 
     def _init_max_request(self):
-        self.width = self.region_w
-        self.height = self.region_h
-        if self.max_area and (self.width * self.height) > self.max_area:
-            # TODO: seems like this could be more precise. Test is often
-            # 1px short (on the long dim?)
-            scale = (self.max_area / (self.width * self.height))**0.5
-            self.width = floor(self.region_w * scale)
-            self.height = floor(self.region_h * scale)
-        if self.max_width and self.width > self.max_width:
-            scale = self.max_width / self.region_w
-            self.width = floor(self.region_w * scale)
-            self.height = floor(self.region_h * scale)
-        if self.max_height and self.height > self.max_height:
-            scale = self.max_height / self.region_h
-            self.width = floor(self.region_w * scale)
-            self.height = floor(self.region_h * scale)
+        if self.region_w < self.image_max_width:
+            self.width = self.region_w
+        else:
+            self.width = self.image_max_width
+        if self.region_h < self.image_max_height:
+            self.height = self.region_h
+        else:
+            self.height = self.image_max_height
 
     def _init_by_w_request(self):
         self.width = int(self.uri_slice[:-1])
         scale = self.width / self.region_w
-        self.height = floor(self.region_h * scale)
+        self.height = round(self.region_h * scale) # rounding vs. floor seems to
+                                                   # seems to produce errors
+                                                   # less frequently, but...
 
     def _init_by_h_request(self):
         self.height = int(self.uri_slice[1:])
         scale = self.height / self.region_h
-        self.width = floor(self.region_w * scale)
+        self.width = round(self.region_w * scale) # see above, round vs. floor
 
     def _init_by_pct_request(self):
         try:
@@ -218,7 +240,7 @@ class SizeParameter(AbstractParameter):
     def _pct_to_decimal(n):
         return Decimal(float(n)) / DECIMAL_ONE_HUNDRED
 
-    def _check_size_above_full(self):
+    def _check_size_above_full(self): # (self)replace with new upsampling featureures
         allowed = SIZE_ABOVE_FULL in self.enabled_features
         larger = self.width > self.region_w or self.height > self.region_h
         if larger and not allowed:
@@ -226,11 +248,11 @@ class SizeParameter(AbstractParameter):
 
     def _check_if_supported(self):
         # raises FeatureNotEnabledException
-        if self.request_type is FULL:
+        if self.request_type is MAX:
             return
         try:
-            if self._request_type not in self.enabled_features:
-                raise FeatureNotEnabledException(self._request_type)
+            if self.request_type not in self.enabled_features:
+                raise FeatureNotEnabledException(self.request_type)
         except FeatureNotEnabledException as fe:
             if fe.feature is SIZE_BY_W and self._allowed_level0_size_request():
                 return
@@ -239,22 +261,22 @@ class SizeParameter(AbstractParameter):
 
     def _check_if_larger_than_max(self):
         area = self.width * self.height
-        if self.max_area and area > self.max_area:
+        if self.profile_max_area and area > self.profile_max_area:
             msg = (
                 f'Request area ({area}) is greater '
-                f'than max area allowed ({self.max_area})'
+                f'than max area allowed ({self.profile_max_area})'
             )
             raise RequestException(msg)
-        if self.max_width and self.width > self.max_width:
+        if self.profile_max_width and self.width > self.profile_max_width:
             msg = (
                 f'Request width ({self.width}) is greater than'
-                f'max width allowed ({self.max_width})'
+                f'max width allowed ({self.profile_max_width})'
             )
             raise RequestException(msg)
-        if self.max_height and self.height > self.max_height:
+        if self.profile_max_height and self.height > self.profile_max_height:
             msg = (
                 f'Request height ({self.height}) is greater than'
-                f'max height allowed ({self.max_height})'
+                f'max height allowed ({self.profile_max_height})'
             )
             raise RequestException(msg)
 

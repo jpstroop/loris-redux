@@ -28,4 +28,4 @@ class TestInfoHandler(BaseHandlerTest):
         assert response.headers["Allow"] == "GET"
         assert response.headers["Content-Type"] == "application/json"
         # Careful, this could change:
-        assert response.headers["Content-Length"] == "760"
+        assert response.headers["Content-Length"] == "753"

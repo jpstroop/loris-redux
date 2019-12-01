@@ -36,7 +36,6 @@ class TestCompliance(object):
                 'formats': ('png', 'webp'),
                 "supports" : (
                     'canonicalLinkHeader',
-                    'max',
                     'mirroring',
                     'profileLinkHeader',
                     'regionSquare',
@@ -56,7 +55,6 @@ class TestCompliance(object):
                 'qualities': ('bitonal', 'gray'),
                 "supports" : (
                     'canonicalLinkHeader',
-                    'max',
                     'mirroring',
                     'profileLinkHeader',
                     'regionSquare',
@@ -80,7 +78,7 @@ class TestCompliance(object):
 
     def test_additional_features_two_plus(self, level2_plus_yaml):
         compliance = Compliance(level2_plus_yaml)
-        extras = ('max', 'regionSquare')
+        extras = ('regionSquare',)
         assert compliance == 2
         assert compliance.additional_features == extras
 

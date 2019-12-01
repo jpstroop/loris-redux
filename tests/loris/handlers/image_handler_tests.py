@@ -12,7 +12,7 @@ class TestImageHandler(BaseHandlerTest):
         assert "Etag" in response.headers
         assert response.headers["Allow"] == "GET"
         assert response.headers["Content-Type"] == "image/jpeg"
-        assert response.headers["Content-Length"] == "5962"
+        assert response.headers["Content-Length"] == "6015"
 
     def test_redirect_to_canonical(self):
         path = "/loris:sample.jp2/full/pct:5/0/default.jpg"

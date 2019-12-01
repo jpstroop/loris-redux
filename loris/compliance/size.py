@@ -13,7 +13,7 @@ class SizeCompliance(AbstractFeatureSet):
 
     LEVEL_1 = st((SIZE_BY_W, SIZE_BY_H, SIZE_BY_PCT))
     LEVEL_2 = st(LEVEL_1 + (SIZE_BY_CONFINED_WH, SIZE_BY_DISTORTED_WH, SIZE_BY_WH))
-    ALL = st(LEVEL_2 + (MAX, SIZE_ABOVE_FULL))
+    ALL = st(LEVEL_2 + (SIZE_ABOVE_FULL,))
 
     def __init__(self, config):
         super().__init__(config)
