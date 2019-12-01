@@ -22,7 +22,7 @@ class TestInfo(object):
 
     def test_to_dict_has_identifier(self, compliance):
         info = Info(compliance, HTTP_ID)
-        assert info.to_dict()['@id'] == HTTP_ID
+        assert info.to_dict()['id'] == HTTP_ID
 
     def test_to_dict_has_protocol(self, compliance):
         info = Info(compliance, HTTP_ID)
