@@ -1,9 +1,9 @@
 from collections import OrderedDict
+from loris.constants import CONTEXT
+from loris.constants import IMAGE_SERVICE_3
+from loris.constants import PROTOCOL
 from operator import methodcaller
 import json
-
-from loris.constants import CONTEXT
-from loris.constants import PROTOCOL
 
 class Info(object):
     # POPO for info.json
@@ -65,6 +65,7 @@ class Info(object):
         d = OrderedDict()
         d['@context'] = CONTEXT
         d['id'] = self.identifier
+        d['type'] = IMAGE_SERVICE_3
         d['protocol'] = PROTOCOL
         d['profile'] = self.profile
         d['width'] = self.width
