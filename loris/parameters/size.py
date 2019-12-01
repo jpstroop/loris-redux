@@ -98,7 +98,7 @@ class SizeParameter(AbstractParameter):
             elif self._distort_aspect:
                 self._canonical = self.uri_slice
             else:
-                self._canonical = f'{self.width},'
+                self._canonical = f'{self.width},{self.height}'
         return self._canonical
 
     def _initialize_properties(self):
