@@ -2,6 +2,7 @@ from loris.info.structs.info import Info
 from loris.compliance import Compliance
 from loris.constants import CONTEXT
 from loris.constants import PROTOCOL
+from loris.constants import IMAGE_SERVICE_3
 from loris.info.structs.size import Size
 from loris.info.structs.tile import Tile
 from collections import OrderedDict
@@ -23,6 +24,10 @@ class TestInfo(object):
     def test_to_dict_has_identifier(self, compliance):
         info = Info(compliance, HTTP_ID)
         assert info.to_dict()['id'] == HTTP_ID
+
+    def test_to_dict_has_type(self, compliance):
+        info = Info(compliance, HTTP_ID)
+        assert info.to_dict()['type'] in IMAGE_SERVICE_3
 
     def test_to_dict_has_protocol(self, compliance):
         info = Info(compliance, HTTP_ID)
