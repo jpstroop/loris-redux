@@ -64,7 +64,7 @@ class Info(object):
     def to_dict(self):
         d = OrderedDict()
         d['@context'] = CONTEXT
-        d['@id'] = self.identifier
+        d['id'] = self.identifier
         d['protocol'] = PROTOCOL
         d['profile'] = self.profile
         d['width'] = self.width
