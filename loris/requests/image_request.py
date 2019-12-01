@@ -23,7 +23,7 @@ class ImageRequest(IIIFRequest):
         self._canonical = None
 
     def _init_delegations(self):
-        # This makes mocking a TON easier, plus Law of Demeter, whatever...
+        # This makes mocking a TON easier
         self.region_request_type = self._region_param.request_type
         self.region_decimal_x = self._region_param.decimal_x
         self.region_decimal_y = self._region_param.decimal_y

@@ -1,4 +1,4 @@
-from loris.constants import FULL
+from loris.constants import MAX
 from loris.exceptions import FeatureNotEnabledException
 from loris.exceptions import RequestException
 from loris.exceptions import SyntaxException
@@ -54,51 +54,41 @@ class TestSizeParameter(object):
             _ = SizeParameter(uri_slice, features, info_data, region_param).request_type
         assert 'Size syntax "wtf" is not valid.' == se.value.message
 
-    def test__init_full(self):
-        uri_slice = 'full'
+    def test__init_max_size_ok(self):
+        uri_slice = 'max'
         features = ()
         info_data = self.mock_info(8000, 6001)
         region_param = self.mock_region(3456, 1234)
         sp = SizeParameter(uri_slice, features, info_data, region_param)
         assert sp.width == 3456
         assert sp.height == 1234
-        assert sp.canonical is FULL
-
-    def test__init_max_size_ok(self):
-        uri_slice = 'max'
-        features = ('max')
-        info_data = self.mock_info(8000, 6001)
-        region_param = self.mock_region(3456, 1234)
-        sp = SizeParameter(uri_slice, features, info_data, region_param)
-        assert sp.width == 3456
-        assert sp.height == 1234
-        assert sp.canonical is FULL # gets adjusted
+        assert sp.canonical is MAX # gets adjusted
 
     def test__init_max_over_size_w(self):
         uri_slice = 'max'
-        features = ('max')
+        features = ()
         profile = ['', { 'maxWidth' : 4000}]
         info_data = self.mock_info(8000, 6001, profile=profile)
         region_param = self.mock_region(5000, 2000) # 1000 wider than allowed
         sp = SizeParameter(uri_slice, features, info_data, region_param)
         assert sp.width == 4000
         assert sp.height == 1600
-        assert sp.canonical == '4000,'
+        assert sp.canonical == 'max'
 
     def test__init_max_over_size_h(self):
         uri_slice = 'max'
-        features = ('max')
+        features = ()
         profile = ['', { 'maxHeight' : 4000}]
         info_data = self.mock_info(8000, 6000, profile=profile)
         region_param = self.mock_region(5000, 4500) # 500 higher than allowed
         sp = SizeParameter(uri_slice, features, info_data, region_param)
         assert sp.width == 4444
         assert sp.height == 4000
-        assert sp.canonical == '4444,'
+        assert sp.canonical == 'max'
 
     def test__init_max_over_size_area(self):
         uri_slice = 'max'
-        features = ('max')
+        features = ()
         max_area = 24000000
         profile = ['', { 'maxArea' : 24000000}]
         info_data = self.mock_info(8000, 6000, profile=profile)
@@ -107,18 +97,7 @@ class TestSizeParameter(object):
         assert sp.width == 4140
         assert sp.height == 5796
         assert (sp.height*sp.width) < max_area
-        assert sp.canonical == '4140,'
-
-    def test__check_if_supported_max_raises(self):
-        uri_slice = 'max'
-        features = ()
-        max_area = 24000000
-        profile = ['', { 'maxArea' : 24000000}]
-        info_data = self.mock_info(8000, 6000, profile=profile)
-        region_param = self.mock_region(5000, 7000)
-        with pytest.raises(FeatureNotEnabledException) as fe:
-            SizeParameter(uri_slice, features, info_data, region_param)
-        assert "not support the 'max'" in fe.value.message
+        assert sp.canonical == 'max'
 
     def test__init_sizeByW(self):
         uri_slice = '1024,'
@@ -139,16 +118,17 @@ class TestSizeParameter(object):
             SizeParameter(uri_slice, features, info_data, region_param)
         assert "not support the 'sizeByW'" in fe.value.message
 
-    def test_full_as_sizeByW_adjusts_request_type(self):
+    def test_max_as_sizeByW_adjusts_request_type(self):
         uri_slice = '1024,'
         features = ('sizeByW')
-        info_data = self.mock_info(8000, 6000)
+        profile = ['', { 'maxArea' : 24000000}]
+        info_data = self.mock_info(8000, 6000, profile=profile)
         region_param = self.mock_region(1024, 1024)
         sp = SizeParameter(uri_slice, features, info_data, region_param)
         assert sp.width == 1024
         assert sp.height == 1024
-        assert sp.request_type is FULL
-        assert sp.canonical == FULL
+        assert sp.request_type is MAX
+        assert sp.canonical == MAX
 
     def test_full_as_sizeByW_still_raises(self):
         uri_slice = '1024,'
@@ -165,9 +145,9 @@ class TestSizeParameter(object):
         info_data = self.mock_info(8000, 6001)
         region_param = self.mock_region(2048, 3072)
         sp = SizeParameter(uri_slice, features, info_data, region_param)
-        assert sp.width == 682
+        assert sp.width == 683
         assert sp.height == 1024
-        assert sp.canonical == '682,'
+        assert sp.canonical == '683,'
 
     @pytest.mark.skip(reason='test not written')
     def test_full_as_sizeByH_adjusts_request_type(self):
@@ -373,16 +353,6 @@ class TestSizeParameter(object):
         with pytest.raises(RequestException) as re:
             SizeParameter(uri_slice, features, info_data, region_param)
         assert "area (30000000) is greater" in re.value.message
-
-    def test_full_larger_that_max_raises(self):
-        uri_slice = 'full'
-        features = ()
-        profile = ['', { 'maxArea' : 16000000 }]
-        info_data = self.mock_info(8000, 6000, profile=profile)
-        region_param = self.mock_region(8000, 6000)
-        with pytest.raises(RequestException) as re:
-            SizeParameter(uri_slice, features, info_data, region_param)
-        assert "area (48000000) is greater" in re.value.message
 
     def test_can_get_tiles_without_sizeByW_if_allowed(self):
         uri_slice = '1024,'

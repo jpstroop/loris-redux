@@ -1,12 +1,11 @@
 from loris.exceptions import LorisException
 from loris.requests.info_request import InfoRequest
-
 import cherrypy
 import json
 
 class InfoHandler(object):
 
-    exposed = True
+    exposed = True # This is for CherryPy.
 
     def GET(self, identifier):
         cherrypy.response.headers['Allow'] = 'GET'

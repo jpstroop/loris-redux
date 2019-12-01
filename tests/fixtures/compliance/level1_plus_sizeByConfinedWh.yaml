@@ -36,8 +36,6 @@ rotation:
   rotationBy90s:
     enabled: false
 size:
-  max:
-    enabled: false
   sizeAboveFull:
     enabled: false
   sizeByConfinedWh:

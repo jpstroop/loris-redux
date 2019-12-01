@@ -102,8 +102,6 @@ iiif_features:
     rotationBy90s:
       enabled: True
   size:
-    max:
-      enabled: True
     sizeAboveFull:
       enabled: True
     sizeByConfinedWh:

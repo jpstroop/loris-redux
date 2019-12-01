@@ -12,10 +12,11 @@ class TestImageRequest(object):
 
     def test_canonical(self, compliance_2, tiled_jp2, app_configs):
         resolver_data = (tiled_jp2, 'jp2', 'no need for lastmod here')
-        iiif_params = 'full/max/0/default.jpg'
+        # The JP2 is 5906 x 7200
+        iiif_params = 'full/3622,/0/default.jpg'
         with patch.object(IIIFRequest, '_resolve_identifier', return_value=resolver_data):
             request = ImageRequest('fakeid', iiif_params)
-            assert request.canonical == 'full/3622,/0/default.jpg'
+            assert request.canonical == 'full/max/0/default.jpg'
 
     def test_etag(self, compliance_2, tiled_jp2, app_configs):
         lastmod = datetime(2016, 9, 4, 12, 28, 24, 928635)

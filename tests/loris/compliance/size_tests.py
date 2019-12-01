@@ -11,7 +11,6 @@ class TestSizeCompliance(object):
             'sizeByDistortedWh': { 'enabled': True },
             'sizeByWh': { 'enabled': True },
             'sizeAboveFull': { 'enabled': True },
-            'max': { 'enabled': True }
         }
         assert SizeCompliance(cfg) == 2
 
@@ -24,7 +23,6 @@ class TestSizeCompliance(object):
             'sizeByDistortedWh': { 'enabled': True },
             'sizeByWh': { 'enabled': False },
             'sizeAboveFull': { 'enabled': False },
-            'max': { 'enabled': False }
         }
         assert SizeCompliance(cfg) == 1
 
@@ -37,7 +35,6 @@ class TestSizeCompliance(object):
             'sizeByDistortedWh': { 'enabled': False },
             'sizeByWh': { 'enabled': True },
             'sizeAboveFull': { 'enabled': False },
-            'max': { 'enabled': False }
         }
         assert SizeCompliance(cfg) == 1
 
@@ -50,7 +47,6 @@ class TestSizeCompliance(object):
             'sizeByDistortedWh': { 'enabled': True },
             'sizeByWh': { 'enabled': True },
             'sizeAboveFull': { 'enabled': False },
-            'max': { 'enabled': False }
         }
         assert SizeCompliance(cfg) == 1
 
@@ -63,7 +59,6 @@ class TestSizeCompliance(object):
             'sizeByDistortedWh': { 'enabled': False },
             'sizeByWh': { 'enabled': False },
             'sizeAboveFull': { 'enabled': False },
-            'max': { 'enabled': False }
         }
         assert SizeCompliance(cfg) == 1
 
@@ -76,7 +71,6 @@ class TestSizeCompliance(object):
             'sizeByDistortedWh': { 'enabled': False },
             'sizeByWh': { 'enabled': False },
             'sizeAboveFull': { 'enabled': False },
-            'max': { 'enabled': False }
         }
         assert SizeCompliance(cfg) == 0
 
@@ -89,7 +83,6 @@ class TestSizeCompliance(object):
             'sizeByDistortedWh': { 'enabled': False },
             'sizeByWh': { 'enabled': False },
             'sizeAboveFull': { 'enabled': False },
-            'max': { 'enabled': False }
         }
         assert SizeCompliance(cfg) == 0
 
@@ -102,7 +95,6 @@ class TestSizeCompliance(object):
             'sizeByDistortedWh': { 'enabled': False },
             'sizeByWh': { 'enabled': False },
             'sizeAboveFull': { 'enabled': False },
-            'max': { 'enabled': False }
         }
         assert SizeCompliance(cfg) == 0
 
@@ -115,7 +107,6 @@ class TestSizeCompliance(object):
             'sizeByDistortedWh': { 'enabled': True },
             'sizeByWh': { 'enabled': True },
             'sizeAboveFull': { 'enabled': False },
-            'max': { 'enabled': False }
         }
         assert SizeCompliance(cfg) == 2
 
@@ -128,6 +119,5 @@ class TestSizeCompliance(object):
             'sizeByDistortedWh': { 'enabled': False },
             'sizeByWh': { 'enabled': False },
             'sizeAboveFull': { 'enabled': False },
-            'max': { 'enabled': False }
         }
         assert SizeCompliance(cfg) == 0
