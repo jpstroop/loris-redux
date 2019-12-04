@@ -15,7 +15,6 @@ from loris.constants import MAX_WIDTH
 class Compliance(ComparableMixin):
 
     ALL_LEVEL_1 = st(
-        # FormatCompliance.LEVEL_1 +
         HttpCompliance.LEVEL_1 +
         QualityCompliance.LEVEL_1 +
         RegionCompliance.LEVEL_1 +

@@ -8,7 +8,6 @@ class TestSizeCompliance(object):
             'sizeByH': { 'enabled': True },
             'sizeByPct': { 'enabled': True },
             'sizeByConfinedWh': { 'enabled': True },
-            'sizeByDistortedWh': { 'enabled': True },
             'sizeByWh': { 'enabled': True },
             'sizeAboveFull': { 'enabled': True },
         }
@@ -20,20 +19,7 @@ class TestSizeCompliance(object):
             'sizeByH': { 'enabled': True },
             'sizeByPct': { 'enabled': True },
             'sizeByConfinedWh': { 'enabled': True },
-            'sizeByDistortedWh': { 'enabled': True },
             'sizeByWh': { 'enabled': False },
-            'sizeAboveFull': { 'enabled': False },
-        }
-        assert SizeCompliance(cfg) == 1
-
-    def test_1_wo_sizeByDistortedWh(self):
-        cfg = {
-            'sizeByW': { 'enabled': True },
-            'sizeByH': { 'enabled': True },
-            'sizeByPct': { 'enabled': True },
-            'sizeByConfinedWh': { 'enabled': True },
-            'sizeByDistortedWh': { 'enabled': False },
-            'sizeByWh': { 'enabled': True },
             'sizeAboveFull': { 'enabled': False },
         }
         assert SizeCompliance(cfg) == 1
@@ -44,7 +30,6 @@ class TestSizeCompliance(object):
             'sizeByH': { 'enabled': True },
             'sizeByPct': { 'enabled': True },
             'sizeByConfinedWh': { 'enabled': False },
-            'sizeByDistortedWh': { 'enabled': True },
             'sizeByWh': { 'enabled': True },
             'sizeAboveFull': { 'enabled': False },
         }
@@ -56,7 +41,6 @@ class TestSizeCompliance(object):
             'sizeByH': { 'enabled': True },
             'sizeByPct': { 'enabled': True },
             'sizeByConfinedWh': { 'enabled': False },
-            'sizeByDistortedWh': { 'enabled': False },
             'sizeByWh': { 'enabled': False },
             'sizeAboveFull': { 'enabled': False },
         }
@@ -68,7 +52,6 @@ class TestSizeCompliance(object):
             'sizeByH': { 'enabled': True },
             'sizeByPct': { 'enabled': False },
             'sizeByConfinedWh': { 'enabled': False },
-            'sizeByDistortedWh': { 'enabled': False },
             'sizeByWh': { 'enabled': False },
             'sizeAboveFull': { 'enabled': False },
         }
@@ -80,7 +63,6 @@ class TestSizeCompliance(object):
             'sizeByH': { 'enabled': False },
             'sizeByPct': { 'enabled': True },
             'sizeByConfinedWh': { 'enabled': False },
-            'sizeByDistortedWh': { 'enabled': False },
             'sizeByWh': { 'enabled': False },
             'sizeAboveFull': { 'enabled': False },
         }
@@ -92,7 +74,6 @@ class TestSizeCompliance(object):
             'sizeByH': { 'enabled': True },
             'sizeByPct': { 'enabled': True },
             'sizeByConfinedWh': { 'enabled': False },
-            'sizeByDistortedWh': { 'enabled': False },
             'sizeByWh': { 'enabled': False },
             'sizeAboveFull': { 'enabled': False },
         }
@@ -104,7 +85,6 @@ class TestSizeCompliance(object):
             'sizeByH': { 'enabled': True },
             'sizeByPct': { 'enabled': True },
             'sizeByConfinedWh': { 'enabled': True },
-            'sizeByDistortedWh': { 'enabled': True },
             'sizeByWh': { 'enabled': True },
             'sizeAboveFull': { 'enabled': False },
         }
@@ -116,7 +96,6 @@ class TestSizeCompliance(object):
             'sizeByH': { 'enabled': False },
             'sizeByPct': { 'enabled': False },
             'sizeByConfinedWh': { 'enabled': False },
-            'sizeByDistortedWh': { 'enabled': False },
             'sizeByWh': { 'enabled': False },
             'sizeAboveFull': { 'enabled': False },
         }

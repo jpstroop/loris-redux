@@ -24,26 +24,6 @@ class TestSizeParameter(object):
     def mock_region(self, region_width, region_height):
         return Mock(pixel_w=region_width, pixel_h=region_height)
 
-    def test__is_distorted_no_sizes_within_error(self):
-        uri_slice = '4000,3000'
-        info_data = self.mock_info(8000, 6001)
-        assert SizeParameter._is_distorted(uri_slice, info_data) is False
-
-    def test__is_distorted_no_sizes_outside_error(self):
-        uri_slice = '4000,2975'
-        info_data = self.mock_info(8000, 6001)
-        assert SizeParameter._is_distorted(uri_slice, info_data)
-
-    def test__is_distorted_overridden_by_sizes(self):
-        uri_slice = '1192,32'
-        sizes = [
-            Size(1192, 32),
-            Size(2383, 63),
-            # ...
-            Size(76250, 2000)
-        ]
-        info_data = self.mock_info(152500, 4000, sizes=sizes)
-        assert SizeParameter._is_distorted(uri_slice, info_data) is False
 
     def test__deduce_request_type_raises_syntax_exception(self):
         uri_slice = 'wtf'
@@ -249,34 +229,6 @@ class TestSizeParameter(object):
     def test_full_as_sizeByConfinedWh_still_raises(self):
         raise NotImplementedError
 
-    def test__init_sizeByDistortedWh(self):
-        uri_slice = '500,600'
-        features = ('sizeByDistortedWh')
-        info_data = self.mock_info(8000, 6001)
-        region_param = self.mock_region(2000, 1200)
-        sp = SizeParameter(uri_slice, features, info_data, region_param)
-        assert sp.width == 500
-        assert sp.height == 600
-        assert sp._distort_aspect
-        assert sp.canonical == '500,600'
-
-    def test__check_if_supported_sizeByDistortedWh_raises(self):
-        uri_slice = '2,2000'
-        features = ('sizeAboveFull')
-        info_data = self.mock_info(8000, 6001)
-        region_param = self.mock_region(2000, 1200)
-        with pytest.raises(FeatureNotEnabledException) as fe:
-            SizeParameter(uri_slice, features, info_data, region_param)
-        assert "not support the 'sizeByDistortedWh'" in fe.value.message
-
-    @pytest.mark.skip(reason='test not written')
-    def test_full_as_sizeByDistortedWh_adjusts_request_type(self):
-        raise NotImplementedError
-
-    @pytest.mark.skip(reason='test not written')
-    def test_full_as_sizeByDistortedWh_still_raises(self):
-        raise NotImplementedError
-
     def test__init_sizeByWh(self):
         uri_slice = '400,300'
         features = ('sizeByWh')
@@ -285,7 +237,6 @@ class TestSizeParameter(object):
         sp = SizeParameter(uri_slice, features, info_data, region_param)
         assert sp.width == 400
         assert sp.height == 300
-        assert not sp._distort_aspect
         assert sp.canonical == '400,300'
 
     def test__check_if_supported_sizeByWh_raises(self):
