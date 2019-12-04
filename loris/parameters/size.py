@@ -1,7 +1,4 @@
 from decimal import Decimal
-from math import floor
-import re
-
 from loris.constants import DECIMAL_ONE_HUNDRED
 from loris.constants import MAX
 from loris.constants import MAX_AREA
@@ -9,7 +6,6 @@ from loris.constants import MAX_HEIGHT
 from loris.constants import MAX_WIDTH
 from loris.constants import SIZE_ABOVE_FULL
 from loris.constants import SIZE_BY_CONFINED_WH
-from loris.constants import SIZE_BY_DISTORTED_WH
 from loris.constants import SIZE_BY_H
 from loris.constants import SIZE_BY_PCT
 from loris.constants import SIZE_BY_W
@@ -19,36 +15,14 @@ from loris.exceptions import RequestException
 from loris.exceptions import SyntaxException
 from loris.info.structs.size import Size
 from loris.parameters.api import AbstractParameter
+from math import floor
+from re import compile
+from re import match
 
-# Maximum approximation error between the original dimensions and smaller
-# requests before we consider a w, h request THAT IS NOT THE SIZES LIST
-# to be 'sizeByDistortedWh'...
-MAX_WH_ERROR = 0.01
-# E.g.:
-#
-# >>> MAX_WH_ERROR = 0.1
-# >>> (3000/2000) - (6000 / 4001)
-# 0.0003749062734317299
-# >>> (3000/2000) - (6000 / 4001) < MAX_WH_ERROR
-# True
-#
-# This is tricky for two reasons:
-# 1) OSd will make requests all the way down to 3:2, 2:1, etc.
-# and even if you configure it to not go that low, the relative error can
-# get pretty high.
-#
-# 2) Scrolls:
-#
-# >>> (152500 / 4000) - (1192 / 32)
-# 0.875
-#
-# TODO: is this really the best approach? Seems like we should be able to know
-# that the error is going to be larger when the aspect ratio is greater?
-
-W_REGEX = re.compile(r'^\d+,$')
-H_REGEX = re.compile(r'^,\d+$')
-WH_REGEX = re.compile(r'^\d+,\d+$')
-CONFINED_REGEX = re.compile(r'^!\d+,\d+$')
+W_REGEX = compile(r'^\d+,$')
+H_REGEX = compile(r'^,\d+$')
+WH_REGEX = compile(r'^\d+,\d+$')
+CONFINED_REGEX = compile(r'^!\d+,\d+$')
 
 class SizeParameter(AbstractParameter):
 
@@ -67,20 +41,10 @@ class SizeParameter(AbstractParameter):
         self.height = None
         # memoized properties:
         self._request_type = None
-        self._distort_aspect = False
         # raises SyntaxException, RequestException
         self._initialize_properties()
         # raises FeatureNotEnabledException, RequestException
         self._run_checks()
-
-        # TODO:
-        # We need to know the max width, height, and area from the profile AND
-        # we need to know the max possible width and height for this specific AND
-        # the FINAL width and height of the image request
-        #  * If the request is just MAX, then we want the max possible
-        #  * If the request is one of the other syntaxes, we calculate the requested
-        #    width and height, and then check: 1) if it's too big (error) and 2) if
-        #    it's actually max.
 
     @property
     def request_type(self):
@@ -95,8 +59,6 @@ class SizeParameter(AbstractParameter):
         if self._canonical is None:
             if self.request_type is MAX:
                 self._canonical = MAX
-            elif self._distort_aspect:
-                self._canonical = self.uri_slice
             else:
                 self._canonical = f'{self.width},{self.height}'
         return self._canonical
@@ -114,9 +76,7 @@ class SizeParameter(AbstractParameter):
         if self.request_type is SIZE_BY_CONFINED_WH:
             self._init_by_confined_wh_request(); return
         if self.request_type is SIZE_BY_WH:
-            self._init_wh_request(distort_aspect=False); return
-        if self.request_type is SIZE_BY_DISTORTED_WH:
-            self._init_wh_request(distort_aspect=True); return
+            self._init_wh_request(); return
 
     def _run_checks(self):
         # raises RequestException
@@ -130,35 +90,18 @@ class SizeParameter(AbstractParameter):
     def _deduce_request_type(self):
         if self.uri_slice == MAX:
             return MAX
-        if re.match(W_REGEX, self.uri_slice):
+        if match(W_REGEX, self.uri_slice):
             return SIZE_BY_W
-        if re.match(H_REGEX, self.uri_slice):
+        if match(H_REGEX, self.uri_slice):
             return SIZE_BY_H
-        if re.match(WH_REGEX, self.uri_slice):
-            if SizeParameter._is_distorted(self.uri_slice, self.info):
-                return SIZE_BY_DISTORTED_WH
-            else:
-                return SIZE_BY_WH
-        if re.match(CONFINED_REGEX, self.uri_slice):
+        if match(WH_REGEX, self.uri_slice):
+            return SIZE_BY_WH
+        if match(CONFINED_REGEX, self.uri_slice):
             return SIZE_BY_CONFINED_WH
         if self.uri_slice.split(':')[0] == 'pct':
             return SIZE_BY_PCT
         msg = f'Size syntax "{self.uri_slice}" is not valid.'
         raise SyntaxException(msg)
-
-    @staticmethod
-    def _is_distorted(uri_slice, info):
-        # static and passing vals so that we can test this method in isolation
-        w, h = map(int, uri_slice.split(','))
-        if Size(w, h) in info.sizes:
-            return False
-        else:
-            aspect = info.long_dim / info.short_dim
-            request_aspect = max(w, h) / min(w, h)
-            # we have to account for sizeAboveFull
-            larger_aspect = max(aspect, request_aspect)
-            smaller_aspect = min(aspect, request_aspect)
-            return larger_aspect - smaller_aspect > MAX_WH_ERROR
 
     def _adjust_if_actually_max(self):
         # TODO: we need to calculate max width and height when we init so that
@@ -232,8 +175,7 @@ class SizeParameter(AbstractParameter):
         self.width = int(self.region_w * scale)
         self.height = int(self.region_h * scale)
 
-    def _init_wh_request(self, distort_aspect=False):
-        self._distort_aspect = distort_aspect
+    def _init_wh_request(self):
         self.width, self.height = map(int, self.uri_slice.split(','))
 
     @staticmethod

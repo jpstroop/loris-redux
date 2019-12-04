@@ -40,8 +40,6 @@ size:
     enabled: false
   sizeByConfinedWh:
     enabled: true
-  sizeByDistortedWh:
-    enabled: true
   sizeByH:
     enabled: true
   sizeByPct:
