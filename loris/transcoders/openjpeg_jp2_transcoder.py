@@ -53,7 +53,7 @@ class OpenJpegJp2Transcoder(AbstractJp2Transcoder, AbstractTranscoder):
         processor = platform.processor() # is this enough?
         package_dir = dirname(dirname(abspath(__file__)))
         opj_dir = join(package_dir, 'openjpeg', system, processor)
-        if system == 'linux':
+        if system in ('linux','darwin'):
             return (opj_dir, join(opj_dir, LINUX_OPJ_BIN))
         else:
             msg = f'OpenJpeg binaries not included for for {system}/{processor}'
