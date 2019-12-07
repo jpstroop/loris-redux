@@ -17,7 +17,7 @@ class TestSizeCompliance(object):
         cfg = {
             'sizeByW': { 'enabled': True },
             'sizeByH': { 'enabled': True },
-            'sizeByPct': { 'enabled': True },
+            'sizeByPct': { 'enabled': False },
             'sizeByConfinedWh': { 'enabled': True },
             'sizeByWh': { 'enabled': False },
             'sizeAboveFull': { 'enabled': False },
@@ -28,7 +28,7 @@ class TestSizeCompliance(object):
         cfg = {
             'sizeByW': { 'enabled': True },
             'sizeByH': { 'enabled': True },
-            'sizeByPct': { 'enabled': True },
+            'sizeByPct': { 'enabled': False },
             'sizeByConfinedWh': { 'enabled': False },
             'sizeByWh': { 'enabled': True },
             'sizeAboveFull': { 'enabled': False },
@@ -39,29 +39,18 @@ class TestSizeCompliance(object):
         cfg = {
             'sizeByW': { 'enabled': True },
             'sizeByH': { 'enabled': True },
-            'sizeByPct': { 'enabled': True },
+            'sizeByPct': { 'enabled': False },
             'sizeByConfinedWh': { 'enabled': False },
             'sizeByWh': { 'enabled': False },
             'sizeAboveFull': { 'enabled': False },
         }
         assert SizeCompliance(cfg) == 1
 
-    def test_0_wo_sizeByPct(self):
-        cfg = {
-            'sizeByW': { 'enabled': True },
-            'sizeByH': { 'enabled': True },
-            'sizeByPct': { 'enabled': False },
-            'sizeByConfinedWh': { 'enabled': False },
-            'sizeByWh': { 'enabled': False },
-            'sizeAboveFull': { 'enabled': False },
-        }
-        assert SizeCompliance(cfg) == 0
-
     def test_0_wo_sizeByH(self):
         cfg = {
             'sizeByW': { 'enabled': True },
             'sizeByH': { 'enabled': False },
-            'sizeByPct': { 'enabled': True },
+            'sizeByPct': { 'enabled': False },
             'sizeByConfinedWh': { 'enabled': False },
             'sizeByWh': { 'enabled': False },
             'sizeAboveFull': { 'enabled': False },
@@ -72,7 +61,7 @@ class TestSizeCompliance(object):
         cfg = {
             'sizeByW': { 'enabled': False },
             'sizeByH': { 'enabled': True },
-            'sizeByPct': { 'enabled': True },
+            'sizeByPct': { 'enabled': False },
             'sizeByConfinedWh': { 'enabled': False },
             'sizeByWh': { 'enabled': False },
             'sizeAboveFull': { 'enabled': False },
@@ -92,7 +81,7 @@ class TestSizeCompliance(object):
 
     def test_how_to_get_0(self):
         cfg = {
-            'sizeByW': { 'enabled': True },
+            'sizeByW': { 'enabled': False },
             'sizeByH': { 'enabled': False },
             'sizeByPct': { 'enabled': False },
             'sizeByConfinedWh': { 'enabled': False },

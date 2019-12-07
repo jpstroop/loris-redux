@@ -54,7 +54,7 @@ class Compliance(ComparableMixin):
     @property
     def uri(self):
         if self._uri is None:
-            self._uri = f'http://iiif.io/api/image/2/level{int(self)}.json'
+            self._uri = f'http://iiif.io/api/image/3/level{int(self)}.json'
         return self._uri
 
     @property

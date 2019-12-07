@@ -10,8 +10,8 @@ from loris.constants import SIZE_BY_WH
 
 class SizeCompliance(AbstractFeatureSet):
 
-    LEVEL_1 = st((SIZE_BY_W, SIZE_BY_H, SIZE_BY_PCT))
-    LEVEL_2 = st(LEVEL_1 + (SIZE_BY_CONFINED_WH, SIZE_BY_WH))
+    LEVEL_1 = st((SIZE_BY_W, SIZE_BY_H))
+    LEVEL_2 = st(LEVEL_1 + (SIZE_BY_CONFINED_WH, SIZE_BY_WH, SIZE_BY_PCT))
     ALL = st(LEVEL_2 + (SIZE_ABOVE_FULL,))
 
     def __init__(self, config):

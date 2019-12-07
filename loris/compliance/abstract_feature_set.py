@@ -15,7 +15,7 @@ class AbstractFeatureSet(ComparableMixin):
     @property
     def features(self):
         # This is a list of features the config actually supports, regardless
-        # of level. See http://iiif.io/api/image/2.1/compliance/
+        # of level. See http://iiif.io/api/image/3.1/compliance/
         # This should be passed to the various Parameter constructors.
         if self._features is None:
             self._features = st(k for k,v in self._config.items() if v['enabled'])
