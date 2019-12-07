@@ -38,7 +38,6 @@ class TestCompliance(object):
                     'canonicalLinkHeader',
                     'mirroring',
                     'profileLinkHeader',
-                    'regionSquare',
                     'rotationArbitrary',
                     'sizeAboveFull'
                 )
@@ -57,7 +56,6 @@ class TestCompliance(object):
                     'canonicalLinkHeader',
                     'mirroring',
                     'profileLinkHeader',
-                    'regionSquare',
                     'rotationArbitrary',
                     'sizeAboveFull'
                 )
@@ -78,7 +76,7 @@ class TestCompliance(object):
 
     def test_additional_features_two_plus(self, level2_plus_yaml):
         compliance = Compliance(level2_plus_yaml)
-        extras = ('regionSquare',)
+        extras = ()
         assert compliance == 2
         assert compliance.additional_features == extras
 
