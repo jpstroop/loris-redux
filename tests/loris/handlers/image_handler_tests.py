@@ -3,10 +3,13 @@ import pytest
 
 
 class TestImageHandler(BaseHandlerTest):
+
+    @pytest.mark.filterwarnings("ignore:unclosed file")
     def test_image_returns200(self):
         response = self.get("/loris:sample.jp2/full/200,/0/default.jpg")
         assert response.status_code == 200
 
+    @pytest.mark.filterwarnings("ignore:unclosed file")
     def test_image_headers(self):
         response = self.get("/loris:sample.jp2/full/200,/0/default.jpg")
         assert "Etag" in response.headers
@@ -20,6 +23,7 @@ class TestImageHandler(BaseHandlerTest):
         canonical = "/loris:sample.jp2/full/300,400/0/default.jpg"
         assert response.headers["Location"] == canonical
 
+    @pytest.mark.filterwarnings("ignore:unclosed file")
     @pytest.mark.filterwarnings("ignore:the imp module is deprecated")
     def test_etag_works(self):
         path = "/loris:sample.jp2/full/200,/0/default.jpg"
