@@ -15,12 +15,12 @@ class TestCompliance(object):
 
     def test_uri(self, everything_enabled_yaml):
         compliance = Compliance(everything_enabled_yaml)
-        assert compliance.uri == 'http://iiif.io/api/image/2/level2.json'
+        assert compliance.uri == 'http://iiif.io/api/image/3/level2.json'
 
     def test_profile0_plus_sizeByW_yaml(self, level0_plus_sizeByW_yaml):
         compliance = Compliance(level0_plus_sizeByW_yaml)
         expected = (
-            'http://iiif.io/api/image/2/level0.json',
+            'http://iiif.io/api/image/3/level0.json',
             {
                 "supports" : ("sizeByW",)
             }
@@ -30,7 +30,7 @@ class TestCompliance(object):
     def test_profile2_plus_everything_yaml(self, everything_enabled_yaml):
         compliance = Compliance(everything_enabled_yaml)
         expected = (
-            'http://iiif.io/api/image/2/level2.json',
+            'http://iiif.io/api/image/3/level2.json',
             {
                 'qualities': ('bitonal', 'color', 'gray'),
                 'formats': ('png', 'webp'),
@@ -49,7 +49,7 @@ class TestCompliance(object):
     def test_profile2_plus_everything_yaml_no_color(self, everything_enabled_yaml):
         compliance = Compliance(everything_enabled_yaml)
         expected = (
-            'http://iiif.io/api/image/2/level2.json',
+            'http://iiif.io/api/image/3/level2.json',
             {
                 'formats': ('png', 'webp'),
                 'qualities': ('bitonal', 'gray'),

@@ -43,7 +43,7 @@ size:
   sizeByH:
     enabled: true
   sizeByPct:
-    enabled: true
+    enabled: false
   sizeByW:
     enabled: true
   sizeByWh:
