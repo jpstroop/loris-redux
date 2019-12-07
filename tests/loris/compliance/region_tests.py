@@ -13,7 +13,7 @@ class TestRegionCompliance(object):
         cfg = {
             'regionByPx': { 'enabled': True },
             'regionByPct': { 'enabled': False },
-            'regionSquare': { 'enabled': False }
+            'regionSquare': { 'enabled': True }
         }
         assert RegionCompliance(cfg) == 1
 
@@ -25,15 +25,15 @@ class TestRegionCompliance(object):
         }
         assert RegionCompliance(cfg) == 0
 
-    def test_still_1_with_extras(self):
+    def test_how_to_get_2(self):
         cfg = {
             'regionByPx': { 'enabled': True },
-            'regionByPct': { 'enabled': False },
+            'regionByPct': { 'enabled': True },
             'regionSquare': { 'enabled': True }
         }
-        assert RegionCompliance(cfg) == 1
+        assert RegionCompliance(cfg) == 2
 
-    def test_still_0_with_extras(self):
+    def test_still_0_with_addl(self):
         cfg = {
             'regionByPx': { 'enabled': False },
             'regionByPct': { 'enabled': False },

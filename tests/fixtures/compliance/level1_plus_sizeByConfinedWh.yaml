@@ -27,7 +27,7 @@ region:
   regionByPx:
     enabled: true
   regionSquare:
-    enabled: false
+    enabled: true
 rotation:
   mirroring:
     enabled: false

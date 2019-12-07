@@ -6,9 +6,9 @@ from loris.constants import REGION_SQUARE
 
 class RegionCompliance(AbstractFeatureSet):
 
-    LEVEL_1 = (REGION_BY_PIXEL,)
+    LEVEL_1 = (REGION_BY_PIXEL,REGION_SQUARE,)
     LEVEL_2 = st(LEVEL_1 + (REGION_BY_PCT,))
-    ALL = st(LEVEL_2 + (REGION_SQUARE,))
+    ALL = LEVEL_2
 
     def __init__(self, config):
         super().__init__(config)
