@@ -68,6 +68,7 @@ class TestKakaduJp2Transcoder(object):
         cmd_no_path = 'kdu_expand -i /foo/bar.jp2 -o /baz/quux.bmp -region {0.17789195945,0},{0.64407721149,1} -reduce 5'
         assert transcoder._build_command(image_request, fake_pipe).endswith(cmd_no_path)
 
+    @pytest.mark.filterwarnings("ignore:unclosed file")
     def test__execute_simple(self, transcoder, region_test_jp2):
         # This is the equivalent of /full/full/0/default.jpg.
         # It will be slow
@@ -99,6 +100,7 @@ class TestKakaduJp2Transcoder(object):
             assert is_close_color(i.getpixel((0,7999)), BLUE)
             assert is_close_color(i.getpixel((5999,7999)), ORANGE)
 
+    @pytest.mark.filterwarnings("ignore:unclosed file")
     def test__execute_small_full(self, transcoder, region_test_jp2):
         # This is the equivalent of /full/3000,/0/default.jpg.
         image_request = Mock(

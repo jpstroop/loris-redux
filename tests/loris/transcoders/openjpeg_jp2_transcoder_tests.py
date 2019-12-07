@@ -66,6 +66,7 @@ class TestOpenJpegJp2Transcoder(object):
         cmd_no_path = 'opj_decompress -i /foo/bar.jp2 -o /baz/quux.bmp -d 0,1024,512,1536 -r 4'
         assert transcoder._build_command(image_request, fake_pipe).endswith(cmd_no_path)
 
+    @pytest.mark.filterwarnings("ignore:unclosed file")
     def test__execute_small_full(self, transcoder, region_test_jp2):
         # This is the equivalent of /full/full/0/default.jpg.
         # It will be slow (~2-2.5 seconds)
