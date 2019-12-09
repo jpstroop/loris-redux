@@ -51,13 +51,13 @@ class TestJp2Extractor(object):
         assert info.sizes[5].width == 185
         assert info.sizes[5].height == 225
 
-    def test_profile_with_color(self, compliance_2, tiled_jp2, app_configs):
+    def test_with_color(self, compliance_2, tiled_jp2, app_configs):
         info = init_and_extract(tiled_jp2, compliance_2, app_configs)
-        assert info.profile[1]['qualities'] == COLOR_QUALITIES
+        assert info.extra_qualities == COLOR_QUALITIES
 
-    def test_profile_with_gray(self, compliance_2, gray_jp2, app_configs):
+    def test_with_gray(self, compliance_2, gray_jp2, app_configs):
         info = init_and_extract(gray_jp2, compliance_2, app_configs)
-        assert info.profile[1]['qualities'] == GRAY_QUALITIES
+        assert info.extra_qualities == GRAY_QUALITIES
 
     def test_sizes_respects_max(self, compliance_2, tiled_jp2, app_configs):
         info = init_and_extract(tiled_jp2, compliance_2, app_configs)
@@ -74,21 +74,21 @@ class TestJp2Extractor(object):
         assert info.sizes[5].width == 185
         assert info.sizes[5].height == 225
 
-    def test_profile_includes_max_area(self, compliance_2, tiled_jp2, app_configs):
+    def test_includes_max_area(self, compliance_2, tiled_jp2, app_configs):
         info = init_and_extract(tiled_jp2, compliance_2, app_configs)
-        assert info.profile[1]['maxArea'] == 16000000
+        assert info.max_area == 16000000
 
-    def test_profile_includes_max_width(self, compliance_2, tiled_jp2, app_configs):
+    def test_includes_max_width(self, compliance_2, tiled_jp2, app_configs):
         app_configs['max_area'] = None
         app_configs['max_width'] = 4000
         info = init_and_extract(tiled_jp2, compliance_2, app_configs)
-        assert info.profile[1]['maxWidth'] == 4000
+        assert info.max_width == 4000
 
-    def test_profile_includes_max_height(self, compliance_2, tiled_jp2, app_configs):
+    def test_includes_max_height(self, compliance_2, tiled_jp2, app_configs):
         app_configs['max_area'] = None
         app_configs['max_height'] = 4001
         info = init_and_extract(tiled_jp2, compliance_2, app_configs)
-        assert info.profile[1]['maxHeight'] == 4001
+        assert info.max_height == 4001
 
     def test_wh_in_sizes_l0_when_no_maxes(self, compliance_0, tiled_jp2, app_configs):
         app_configs['sizes_and_tiles']['jp2']['encoded_only'] = False

@@ -10,7 +10,7 @@ class FormatParameter(AbstractParameter):
 
     def __init__(self, uri_slice, enabled_features, info):
         super().__init__(uri_slice, enabled_features)
-        self.formats_available = info.profile[1]['formats']
+        self.formats_available = info.extra_formats
         self._canonical = uri_slice
         self._run_checks()
 

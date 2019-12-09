@@ -16,10 +16,14 @@ class TestSizeParameter(object):
         long_dim = max(width, height)
         short_dim = min(width, height)
         sizes = kwargs.get('sizes', [ Size(width, height) ])
+        tiles = kwargs.get('tiles')
+        max_area = kwargs.get('max_area')
+        max_width = kwargs.get('max_width')
+        max_height = kwargs.get('max_height')
         tiles = kwargs.get('tiles', None)
-        profile = kwargs.get('profile', ['',{}])
         return Mock(width=width, height=height, long_dim=long_dim, \
-            short_dim=short_dim, sizes=sizes, tiles=tiles, profile=profile)
+            short_dim=short_dim, sizes=sizes, tiles=tiles, max_area=max_area, \
+            max_width=max_width, max_height=max_height)
 
     def mock_region(self, region_width, region_height):
         return Mock(pixel_w=region_width, pixel_h=region_height)
@@ -47,8 +51,7 @@ class TestSizeParameter(object):
     def test__init_max_over_size_w(self):
         uri_slice = 'max'
         features = ()
-        profile = ['', { 'maxWidth' : 4000}]
-        info_data = self.mock_info(8000, 6001, profile=profile)
+        info_data = self.mock_info(8000, 6001, max_width=4000)
         region_param = self.mock_region(5000, 2000) # 1000 wider than allowed
         sp = SizeParameter(uri_slice, features, info_data, region_param)
         assert sp.width == 4000
@@ -58,8 +61,7 @@ class TestSizeParameter(object):
     def test__init_max_over_size_h(self):
         uri_slice = 'max'
         features = ()
-        profile = ['', { 'maxHeight' : 4000}]
-        info_data = self.mock_info(8000, 6000, profile=profile)
+        info_data = self.mock_info(8000, 6000, max_height=4000)
         region_param = self.mock_region(5000, 4500) # 500 higher than allowed
         sp = SizeParameter(uri_slice, features, info_data, region_param)
         assert sp.width == 4444
@@ -70,8 +72,7 @@ class TestSizeParameter(object):
         uri_slice = 'max'
         features = ()
         max_area = 24000000
-        profile = ['', { 'maxArea' : 24000000}]
-        info_data = self.mock_info(8000, 6000, profile=profile)
+        info_data = self.mock_info(8000, 6000, max_area=24000000)
         region_param = self.mock_region(5000, 7000)
         sp = SizeParameter(uri_slice, features, info_data, region_param)
         assert sp.width == 4140
@@ -101,8 +102,7 @@ class TestSizeParameter(object):
     def test_max_as_sizeByW_adjusts_request_type(self):
         uri_slice = '1024,'
         features = ('sizeByW')
-        profile = ['', { 'maxArea' : 24000000}]
-        info_data = self.mock_info(8000, 6000, profile=profile)
+        info_data = self.mock_info(8000, 6000, max_area=24000000)
         region_param = self.mock_region(1024, 1024)
         sp = SizeParameter(uri_slice, features, info_data, region_param)
         assert sp.width == 1024
@@ -278,8 +278,7 @@ class TestSizeParameter(object):
     def test_width_larger_than_max_raises(self):
         uri_slice = '5000,'
         features = ('sizeByW', 'sizeAboveFull')
-        profile = ['', { 'maxWidth' : 4000 }]
-        info_data = self.mock_info(8000, 6001, profile=profile)
+        info_data = self.mock_info(8000, 6001, max_width=4000)
         region_param = self.mock_region(4000, 3000)
         with pytest.raises(RequestException) as re:
             SizeParameter(uri_slice, features, info_data, region_param)
@@ -288,8 +287,7 @@ class TestSizeParameter(object):
     def test_height_larger_than_max_raises(self):
         uri_slice = ',1024'
         features = ('sizeByH')
-        profile = ['', { 'maxHeight' : 1000 }]
-        info_data = self.mock_info(8000, 6001, profile=profile)
+        info_data = self.mock_info(8000, 6001, max_height=1000)
         region_param = self.mock_region(2048, 2048)
         with pytest.raises(RequestException) as re:
             SizeParameter(uri_slice, features, info_data, region_param)
@@ -298,8 +296,7 @@ class TestSizeParameter(object):
     def test_area_larger_than_max_raises(self):
         uri_slice = '5000,'
         features = ('sizeByW', 'sizeAboveFull')
-        profile = ['', { 'maxArea' : 16000000 }]
-        info_data = self.mock_info(8000, 6001, profile=profile)
+        info_data = self.mock_info(8000, 6001, max_area=16000000)
         region_param = self.mock_region(5000, 6000)
         with pytest.raises(RequestException) as re:
             SizeParameter(uri_slice, features, info_data, region_param)

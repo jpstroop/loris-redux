@@ -8,7 +8,7 @@ import pytest
 class TestQualityParameter(object):
 
     def mock_info(self, qualities_available):
-        return Mock(profile=['_', {'qualities' : qualities_available} ])
+        return Mock(extra_qualities=qualities_available)
 
     def test_canonical_color_with_color(self):
         uri_slice = 'color'

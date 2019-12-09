@@ -8,7 +8,7 @@ import pytest
 class TestFormatParameter(object):
 
     def mock_info(self, formats_available):
-        return Mock(profile=['_', {'formats' : formats_available}])
+        return Mock(extra_formats=formats_available)
 
     def test_png_with_all_enabled(self):
         uri_slice = 'png'

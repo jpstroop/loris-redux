@@ -38,8 +38,7 @@ class Compliance(ComparableMixin):
         self.region = RegionCompliance(config['region'])
         self.rotation = RotationCompliance(config['rotation'])
         self.size = SizeCompliance(config['size'])
-
-        self._additional_features = None
+        self._extra_features = None
         self._int = None
         self._uri = None
 
@@ -50,6 +49,9 @@ class Compliance(ComparableMixin):
                 self.region, self.rotation, self.size) )
             self._int = min(ints)
         return self._int
+
+    def __str__(self):
+        return f'level{int(self)}'
 
     @property
     def uri(self):
@@ -68,39 +70,26 @@ class Compliance(ComparableMixin):
             self.size.features
         )
 
+    def extra_qualities(self, include_color=True):
+        qualities = self.quality.features
+        if not include_color:
+            qualities = tuple(filter(lambda q: q != COLOR, qualities))
+        return qualities
+
     @property
-    def additional_features(self):
+    def extra_formats(self):
+        return self.format.features
+
+    @property
+    def extra_features(self):
         # Features supported above the calculated compliance level, i.e. the
         # difference between all enabled features and the calculated compliance
         # level. For listing in profile[1]['supports'].
-        if self._additional_features is None:
+        if self._extra_features is None:
             level_features = set(()) # 0
             if int(self) == 2:
                 level_features = set(Compliance.ALL_LEVEL_2)
             elif int(self) == 1:
                 level_features = set(Compliance.ALL_LEVEL_1)
-            self._additional_features = set(self.all_enabled_features) - level_features
-        return st(self._additional_features)
-
-    def to_profile(self, **kwargs):
-        # A tuple suitable for placing in the "supports" key of info.json
-        # Pass include_color=False if the source image is grayscale. Can also
-        # pass max_area, max_width, and max_height
-        d = { }
-        qualities = self.quality.features
-        if not kwargs.get('include_color', True):
-            qualities = tuple(filter(lambda q: q != COLOR, qualities))
-        if qualities:
-            d['qualities'] = qualities
-
-        if self.additional_features:
-            d['supports'] = self.additional_features
-        if self.format.features:
-            d['formats'] = self.format.features
-        if kwargs.get('max_area') is not None:
-            d[MAX_AREA] = kwargs['max_area']
-        if kwargs.get('max_width') is not None:
-            d[MAX_WIDTH] = kwargs['max_width']
-        if kwargs.get('max_height') is not None:
-            d[MAX_HEIGHT] = kwargs['max_height']
-        return ( self.uri, d )
+            self._extra_features = set(self.all_enabled_features) - level_features
+        return st(self._extra_features)

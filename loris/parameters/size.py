@@ -32,9 +32,6 @@ class SizeParameter(AbstractParameter):
         # delegations:
         self.region_w = region_param.pixel_w
         self.region_h = region_param.pixel_h
-        self.profile_max_width = self.info.profile[1].get(MAX_WIDTH)
-        self.profile_max_height = self.info.profile[1].get(MAX_HEIGHT)
-        self.profile_max_area = self.info.profile[1].get(MAX_AREA)
         # calculations:
         self.image_max_width, self.image_max_height = self._calc_image_max_wh()
         self.width = None
@@ -117,16 +114,16 @@ class SizeParameter(AbstractParameter):
         # remember, region may be the whole image. it doesn't reall
         max_w = self.region_w
         max_h = self.region_h
-        if self.profile_max_area:
-            scale = (self.profile_max_area / (max_w * max_h))**0.5
+        if self.info.max_area:
+            scale = (self.info.max_area / (max_w * max_h))**0.5
             max_w = floor(self.region_w * scale)
             max_h = floor(self.region_h * scale)
-        if self.profile_max_width and max_w > self.profile_max_width:
-            scale = self.profile_max_width / self.region_w
+        if self.info.max_width and max_w > self.info.max_width:
+            scale = self.info.max_width / self.region_w
             max_w = floor(self.region_w * scale)
             max_h = floor(self.region_h * scale)
-        if self.profile_max_height:
-            scale = self.profile_max_height / self.region_h
+        if self.info.max_height:
+            scale = self.info.max_height / self.region_h
             max_w = floor(self.region_w * scale)
             max_h = floor(self.region_h * scale)
         return (max_w, max_h)
@@ -203,22 +200,22 @@ class SizeParameter(AbstractParameter):
 
     def _check_if_larger_than_max(self):
         area = self.width * self.height
-        if self.profile_max_area and area > self.profile_max_area:
+        if self.info.max_area and area > self.info.max_area:
             msg = (
                 f'Request area ({area}) is greater '
-                f'than max area allowed ({self.profile_max_area})'
+                f'than max area allowed ({self.info.max_area})'
             )
             raise RequestException(msg)
-        if self.profile_max_width and self.width > self.profile_max_width:
+        if self.info.max_width and self.width > self.info.max_width:
             msg = (
                 f'Request width ({self.width}) is greater than'
-                f'max width allowed ({self.profile_max_width})'
+                f'max width allowed ({self.info.max_width})'
             )
             raise RequestException(msg)
-        if self.profile_max_height and self.height > self.profile_max_height:
+        if self.info.max_height and self.height > self.info.max_height:
             msg = (
                 f'Request height ({self.height}) is greater than'
-                f'max height allowed ({self.profile_max_height})'
+                f'max height allowed ({self.info.max_height})'
             )
             raise RequestException(msg)
 
