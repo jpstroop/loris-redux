@@ -12,7 +12,7 @@ class QualityParameter(AbstractParameter):
 
     def __init__(self, uri_slice, enabled_features, info):
         super().__init__(uri_slice, enabled_features)
-        self.qualities_available = info.profile[1]['qualities'] + (DEFAULT,)
+        self.qualities_available = info.extra_qualities + (DEFAULT,)
         self.image_is_color = COLOR in self.qualities_available
         self._run_checks()
 

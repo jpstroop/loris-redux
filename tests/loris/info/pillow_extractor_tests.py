@@ -25,19 +25,19 @@ class TestPillowExtractor(object):
 
     def test_color_jpg_qualities(self, compliance_2, color_jpg, app_configs):
         info = init_and_extract(color_jpg, compliance_2, app_configs)
-        assert info.profile[1]['qualities'] == COLOR_QUALITIES
+        assert info.extra_qualities == COLOR_QUALITIES
 
     def test_color_png_qualities(self, compliance_2, color_png, app_configs):
         info = init_and_extract(color_png, compliance_2, app_configs)
-        assert info.profile[1]['qualities'] == COLOR_QUALITIES
+        assert info.extra_qualities == COLOR_QUALITIES
 
     def test_gray_jpg_qualities(self, compliance_2, gray_jpg, app_configs):
         info = init_and_extract(gray_jpg, compliance_2, app_configs)
-        assert info.profile[1]['qualities'] == GRAY_QUALITIES
+        assert info.extra_qualities == GRAY_QUALITIES
 
     def test_gray_png_qualities(self, compliance_2, gray_png, app_configs):
         info = init_and_extract(gray_png, compliance_2, app_configs)
-        assert info.profile[1]['qualities'] == GRAY_QUALITIES
+        assert info.extra_qualities == GRAY_QUALITIES
 
     def test_sizes_color_jpg(self, compliance_0, color_jpg, app_configs):
         # so that tiles are smaller than the full test image:
@@ -74,19 +74,19 @@ class TestPillowExtractor(object):
         assert info.sizes[6].width == 94
         assert info.sizes[6].height == 125
 
-    def test_profile_includes_max_area(self, compliance_2, color_jpg, app_configs):
+    def test_includes_max_area(self, compliance_2, color_jpg, app_configs):
         info = init_and_extract(color_jpg, compliance_2, app_configs)
-        assert info.profile[1]['maxArea'] == 16000000
+        assert info.max_area == 16000000
 
-    def test_profile_includes_max_width(self, compliance_2, color_jpg, app_configs):
+    def test_includes_max_width(self, compliance_2, color_jpg, app_configs):
         app_configs['max_width'] = 7200
         info = init_and_extract(color_jpg, compliance_2, app_configs)
-        assert info.profile[1]['maxWidth'] == 7200
+        assert info.max_width == 7200
 
-    def test_profile_includes_max_width(self, compliance_2, color_jpg, app_configs):
+    def test_includes_max_width(self, compliance_2, color_jpg, app_configs):
         app_configs['max_height'] = 5000
         info = init_and_extract(color_jpg, compliance_2, app_configs)
-        assert info.profile[1]['maxHeight'] == 5000
+        assert info.max_height == 5000
 
     def test_sizes_always_includes_full_or_max(self, compliance_0, color_jpg, app_configs):
         app_configs['sizes_and_tiles']['other_formats']['enabled'] = False

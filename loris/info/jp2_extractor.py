@@ -1,21 +1,18 @@
 from collections import deque
-from math import ceil
-
 from loris.info.abstract_extractor import AbstractExtractor
-from loris.info.structs.info import Info
 from loris.info.structs.size import Size
 from loris.info.structs.tile import Tile
+from math import ceil
 
 class Jp2Extractor(AbstractExtractor):
     # Extracts JPEG 2000 specific info for an image
-    #
     def __init__(self, compliance, app_configs):
         super().__init__(compliance, app_configs)
         self._include_tiles_and_sizes = None
 
     def extract(self, path, http_identifier):
         metadata = Jp2Parser(path).metadata
-        info = Info(self.compliance, http_identifier)
+        info = self.init_info(http_identifier)
         info.width = metadata['image_width']
         info.height = metadata['image_height']
         info.identifier = http_identifier
@@ -32,7 +29,8 @@ class Jp2Extractor(AbstractExtractor):
             else:
                 info.sizes.extend(level_sizes)
 
-        info.profile = self._make_profile(metadata['is_color'])
+        quals = self.compliance.extra_qualities(metadata['is_color'])
+        info.extra_qualities = quals
         return info
 
     @property
@@ -41,12 +39,6 @@ class Jp2Extractor(AbstractExtractor):
             encoded_only = self.app_configs['sizes_and_tiles']['jp2']['encoded_only']
             self._include_tiles_and_sizes = (self.compliance > 0) or encoded_only
         return self._include_tiles_and_sizes
-
-    def _make_profile(self, is_color):
-        profile = self.compliance.to_profile(include_color=is_color, \
-            max_area=self.max_area, max_width=self.max_width, \
-            max_height=self.max_height)
-        return profile
 
     @staticmethod
     def _levels_to_sizes(levels, w, h, max_w, max_h):

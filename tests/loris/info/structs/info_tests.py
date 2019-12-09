@@ -1,11 +1,16 @@
-from loris.info.structs.info import Info
+from collections import OrderedDict
 from loris.compliance import Compliance
 from loris.constants import CONTEXT
-from loris.constants import PROTOCOL
+from loris.constants import CONTEXT_URI
+from loris.constants import ID
 from loris.constants import IMAGE_SERVICE_3
+from loris.constants import MAX_AREA
+from loris.constants import PROTOCOL
+from loris.constants import PROTOCOL_URI
+from loris.constants import TYPE
+from loris.info.structs.info import Info
 from loris.info.structs.size import Size
 from loris.info.structs.tile import Tile
-from collections import OrderedDict
 import pytest
 
 @pytest.fixture()
@@ -17,25 +22,19 @@ HTTP_ID = 'https://example.edu/images/1234'
 class TestInfo(object):
 
     # Defaults and stuff set up w/ init
-    def test_to_dict_has_context(self, compliance):
+    def test_dict_has_boilerplate_values(self, compliance):
         info = Info(compliance, HTTP_ID)
-        assert info.to_dict()['@context'] == CONTEXT
+        d = info.to_dict()
+        assert d[CONTEXT] == CONTEXT_URI
+        assert d[PROTOCOL] == PROTOCOL_URI
+        assert d[TYPE] == IMAGE_SERVICE_3
+        assert d[ID] == HTTP_ID
 
-    def test_to_dict_has_identifier(self, compliance):
+    def test_to_dict_strips_none_values(self, compliance):
         info = Info(compliance, HTTP_ID)
-        assert info.to_dict()['id'] == HTTP_ID
-
-    def test_to_dict_has_type(self, compliance):
-        info = Info(compliance, HTTP_ID)
-        assert info.to_dict()['type'] in IMAGE_SERVICE_3
-
-    def test_to_dict_has_protocol(self, compliance):
-        info = Info(compliance, HTTP_ID)
-        assert info.to_dict()['protocol'] == PROTOCOL
-
-    def test_to_dict_has_profile(self, compliance):
-        info = Info(compliance, HTTP_ID)
-        assert 'profile' in info.to_dict()
+        info.max_area = None
+        d = info.to_dict()
+        assert MAX_AREA not in d
 
     def test_long_dim(self, compliance):
         info = Info(compliance, HTTP_ID)

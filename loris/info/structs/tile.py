@@ -1,5 +1,6 @@
 from loris.info.structs.size import Size
 from loris.constants import HEIGHT
+from loris.constants import SCALE_FACTORS
 
 class Tile(Size):
     __slots__ = 'scale_factors'
@@ -13,5 +14,5 @@ class Tile(Size):
         d = super().to_dict()
         if self.width == self.height:
             del d[HEIGHT]
-        d['scaleFactors'] = self.scale_factors
+        d[SCALE_FACTORS] = self.scale_factors
         return d

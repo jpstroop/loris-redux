@@ -37,11 +37,11 @@ class PillowExtractor(AbstractExtractor):
             self.min_dimension = sf['min_dimension']
 
     def extract(self, path, http_identifier):
-        info = Info(self.compliance, http_identifier)
+        info = self.init_info(http_identifier)
         pillow_image = Image.open(path)
         w, h = pillow_image.size
         info.width, info.height = (w, h)
-        info.profile = self._make_profile(pillow_image)
+        info.extra_qualities = self._make_qualities(pillow_image)
         max_size = self.max_size(w, h)
         if self.include_sizes_and_tiles:
             scale_factors = self._scale_factors(w, h)
@@ -51,6 +51,10 @@ class PillowExtractor(AbstractExtractor):
         else:
             info.sizes = [max_size]
         return info
+
+    def _make_qualities(self, pillow_image):
+        is_color = PillowExtractor.is_color(pillow_image)
+        return self.compliance.extra_qualities(is_color)
 
     def _scale_factors(self, image_w, image_h):
         short_image_dimenson = min(image_w, image_h)
@@ -85,10 +89,3 @@ class PillowExtractor(AbstractExtractor):
     @staticmethod
     def is_color(pillow_image):
         return pillow_image.mode in COLOR_MODES
-
-    def _make_profile(self, pillow_image):
-        include_color = PillowExtractor.is_color(pillow_image)
-        profile = self.compliance.to_profile(include_color=include_color, \
-            max_area=self.max_area, max_width=self.max_width, \
-            max_height=self.max_height)
-        return profile

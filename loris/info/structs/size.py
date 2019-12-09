@@ -1,14 +1,13 @@
 from collections import OrderedDict
-
-from loris.constants import WIDTH
+from dataclasses import dataclass
 from loris.constants import HEIGHT
+from loris.constants import WIDTH
 
-class Size(object):
+@dataclass
+class Size:
     __slots__ = 'width', 'height'
-
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
+    width: int
+    height: int
 
     def __lt__(self, other):
         return self.width < other.width and self.height < other.height

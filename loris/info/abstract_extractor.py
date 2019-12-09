@@ -1,10 +1,10 @@
 from abc import ABCMeta
 from abc import abstractmethod
-from math import ceil
-
 from loris.constants import BITONAL_QUALITIES
 from loris.constants import COLOR_QUALITIES
+from loris.info.structs.info import Info
 from loris.info.structs.size import Size
+from math import ceil
 
 class AbstractExtractor(metaclass=ABCMeta):
     #
@@ -22,9 +22,19 @@ class AbstractExtractor(metaclass=ABCMeta):
     def __init__(self, compliance, app_configs):
         self.compliance = compliance
         self.app_configs = app_configs
-        self.max_area = app_configs.get('max_area', None)
-        self.max_width = app_configs.get('max_width', None)
-        self.max_height = app_configs.get('max_height', None)
+        self._max_area = self.app_configs.get('max_area')
+        self._max_width = self.app_configs.get('max_width')
+        self._max_height = self.app_configs.get('max_height')
+
+    def init_info(self, http_identifier):
+        # This is all of the info that is per-server
+        info = Info(self.compliance, http_identifier)
+        info.extra_features = self.compliance.extra_features
+        info.extra_formats = self.compliance.extra_formats
+        info.max_area = self._max_area
+        info.max_width = self._max_width
+        info.max_height = self._max_height
+        return info
 
     @abstractmethod
     def extract(self, path, http_identifier):  # pragma: no cover
@@ -32,16 +42,15 @@ class AbstractExtractor(metaclass=ABCMeta):
         return
 
     def max_size(self, image_width, image_height):
-        # I stole this from @zimeon, sort of:
         w, h = image_width, image_height
-        if self.max_area and self.max_area < (image_width * image_height):
-            scale = (self.max_area / (image_width * image_height)) ** 0.5
+        if self._max_area and self._max_area < (w * h):
+            scale = (self._max_area / (image_width * image_height)) ** 0.5
             w, h = AbstractExtractor._scale_wh(scale, image_width, image_height)
-        if self.max_width and self.max_width < w:
-            scale = self.max_width / image_width
+        if self._max_width and self._max_width < w:
+            scale = self._max_width / image_width
             w, h = AbstractExtractor._scale_wh(scale, image_width, image_height)
-        if self.max_height and self.max_height < h:
-            scale = self.max_height / image_height
+        if self._max_height and self._max_height < h:
+            scale = self._max_height / image_height
             w, h = AbstractExtractor._scale_wh(scale, image_width, image_height)
         return Size(w, h)
 
