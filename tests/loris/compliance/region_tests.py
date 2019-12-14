@@ -25,14 +25,6 @@ class TestRegionCompliance(object):
         }
         assert RegionCompliance(cfg) == 0
 
-    def test_how_to_get_2(self):
-        cfg = {
-            'regionByPx': { 'enabled': True },
-            'regionByPct': { 'enabled': True },
-            'regionSquare': { 'enabled': True }
-        }
-        assert RegionCompliance(cfg) == 2
-
     def test_still_0_with_addl(self):
         cfg = {
             'regionByPx': { 'enabled': False },
