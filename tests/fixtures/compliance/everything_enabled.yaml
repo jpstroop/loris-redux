@@ -36,7 +36,7 @@ rotation:
   rotationBy90s:
     enabled: true
 size:
-  sizeAboveFull:
+  sizeUpscaling:
     enabled: true
   sizeByConfinedWh:
     enabled: true

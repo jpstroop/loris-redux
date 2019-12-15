@@ -38,7 +38,7 @@ rotation:
 size:
   max:
     enabled: false
-  sizeAboveFull:
+  sizeUpscaling:
     enabled: false
   sizeByConfinedWh:
     enabled: false

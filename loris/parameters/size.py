@@ -4,7 +4,7 @@ from loris.constants import MAX
 from loris.constants import MAX_AREA
 from loris.constants import MAX_HEIGHT
 from loris.constants import MAX_WIDTH
-from loris.constants import SIZE_ABOVE_FULL
+from loris.constants import SIZE_UPSCALING
 from loris.constants import SIZE_BY_CONFINED_WH
 from loris.constants import SIZE_BY_H
 from loris.constants import SIZE_BY_PCT
@@ -19,6 +19,8 @@ from math import floor
 from re import compile
 from re import match
 
+# note that these regexes do not account for a leading '^'; we just check for
+# that in self._deduce_request_type()
 W_REGEX = compile(r'^\d+,$')
 H_REGEX = compile(r'^,\d+$')
 WH_REGEX = compile(r'^\d+,\d+$')
@@ -36,6 +38,7 @@ class SizeParameter(AbstractParameter):
         self.image_max_width, self.image_max_height = self._calc_image_max_wh()
         self.width = None
         self.height = None
+        self.upscaling_requested = False
         # memoized properties:
         self._request_type = None
         # raises SyntaxException, RequestException
@@ -77,7 +80,7 @@ class SizeParameter(AbstractParameter):
 
     def _run_checks(self):
         # raises RequestException
-        self._check_size_above_full()
+        self._check_size_upscaling()
         # raises FeatureNotEnabledException
         self._check_if_supported()
         # raises RequestException
@@ -85,17 +88,21 @@ class SizeParameter(AbstractParameter):
         self._adjust_if_actually_max()
 
     def _deduce_request_type(self):
-        if self.uri_slice == MAX:
+        slice = self.uri_slice
+        if slice[0:1] == '^':
+            self.upscaling_requested = True
+            slice = slice[1:]
+        if slice == MAX:
             return MAX
-        if match(W_REGEX, self.uri_slice):
+        if match(W_REGEX, slice):
             return SIZE_BY_W
-        if match(H_REGEX, self.uri_slice):
+        if match(H_REGEX, slice):
             return SIZE_BY_H
-        if match(WH_REGEX, self.uri_slice):
+        if match(WH_REGEX, slice):
             return SIZE_BY_WH
-        if match(CONFINED_REGEX, self.uri_slice):
+        if match(CONFINED_REGEX, slice):
             return SIZE_BY_CONFINED_WH
-        if self.uri_slice.split(':')[0] == 'pct':
+        if slice.split(':')[0] == 'pct':
             return SIZE_BY_PCT
         msg = f'Size syntax "{self.uri_slice}" is not valid.'
         raise SyntaxException(msg)
@@ -139,20 +146,23 @@ class SizeParameter(AbstractParameter):
             self.height = self.image_max_height
 
     def _init_by_w_request(self):
-        self.width = int(self.uri_slice[:-1])
+        slice = self._strip_caret_if_upsample()
+        self.width = int(slice[:-1])
         scale = self.width / self.region_w
         self.height = round(self.region_h * scale) # rounding vs. floor seems to
                                                    # seems to produce errors
                                                    # less frequently, but...
 
     def _init_by_h_request(self):
-        self.height = int(self.uri_slice[1:])
+        slice = self._strip_caret_if_upsample()
+        self.height = int(slice[1:])
         scale = self.height / self.region_h
         self.width = round(self.region_w * scale) # see above, round vs. floor
 
     def _init_by_pct_request(self):
+        slice = self._strip_caret_if_upsample()
         try:
-            scale = SizeParameter._pct_to_decimal(self.uri_slice.split(':')[1])
+            scale = SizeParameter._pct_to_decimal(slice.split(':')[1])
         except ValueError as ve:
             raise SyntaxException(str(ve))
         if scale <= 0:
@@ -165,7 +175,8 @@ class SizeParameter(AbstractParameter):
         self.height = 1 if 0 < h_decimal < 1 else int(h_decimal)
 
     def _init_by_confined_wh_request(self):
-        request_w, request_h = map(int, self.uri_slice[1:].split(','))
+        slice = self._strip_caret_if_upsample()
+        request_w, request_h = map(int, slice[1:].split(','))
         # TODO: below may need more precision than we get from floats w/
         # large images.
         scale = min(request_w / self.region_w, request_h / self.region_h)
@@ -173,17 +184,29 @@ class SizeParameter(AbstractParameter):
         self.height = int(self.region_h * scale)
 
     def _init_wh_request(self):
-        self.width, self.height = map(int, self.uri_slice.split(','))
+        slice = self._strip_caret_if_upsample()
+        self.width, self.height = map(int, slice.split(','))
+
+    def _strip_caret_if_upsample(self):
+        s = self.uri_slice[1:] if self.upscaling_requested else self.uri_slice
+        return s
 
     @staticmethod
     def _pct_to_decimal(n):
         return Decimal(float(n)) / DECIMAL_ONE_HUNDRED
 
-    def _check_size_above_full(self): # (self)replace with new upsampling featureures
-        allowed = SIZE_ABOVE_FULL in self.enabled_features
+    def _check_size_upscaling(self):
+        upscaling_configured = SIZE_UPSCALING in self.enabled_features
         larger = self.width > self.region_w or self.height > self.region_h
-        if larger and not allowed:
-            raise FeatureNotEnabledException(SIZE_ABOVE_FULL)
+        if self.upscaling_requested and not upscaling_configured:
+            raise FeatureNotEnabledException(SIZE_UPSCALING)
+        if larger and not self.upscaling_requested:
+            msg = (
+                f"Image would be upsampled (region is {self.region_w}×"
+                f"{self.region_h}, image is {self.width}×{self.height}), but "
+                "upsampling synax ('^') was not used."
+            )
+            raise RequestException(msg)
 
     def _check_if_supported(self):
         # raises FeatureNotEnabledException
