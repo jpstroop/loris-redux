@@ -1,3 +1,6 @@
+from loris.constants import JSON_CONTENT_TYPE
+from loris.constants import JSONLD_CONTENT_TYPE
+from loris.constants import JSONLD_MEDIA_TYPE
 from loris.exceptions import LorisException
 from loris.requests.info_request import InfoRequest
 import cherrypy
@@ -21,9 +24,18 @@ class InfoHandler(object):
             cherrypy.response.status = 304
             return None
         else:
-            cherrypy.response.headers['content-type'] = 'application/json'
+            accept = cherrypy.request.headers.get('accept')
+            acceptable = (JSONLD_CONTENT_TYPE, None, '*/*')
+            if accept in acceptable and self._jsonld_enabled:
+                cherrypy.response.headers['content-type'] = JSONLD_CONTENT_TYPE
+            else:
+                cherrypy.response.headers['content-type'] = JSON_CONTENT_TYPE
             cherrypy.response.headers['etag'] = info_request.etag
             return str(info_request).encode('utf8')
+
+    @property
+    def _jsonld_enabled(self):
+        return JSONLD_MEDIA_TYPE in InfoRequest.compliance.http.features
 
     # TODO: These can be moved into a mixin. Not sure about _conditional_response
     def _etag_match(self, info_request):

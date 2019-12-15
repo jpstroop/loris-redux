@@ -21,6 +21,12 @@ class AbstractFeatureSet(ComparableMixin):
             self._features = st(k for k,v in self._config.items() if v['enabled'])
         return self._features
 
+    # This is here to that we can change features dynamically during tests. It
+    # is not used in production
+    @features.setter
+    def features(self, features):
+        self._features = features
+
     def __int__(self):
         if all(f in self.features for f in self.LEVEL_2):
             return 2
