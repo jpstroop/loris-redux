@@ -4,10 +4,9 @@
 
 [![License: New BSD](https://img.shields.io/badge/license-New%20BSD-blue.svg)](https://github.com/jpstroop/loris-redux/blob/master/LICENSE)
 
-[![Python 3.6](https://img.shields.io/badge/python-3.6-yellow.svg)](https://img.shields.io/badge/python-3.6-yellow.svg)
 [![Python 3.7](https://img.shields.io/badge/python-3.7-yellow.svg)](https://img.shields.io/badge/python-3.7-yellow.svg)
 [![Python 3.8](https://img.shields.io/badge/python-3.8-yellow.svg)](https://img.shields.io/badge/python-3.8-yellow.svg)
-
+[![Python Nightly](https://img.shields.io/badge/python-nightly-yellow.svg)](https://img.shields.io/badge/python-nightly-yellow.svg)
 
 
 __WIP!__
@@ -19,6 +18,7 @@ A rewrite of loris using [CherryPy](http://cherrypy.org/) and Python `>=` 3.6.
 ### Run the server in debug mode
 
 ```
+$ brew install libmagic # on macOS only
 $ pipenv install --dev # --dev assumes you'll want to run tests
 $ pipenv run python run.py
 ```
