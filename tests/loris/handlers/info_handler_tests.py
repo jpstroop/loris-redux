@@ -35,8 +35,17 @@ class TestInfoHandler(BaseHandlerTest):
         assert response.headers["Content-Type"] == "application/json"
 
     def test_request_without_jsonld_enabled_returns_json(self):
-        # just clear it, since we're not testing anything else
         InfoRequest.compliance.http.features = ()
         headers = {'Accept': 'application/ld+json'}
         response = self.get("/loris:sample.jp2/info.json", headers=headers)
         assert response.headers["Content-Type"] == "application/json"
+
+    def test_profile_link_header(self):
+        response = self.get("/loris:sample.jp2/info.json")
+        expected = '<http://iiif.io/api/image/3/level2.json>;rel="profile"'
+        assert response.headers["Link"] == expected
+
+    def test_profile_link_header_can_be_disabled(self):
+        InfoRequest.compliance.http.features = ()
+        response = self.get("/loris:sample.jp2/info.json")
+        assert "Link" not in response.headers

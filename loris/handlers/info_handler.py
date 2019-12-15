@@ -3,10 +3,11 @@ from loris.constants import JSONLD_CONTENT_TYPE
 from loris.constants import JSONLD_MEDIA_TYPE
 from loris.exceptions import LorisException
 from loris.requests.info_request import InfoRequest
+from loris.handlers.profile_header_mixin import ProfileHeaderMixin
 import cherrypy
 import json
 
-class InfoHandler(object):
+class InfoHandler(ProfileHeaderMixin):
 
     exposed = True # This is for CherryPy.
 
@@ -24,6 +25,8 @@ class InfoHandler(object):
             cherrypy.response.status = 304
             return None
         else:
+            if self._profile_header_enabled:
+                cherrypy.response.headers['Link'] = self._profile_header
             accept = cherrypy.request.headers.get('accept')
             acceptable = (JSONLD_CONTENT_TYPE, None, '*/*')
             if accept in acceptable and self._jsonld_enabled:
