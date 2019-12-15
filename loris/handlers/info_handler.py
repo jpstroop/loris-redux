@@ -2,8 +2,8 @@ from loris.constants import JSON_CONTENT_TYPE
 from loris.constants import JSONLD_CONTENT_TYPE
 from loris.constants import JSONLD_MEDIA_TYPE
 from loris.exceptions import LorisException
-from loris.requests.info_request import InfoRequest
 from loris.handlers.profile_header_mixin import ProfileHeaderMixin
+from loris.requests.info_request import InfoRequest
 import cherrypy
 import json
 

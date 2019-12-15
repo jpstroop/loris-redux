@@ -1,6 +1,5 @@
 from tests.loris.handlers.base_handler_test import BaseHandlerTest
 
-
 class TestFaviconHandler(BaseHandlerTest):
     # See http://docs.cherrypy.org/en/latest/advanced.html#testing-your-application
     def test_favicon(self):
