@@ -29,7 +29,7 @@ class DispatcherMixin(object):
             if val in ('resolvers', 'resolvers.json'):
                 cherrypy.request.params['val'] = val
                 return self.resolvers_handler
-                return self.favicon_handler
+                # return self.favicon_handler
             # base URI
             else:
                 cherrypy.request.params['identifier'] = val
