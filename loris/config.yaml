@@ -102,7 +102,7 @@ iiif_features:
     rotationBy90s:
       enabled: True
   size:
-    sizeAboveFull:
+    sizeUpscaling:
       enabled: True
     sizeByConfinedWh:
       enabled: True

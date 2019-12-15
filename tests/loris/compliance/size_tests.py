@@ -9,7 +9,7 @@ class TestSizeCompliance(object):
             'sizeByPct': { 'enabled': True },
             'sizeByConfinedWh': { 'enabled': True },
             'sizeByWh': { 'enabled': True },
-            'sizeAboveFull': { 'enabled': True },
+            'sizeUpscaling': { 'enabled': True },
         }
         assert SizeCompliance(cfg) == 2
 
@@ -20,7 +20,7 @@ class TestSizeCompliance(object):
             'sizeByPct': { 'enabled': False },
             'sizeByConfinedWh': { 'enabled': True },
             'sizeByWh': { 'enabled': False },
-            'sizeAboveFull': { 'enabled': False },
+            'sizeUpscaling': { 'enabled': False },
         }
         assert SizeCompliance(cfg) == 1
 
@@ -31,7 +31,7 @@ class TestSizeCompliance(object):
             'sizeByPct': { 'enabled': False },
             'sizeByConfinedWh': { 'enabled': False },
             'sizeByWh': { 'enabled': True },
-            'sizeAboveFull': { 'enabled': False },
+            'sizeUpscaling': { 'enabled': False },
         }
         assert SizeCompliance(cfg) == 1
 
@@ -42,7 +42,7 @@ class TestSizeCompliance(object):
             'sizeByPct': { 'enabled': False },
             'sizeByConfinedWh': { 'enabled': False },
             'sizeByWh': { 'enabled': False },
-            'sizeAboveFull': { 'enabled': False },
+            'sizeUpscaling': { 'enabled': False },
         }
         assert SizeCompliance(cfg) == 1
 
@@ -53,7 +53,7 @@ class TestSizeCompliance(object):
             'sizeByPct': { 'enabled': False },
             'sizeByConfinedWh': { 'enabled': False },
             'sizeByWh': { 'enabled': False },
-            'sizeAboveFull': { 'enabled': False },
+            'sizeUpscaling': { 'enabled': False },
         }
         assert SizeCompliance(cfg) == 0
 
@@ -64,7 +64,7 @@ class TestSizeCompliance(object):
             'sizeByPct': { 'enabled': False },
             'sizeByConfinedWh': { 'enabled': False },
             'sizeByWh': { 'enabled': False },
-            'sizeAboveFull': { 'enabled': False },
+            'sizeUpscaling': { 'enabled': False },
         }
         assert SizeCompliance(cfg) == 0
 
@@ -75,7 +75,7 @@ class TestSizeCompliance(object):
             'sizeByPct': { 'enabled': True },
             'sizeByConfinedWh': { 'enabled': True },
             'sizeByWh': { 'enabled': True },
-            'sizeAboveFull': { 'enabled': False },
+            'sizeUpscaling': { 'enabled': False },
         }
         assert SizeCompliance(cfg) == 2
 
@@ -86,6 +86,6 @@ class TestSizeCompliance(object):
             'sizeByPct': { 'enabled': False },
             'sizeByConfinedWh': { 'enabled': False },
             'sizeByWh': { 'enabled': False },
-            'sizeAboveFull': { 'enabled': False },
+            'sizeUpscaling': { 'enabled': False },
         }
         assert SizeCompliance(cfg) == 0

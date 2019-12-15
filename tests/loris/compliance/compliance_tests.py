@@ -33,7 +33,7 @@ class TestCompliance(object):
             'mirroring',
             'profileLinkHeader',
             'rotationArbitrary',
-            'sizeAboveFull'
+            'sizeUpscaling'
         )
         ic = True # include color
         assert str(compliance) == 'level2'
@@ -48,7 +48,7 @@ class TestCompliance(object):
             'mirroring',
             'profileLinkHeader',
             'rotationArbitrary',
-            'sizeAboveFull'
+            'sizeUpscaling'
         )
         ic = False # include color
         assert str(compliance) == 'level2'

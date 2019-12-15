@@ -28,7 +28,6 @@ class TestSizeParameter(object):
     def mock_region(self, region_width, region_height):
         return Mock(pixel_w=region_width, pixel_h=region_height)
 
-
     def test__deduce_request_type_raises_syntax_exception(self):
         uri_slice = 'wtf'
         info_data = self.mock_info(8000, 6001)
@@ -256,33 +255,79 @@ class TestSizeParameter(object):
     def test_full_as_sizeByWh_still_raises(self):
         raise NotImplementedError
 
-    def test__sizeAboveFull_ok(self):
+    def test__sizeUpscaling_ok(self): # This should raise now
         uri_slice = '400,300'
-        features = ('sizeByWh', 'sizeAboveFull')
+        features = ('sizeByWh', 'sizeUpscaling')
         info_data = self.mock_info(8000, 6001)
         region_param = self.mock_region(399, 299)
-        sp = SizeParameter(uri_slice, features, info_data, region_param)
-        assert sp.width == 400
-        assert sp.height == 300
-        assert sp.canonical == '400,300'
+        with pytest.raises(RequestException) as re:
+            SizeParameter(uri_slice, features, info_data, region_param)
+        assert "Image would be upsampled" in re.value.message
 
-    def test_sizeAboveFull_raises(self):
-        uri_slice = '400,300'
+    def test_sizeUpscaling_raises(self):
+        uri_slice = '^400,300'
         features = ('sizeByWh')
         info_data = self.mock_info(8000, 6001)
         region_param = self.mock_region(399, 299)
         with pytest.raises(FeatureNotEnabledException) as fe:
             SizeParameter(uri_slice, features, info_data, region_param)
-        assert "not support the 'sizeAboveFull'" in fe.value.message
+        assert "not support the 'sizeUpscaling' feature" in fe.value.message
+
+    def test_upscaling_ok_if_sizeUpscaling_enabled(self):
+        uri_slice = '^400,300'
+        features = ('sizeByWh','sizeUpscaling')
+        info_data = self.mock_info(8000, 6001)
+        region_param = self.mock_region(399, 299)
+        sp = SizeParameter(uri_slice, features, info_data, region_param)
+        assert sp.upscaling_requested
+        assert sp.width == 400
+        assert sp.height == 300
+        assert sp.region_w == 399
+        assert sp.region_h == 299
+
+    def test_upscaling_ok_w_syntax(self):
+        uri_slice = '^400,'
+        features = ('sizeByW','sizeUpscaling')
+        info_data = self.mock_info(8000, 6001)
+        region_param = self.mock_region(399, 299)
+        SizeParameter(uri_slice, features, info_data, region_param)
+
+    def test_upscaling_ok_h_syntax(self):
+        uri_slice = '^,400'
+        features = ('sizeByH','sizeUpscaling')
+        info_data = self.mock_info(8000, 6001)
+        region_param = self.mock_region(399, 299)
+        SizeParameter(uri_slice, features, info_data, region_param)
+
+    def test_upscaling_ok_pct_syntax(self):
+        uri_slice = '^pct:101'
+        features = ('sizeByPct','sizeUpscaling')
+        info_data = self.mock_info(8000, 6001)
+        region_param = self.mock_region(399, 299)
+        SizeParameter(uri_slice, features, info_data, region_param)
+
+    def test_upscaling_ok_pct_syntax(self):
+        uri_slice = '^pct:101'
+        features = ('sizeByPct','sizeUpscaling')
+        info_data = self.mock_info(8000, 6001)
+        region_param = self.mock_region(399, 299)
+        SizeParameter(uri_slice, features, info_data, region_param)
+
+    def test_upscaling_ok_max_syntax(self):
+        uri_slice = '^max'
+        features = ('sizeUpscaling')
+        info_data = self.mock_info(8000, 6001)
+        region_param = self.mock_region(399, 299)
+        SizeParameter(uri_slice, features, info_data, region_param)
 
     def test_width_larger_than_max_raises(self):
         uri_slice = '5000,'
-        features = ('sizeByW', 'sizeAboveFull')
+        features = ('sizeByW', 'sizeUpscaling')
         info_data = self.mock_info(8000, 6001, max_width=4000)
         region_param = self.mock_region(4000, 3000)
         with pytest.raises(RequestException) as re:
             SizeParameter(uri_slice, features, info_data, region_param)
-        assert "width (5000) is greater" in re.value.message
+        assert "Image would be upsampled" in re.value.message
 
     def test_height_larger_than_max_raises(self):
         uri_slice = ',1024'
@@ -295,7 +340,7 @@ class TestSizeParameter(object):
 
     def test_area_larger_than_max_raises(self):
         uri_slice = '5000,'
-        features = ('sizeByW', 'sizeAboveFull')
+        features = ('sizeByW', 'sizeUpscaling')
         info_data = self.mock_info(8000, 6001, max_area=16000000)
         region_param = self.mock_region(5000, 6000)
         with pytest.raises(RequestException) as re:

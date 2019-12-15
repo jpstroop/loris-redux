@@ -41,7 +41,7 @@ ROTATION_ARBITRARY = 'rotationArbitrary'
 ROTATION_BY_90S = 'rotationBy90s'
 ROTATION_MIRRORING = 'mirroring'
 SCALE_FACTORS = 'scaleFactors'
-SIZE_ABOVE_FULL = 'sizeAboveFull'
+SIZE_UPSCALING = 'sizeUpscaling'
 SIZE_BY_CONFINED_WH = 'sizeByConfinedWh'
 SIZE_BY_H = 'sizeByH'
 SIZE_BY_PCT = 'sizeByPct'
@@ -54,7 +54,6 @@ TYPE = 'type'
 WEBP = 'webp'
 WEBP_MEDIA_TYPE = 'image/webp'
 WIDTH = 'width'
-
 
 # numbers and objects
 DECIMAL_ONE = Decimal(1)

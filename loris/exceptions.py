@@ -1,6 +1,6 @@
 from collections import OrderedDict
 from loris.constants import COMPLIANCE_PAGE
-import json
+from json import dumps
 
 class LorisException(Exception):
     def __init__(self, message, http_status_code):
@@ -11,7 +11,7 @@ class LorisException(Exception):
         return self.to_json()
 
     def to_json(self):
-        return json.dumps(self._to_dict())
+        return dumps(self._to_dict())
 
     def _to_dict(self):
         d = OrderedDict()
@@ -48,4 +48,4 @@ class FeatureNotEnabledException(RequestException):
             f"Server does not support the '{feature}' feature."
             f' See {COMPLIANCE_PAGE} for details.'
         )
-        super().__init__(message)
+        super().__init__(message, 501)
