@@ -1,13 +1,13 @@
 from loris.constants import MEDIA_TYPE_MAPPING
 from loris.exceptions import LorisException
 from loris.requests.image_request import ImageRequest
-
+from loris.handlers.profile_header_mixin import ProfileHeaderMixin
 from logging import getLogger
 import cherrypy
 
 logger = getLogger('loris')
 
-class ImageHandler(object):
+class ImageHandler(ProfileHeaderMixin):
     exposed = True
     def GET(self, identifier, iiif_params):
         cherrypy.response.headers['Allow'] = 'GET'
@@ -31,6 +31,8 @@ class ImageHandler(object):
             transcoder = ImageRequest.transcoders[image_request.file_format]
             stream = transcoder.execute(image_request)
             media_type = MEDIA_TYPE_MAPPING[image_request.format]
+            if self._profile_header_enabled:
+                cherrypy.response.headers['Link'] = self._profile_header
             cherrypy.response.headers['content-type'] = media_type
             cherrypy.response.headers['etag'] = image_request.etag
             return stream.getvalue()
