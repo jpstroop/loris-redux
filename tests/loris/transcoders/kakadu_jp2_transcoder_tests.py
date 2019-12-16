@@ -2,6 +2,7 @@ from decimal import Decimal
 from os.path import exists
 from os.path import isdir
 from unittest.mock import Mock
+from os import environ
 
 import pytest
 
@@ -69,6 +70,7 @@ class TestKakaduJp2Transcoder(object):
         assert transcoder._build_command(image_request, fake_pipe).endswith(cmd_no_path)
 
     @pytest.mark.filterwarnings("ignore:unclosed file")
+    @pytest.mark.skipif("TRAVIS_OS_NAME" in environ and environ["TRAVIS_OS_NAME"] == "osx", reason="skips on CI")
     def test__execute_simple(self, transcoder, region_test_jp2):
         # This is the equivalent of /full/full/0/default.jpg.
         # It will be slow
@@ -101,6 +103,7 @@ class TestKakaduJp2Transcoder(object):
             assert is_close_color(i.getpixel((5999,7999)), ORANGE)
 
     @pytest.mark.filterwarnings("ignore:unclosed file")
+    @pytest.mark.skipif("TRAVIS_OS_NAME" in environ and environ["TRAVIS_OS_NAME"] == "osx", reason="skips on CI")
     def test__execute_small_full(self, transcoder, region_test_jp2):
         # This is the equivalent of /full/3000,/0/default.jpg.
         image_request = Mock(

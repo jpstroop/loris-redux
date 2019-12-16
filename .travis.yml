@@ -1,44 +1,22 @@
-sudo: required
-dist: bionic
-
 language: python
 
-python:
-  - 3.6
-  - 3.7
-  - 3.8
-  # - "nightly"
-  # - "pypy3.5"
+jobs:
+  include:
+    - name: "Python 3.7 on Ubuntu Bionic"
+      dist: bionic
+      python: 3.7
+    - name: "Python 3.8 on Ubuntu Bionic"
+      dist: bionic
+      python: 3.8
+    - name: "Python nightly on Ubuntu Bionic"
+      dist: bionic
+      python: "nightly"
+    - name: "Python 3.7.4 on macOS 10.14"
+      os: osx
+      osx_image: xcode11.2  # Python 3.7.4 running on macOS 10.14.4
+      language: shell
+      before_install: brew install pipenv libmagic
 
-addons:
-  apt:
-    packages:
-    - libmagic1
-    - libjpeg-turbo8
-    - libjpeg-turbo8-dev
-    - libfreetype6
-    - libfreetype6-dev
-    - zlib1g
-    - zlib1g-dev
-    - liblcms2-2
-    - liblcms2-dev
-    - liblcms2-utils
-    - libtiff5-dev
-    - libwebp-dev
-
-install:
-  - pipenv install --dev
-
-# See https://pypi.python.org/pypi/pytest-cov
+install: pipenv install --dev
 script: pipenv run py.test --cov=loris
-
-after_success:
-  coveralls
-
-notifications:
-  email:
-    recipients: "jpstroop@gmail.com"
-    on_success: "always"
-    on_failure: "always"
-    template:
-      - "%{repository}//%{branch}@%{commit} by %{author}: %{message} - %{build_url}"
+after_success: coveralls
