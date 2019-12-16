@@ -10,13 +10,20 @@
 
 A rewrite of loris using [CherryPy](http://cherrypy.org/) and Python `>=` 3.7.
 
-## Stuff you can do now
+## Running the Application and Tests
 
-### Run the server in debug mode
+Not for Production! Also, this assumes you have [pipenv](https://pipenv.kennethreitz.org/en/latest/) installed.
 
-```
+Install the Appllication
+
+```bash
 $ brew install libmagic # on macOS only
-$ pipenv install --dev # --dev assumes you'll want to run tests
+$ pipenv install --dev --python [path to python >=3.7.0]  # --dev assumes you'll want to run tests
+```
+
+Run the Server in debug mode
+
+```bash
 $ pipenv run python run.py
 ```
 
@@ -25,11 +32,10 @@ $ pipenv run python run.py
 
 There is also an extension service, `/resolvers.json` that lists the available resolvers. This is still WIP (see [#101](https://github.com/jpstroop/loris-redux/issues/101)), but the concept is there.
 
-### Run tests
+Run tests
 
 ```bash
-$ pipenv install --dev --python [path to python >=3.6]
-$ pipenv run py.test # optional: --cov=loris
+$ pipenv run pytest
 ```
 
 If you want to see logging output while running the tests, run them with pytest:
@@ -38,19 +44,19 @@ If you want to see logging output while running the tests, run them with pytest:
 $ pipenv run py.test -s <optional/path/to/test/file.py>
 ```
 
-You can also add `-v` to see the names of the tests being run.
+You can also add `-v` to see the names of the tests being run. [Pytest has a lot of options](http://doc.pytest.org/en/latest/usage.html).
 
 To check test coverage locally:
 
 ```bash
-py.test --cov=loris --cov-report html:cov_html
+pipenv run pytest --cov=loris --cov-report html:cov_html
 ```
 
 ## IIIF Compliance
 
-All [IIIF Image API 3.0 features](https://iiif.io/api/image/3.0/compliance/) are implemented. These can be enabled and disabled in [`loris/config.yaml`](loris/config.yaml), and the server will set the compliance level accordingly, and raise exceptions/sent the appropriate HTTP error responses for the disabled features. Level 0 is always supported.
+All [IIIF Image API 3.0 features](https://iiif.io/api/image/3.0/compliance/) are implemented. These can be enabled and disabled in [`loris/config.yaml`](loris/config.yaml). The server will set the compliance level accordingly, and raise exceptions/sent the appropriate HTTP error responses for the disabled features. Level 0 is always supported.
 
-There is a non-standard option to support just tiles and scale factors at an otherwise level 0 compliance. This is enabled and configured in the `application` of [`loris/config.yaml`](loris/config.yaml).
+There is a non-standard option to support just tiles and scale factors at an otherwise level 0 compliance. This is enabled and configured in the `application` section of [`loris/config.yaml`](loris/config.yaml).
 
 ## JPEG2000 Support
 
