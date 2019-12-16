@@ -8,10 +8,7 @@
 [![Python 3.8](https://img.shields.io/badge/python-3.8-yellow.svg)](https://img.shields.io/badge/python-3.8-yellow.svg)
 [![Python Nightly](https://img.shields.io/badge/python-nightly-yellow.svg)](https://img.shields.io/badge/python-nightly-yellow.svg)
 
-
-__WIP!__
-
-A rewrite of loris using [CherryPy](http://cherrypy.org/) and Python `>=` 3.6.
+A rewrite of loris using [CherryPy](http://cherrypy.org/) and Python `>=` 3.7.
 
 ## Stuff you can do now
 
@@ -49,16 +46,11 @@ To check test coverage locally:
 py.test --cov=loris --cov-report html:cov_html
 ```
 
-## Goals
+## IIIF Compliance
 
-  * Full Image API 2.1 support, including all optional features
-  * Work with front-end caches (Varnish, Squid)
-  * Abstract APIs for Parameters, Transcoders, Resolvers, Authorization(?), and Authentication(?) (implementations for the latter four are given in a config file)
-  * Install w/ pip
-  * No WSGI!
-  * https support
-  * Store and Delete source files on the server over HTTP (eventually)
-  * Enable and disable specific features, and dynamically determine compliance level
+All [IIIF Image API 3.0 features](https://iiif.io/api/image/3.0/compliance/) are implemented. These can be enabled and disabled in [`loris/config.yaml`](loris/config.yaml), and the server will set the compliance level accordingly, and raise exceptions/sent the appropriate HTTP error responses for the disabled features. Level 0 is always supported.
+
+There is a non-standard option to support just tiles and scale factors at an otherwise level 0 compliance. This is enabled and configured in the `application` of [`loris/config.yaml`](loris/config.yaml).
 
 ## JPEG2000 Support
 
@@ -76,5 +68,5 @@ transcoders:
 ## Style
 
 ```
-pipenv run black -t py37 -l 79 loris tests
+pipenv run black -t py37 -l 99 loris tests
 ```
