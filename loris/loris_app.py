@@ -83,7 +83,7 @@ class LorisApp(DispatcherMixin):
         paths.append(path.expanduser('~/.loris/config.yaml'))
         return paths
 
-    def _configure_logging(self, cfg_dict): # pragma: no cove
+    def _configure_logging(self, cfg_dict): # pragma: no cover
         global logger
         logging.config.dictConfig(cfg_dict)
         logger = logging.getLogger('loris')
