@@ -1,6 +1,8 @@
 from abc import ABCMeta
 from abc import abstractmethod
 from contextlib import contextmanager
+from logging import getLogger
+from loris.transcoders.pillow_transcoder import PillowTranscoder
 from math import ceil
 from math import log
 from os import makedirs
@@ -9,12 +11,15 @@ from os import unlink
 from os.path import join
 from PIL import Image
 from random import choice
+from shlex import split
 from string import ascii_lowercase
 from subprocess import DEVNULL
 from subprocess import Popen
-from shlex import split
+from warnings import simplefilter
 
-from loris.transcoders.pillow_transcoder import PillowTranscoder
+logger = getLogger('loris')
+# Pillow thinks we leave our fifos open. We don't:
+simplefilter('ignore', ResourceWarning)
 
 class AbstractJp2Transcoder(metaclass=ABCMeta):
     # Any code that can be shared between the OpenJpegJp2Transcoder and the
@@ -63,6 +68,7 @@ class AbstractJp2Transcoder(metaclass=ABCMeta):
             yield pth
         finally:
             unlink(pth)
+            logger.debug('Unlinked %s', pth)
 
     @staticmethod
     def reduce_arg_from_image_request(image_request):
