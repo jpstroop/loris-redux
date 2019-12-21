@@ -1,9 +1,9 @@
 from loris.constants import BASE_URI_REDIRECT
-from loris.handlers.profile_header_mixin import ProfileHeaderMixin
+from loris.handlers.handler_helpers_mixin import HandlerHelpersMixin
 from loris.requests.info_request import IIIFRequest
 import cherrypy
 
-class IdentifierHandler(ProfileHeaderMixin):
+class IdentifierHandler(HandlerHelpersMixin):
     exposed = True
     def GET(self, identifier):
         if BASE_URI_REDIRECT in IIIFRequest.compliance.http.features:
