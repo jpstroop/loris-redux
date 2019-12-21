@@ -1,14 +1,16 @@
 from loris.constants import MEDIA_TYPE_MAPPING
 from loris.exceptions import LorisException
 from loris.requests.image_request import ImageRequest
-from loris.handlers.profile_header_mixin import ProfileHeaderMixin
+from loris.handlers.handler_helpers_mixin import HandlerHelpersMixin
 from logging import getLogger
 import cherrypy
 
 logger = getLogger('loris')
 
-class ImageHandler(ProfileHeaderMixin):
+class ImageHandler(HandlerHelpersMixin):
+
     exposed = True
+
     def GET(self, identifier, iiif_params):
         cherrypy.response.headers['Allow'] = 'GET'
         del cherrypy.response.headers['Content-Type']
@@ -36,11 +38,3 @@ class ImageHandler(ProfileHeaderMixin):
             cherrypy.response.headers['content-type'] = media_type
             cherrypy.response.headers['etag'] = image_request.etag
             return stream.getvalue()
-
-    def _etag_match(self, image_request):
-        return cherrypy.request.headers.get('if-none-match') == image_request.etag
-
-    def _error_response(self, loris_exception):
-        cherrypy.response.headers['Content-Type'] = 'application/json'
-        cherrypy.response.status = loris_exception.http_status_code
-        return str(loris_exception).encode('utf8')

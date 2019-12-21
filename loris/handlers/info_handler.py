@@ -1,18 +1,23 @@
+from logging import getLogger
 from loris.constants import JSON_CONTENT_TYPE
 from loris.constants import JSONLD_CONTENT_TYPE
 from loris.constants import JSONLD_MEDIA_TYPE
 from loris.exceptions import LorisException
-from loris.handlers.profile_header_mixin import ProfileHeaderMixin
+from loris.handlers.handler_helpers_mixin import HandlerHelpersMixin
+from loris.requests.iiif_request import IIIFRequest
 from loris.requests.info_request import InfoRequest
 import cherrypy
 import json
 
-class InfoHandler(ProfileHeaderMixin):
+logger = getLogger('loris')
+
+class InfoHandler(HandlerHelpersMixin):
 
     exposed = True # This is for CherryPy.
 
     def GET(self, identifier):
         cherrypy.response.headers['Allow'] = 'GET'
+        logger.debug(cherrypy.request.path_info)
         try:
             return self._conditional_response(identifier)
         except LorisException as le:
@@ -39,12 +44,3 @@ class InfoHandler(ProfileHeaderMixin):
     @property
     def _jsonld_enabled(self):
         return JSONLD_MEDIA_TYPE in InfoRequest.compliance.http.features
-
-    # TODO: These can be moved into a mixin. Not sure about _conditional_response
-    def _etag_match(self, info_request):
-        return cherrypy.request.headers.get('if-none-match') == info_request.etag
-
-    def _error_response(self, loris_exception):
-        cherrypy.response.headers['Content-Type'] = 'application/json'
-        cherrypy.response.status = loris_exception.http_status_code
-        return str(loris_exception).encode('utf8')
