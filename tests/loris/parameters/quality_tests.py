@@ -46,7 +46,3 @@ class TestQualityParameter(object):
         with pytest.raises(SyntaxException) as se:
             QualityParameter(uri_slice, enabled_features, info)
         assert 'Value "foo" for quality is not recognized' == se.value.message
-
-    @pytest.mark.skip(reason='test not written')
-    def test_bitonal_nodither_extension(self):
-        raise NotImplementedError

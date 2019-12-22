@@ -18,10 +18,14 @@ class TestSizeParameter(object):
         max_area = kwargs.get('max_area')
         max_width = kwargs.get('max_width')
         max_height = kwargs.get('max_height')
-        tiles = kwargs.get('tiles', None)
-        return Mock(width=width, height=height, long_dim=long_dim, \
-            short_dim=short_dim, sizes=sizes, tiles=tiles, max_area=max_area, \
-            max_width=max_width, max_height=max_height)
+        tiles = kwargs.get('tiles')
+        kwargs = {
+            "width": width, "height": height, "long_dim": long_dim,
+            "short_dim": short_dim, "sizes": sizes, "tiles": tiles,
+            "max_area": max_area, "max_width": max_width,
+            "max_height": max_height
+        }
+        return Mock(**kwargs)
 
     def mock_region(self, region_width, region_height):
         return Mock(pixel_w=region_width, pixel_h=region_height)
@@ -127,11 +131,11 @@ class TestSizeParameter(object):
         assert sp.canonical == '683,1024'
 
     @pytest.mark.skip(reason='test not written')
-    def test_full_as_sizeByH_adjusts_request_type(self):
+    def test_max_as_sizeByH_adjusts_request_type(self):
         raise NotImplementedError
 
     @pytest.mark.skip(reason='test not written')
-    def test_full_as_sizeByH_still_raises(self):
+    def test_max_as_sizeByH_still_raises(self):
         raise NotImplementedError
 
     def test__check_if_supported_sizeByH_raises(self):

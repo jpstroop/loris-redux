@@ -159,12 +159,3 @@ class TestFileSystemResolver(object):
         }
         resolver = FileSystemResolver(config)
         assert resolver._get_file_path('foo%2Fbar') == '/tmp/foo/bar.jp2'
-
-    @pytest.mark.skip(reason='Not reliable when timestamps change or precision differs')
-    def test__get_mtime(self, region_test_jp2):
-        # This is somewhat fragile because the timestamp of the
-        # fixture file could change, and the precision on the CI server
-        # seems to be different
-        resolver = FileSystemResolver({ 'root' : '/tmp' })
-        expected = datetime(2016, 7, 16, 13, 12, 11, 980981)
-        assert resolver._get_lastmod_datetime(region_test_jp2) == expected
