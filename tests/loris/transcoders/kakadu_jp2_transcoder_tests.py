@@ -1,21 +1,19 @@
 from decimal import Decimal
+from loris.constants import EXTENSION_PNG
+from loris.constants import KEYWORD_FULL
+from loris.constants import FEATURE_SIZE_BY_W
+from loris.transcoders.kakadu_jp2_transcoder import KakaduJp2Transcoder
+from os import environ
 from os.path import exists
 from os.path import isdir
-from unittest.mock import Mock
-from os import environ
-
-import pytest
-
-from loris.constants import FULL
-from loris.constants import SIZE_BY_W
-from loris.transcoders.kakadu_jp2_transcoder import KakaduJp2Transcoder
-
 from tests.loris.transcoders.helpers import BLUE
 from tests.loris.transcoders.helpers import GREEN
+from tests.loris.transcoders.helpers import is_close_color
 from tests.loris.transcoders.helpers import ORANGE
 from tests.loris.transcoders.helpers import RED
-from tests.loris.transcoders.helpers import is_close_color
 from tests.loris.transcoders.helpers import tmp_image
+from unittest.mock import Mock
+import pytest
 
 @pytest.fixture(scope='module')
 def transcoder():
@@ -81,12 +79,12 @@ class TestKakaduJp2Transcoder(object):
                 all_scales=[1, 2, 4, 8, 16, 32, 64]
             ),
             file_path = region_test_jp2,
-            region_request_type = FULL, # _region_param.request_type
+            region_request_type = KEYWORD_FULL, # _region_param.request_type
             region_decimal_x = 0,       # _region_param.decimal_x
             region_decimal_y = 0,       # _region_param.decimal_y
             region_decimal_w = 1,       # _region_param.decimal_w
             region_decimal_h = 1,       # _region_param.decimal_h
-            size_request_type = FULL,   # _size_param.request_type
+            size_request_type = KEYWORD_FULL,   # _size_param.request_type
             width = 6000,               # _size_param.width
             height = 8000,              # _size_param.height
             mirror = False,             # _rotation_param.mirror
@@ -113,12 +111,12 @@ class TestKakaduJp2Transcoder(object):
                 all_scales=[1, 2, 4, 8, 16, 32, 64]
             ),
             file_path = region_test_jp2,
-            region_request_type = FULL,    # _region_param.request_type
+            region_request_type = KEYWORD_FULL,    # _region_param.request_type
             region_decimal_x = 0,          # _region_param.decimal_x
             region_decimal_y = 0,          # _region_param.decimal_y
             region_decimal_w = 1,          # _region_param.decimal_w
             region_decimal_h = 1,          # _region_param.decimal_h
-            size_request_type = SIZE_BY_W, # _size_param.request_type
+            size_request_type = FEATURE_SIZE_BY_W, # _size_param.request_type
             width = 60,                    # _size_param.width
             height = 80,                   # _size_param.height
             mirror = False,                # _rotation_param.mirror

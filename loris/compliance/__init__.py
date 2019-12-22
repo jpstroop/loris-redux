@@ -6,10 +6,10 @@ from loris.compliance.quality import QualityCompliance
 from loris.compliance.region import RegionCompliance
 from loris.compliance.rotation import RotationCompliance
 from loris.compliance.size import SizeCompliance
-from loris.constants import COLOR
-from loris.constants import MAX_AREA
-from loris.constants import MAX_HEIGHT
-from loris.constants import MAX_WIDTH
+from loris.constants import QUALITY_COLOR
+from loris.constants import KEYWORD_MAX_AREA
+from loris.constants import KEYWORD_MAX_HEIGHT
+from loris.constants import KEYWORD_MAX_WIDTH
 
 
 class Compliance(ComparableMixin):
@@ -73,7 +73,7 @@ class Compliance(ComparableMixin):
     def extra_qualities(self, include_color=True):
         qualities = self.quality.features
         if not include_color:
-            qualities = tuple(filter(lambda q: q != COLOR, qualities))
+            qualities = tuple(filter(lambda q: q != QUALITY_COLOR, qualities))
         return qualities
 
     @property

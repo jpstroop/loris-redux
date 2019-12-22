@@ -1,19 +1,19 @@
 from math import ceil
 from PIL import Image
 
-from loris.constants import BITONAL_QUALITIES
+from loris.constants import QUALITY_BITONAL_QUALITIES
 from loris.constants import COLOR_QUALITIES
-from loris.constants import GRAY_QUALITIES
+from loris.constants import QUALITY_GROUP_GRAY
 from loris.info.abstract_extractor import AbstractExtractor
 from loris.info.structs.info import Info
 from loris.info.structs.size import Size
 from loris.info.structs.tile import Tile
 
 MODES_TO_QUALITIES = {
-    '1': BITONAL_QUALITIES,
-    'L': GRAY_QUALITIES,
-    'LA': GRAY_QUALITIES,
-    'P': GRAY_QUALITIES,
+    '1': QUALITY_BITONAL_QUALITIES,
+    'L': QUALITY_GROUP_GRAY,
+    'LA': QUALITY_GROUP_GRAY,
+    'P': QUALITY_GROUP_GRAY,
     'RGB': COLOR_QUALITIES,
     'RGBA': COLOR_QUALITIES,
     'CMYK': COLOR_QUALITIES,

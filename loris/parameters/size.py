@@ -1,15 +1,15 @@
 from decimal import Decimal
 from loris.constants import DECIMAL_ONE_HUNDRED
-from loris.constants import MAX
-from loris.constants import MAX_AREA
-from loris.constants import MAX_HEIGHT
-from loris.constants import MAX_WIDTH
-from loris.constants import SIZE_UPSCALING
-from loris.constants import SIZE_BY_CONFINED_WH
-from loris.constants import SIZE_BY_H
-from loris.constants import SIZE_BY_PCT
-from loris.constants import SIZE_BY_W
-from loris.constants import SIZE_BY_WH
+from loris.constants import KEYWORD_MAX
+from loris.constants import KEYWORD_MAX_AREA
+from loris.constants import KEYWORD_MAX_HEIGHT
+from loris.constants import KEYWORD_MAX_WIDTH
+from loris.constants import FEATURE_SIZE_UPSCALING
+from loris.constants import FEATURE_SIZE_BY_CONFINED_WH
+from loris.constants import FEATURE_SIZE_BY_H
+from loris.constants import FEATURE_SIZE_BY_PCT
+from loris.constants import FEATURE_SIZE_BY_W
+from loris.constants import FEATURE_SIZE_BY_WH
 from loris.exceptions import FeatureNotEnabledException
 from loris.exceptions import RequestException
 from loris.exceptions import SyntaxException
@@ -57,25 +57,25 @@ class SizeParameter(AbstractParameter):
     @property
     def canonical(self):
         if self._canonical is None:
-            if self.request_type is MAX:
-                self._canonical = MAX
+            if self.request_type is KEYWORD_MAX:
+                self._canonical = KEYWORD_MAX
             else:
                 self._canonical = f'{self.width},{self.height}'
         return self._canonical
 
     def _initialize_properties(self):
         # raises SyntaxException, RequestException
-        if self.request_type is MAX:
+        if self.request_type is KEYWORD_MAX:
             self._init_max_request(); return
-        if self.request_type is SIZE_BY_W:
+        if self.request_type is FEATURE_SIZE_BY_W:
             self._init_by_w_request(); return
-        if self.request_type is SIZE_BY_H:
+        if self.request_type is FEATURE_SIZE_BY_H:
             self._init_by_h_request(); return
-        if self.request_type is SIZE_BY_PCT:
+        if self.request_type is FEATURE_SIZE_BY_PCT:
             self._init_by_pct_request(); return
-        if self.request_type is SIZE_BY_CONFINED_WH:
+        if self.request_type is FEATURE_SIZE_BY_CONFINED_WH:
             self._init_by_confined_wh_request(); return
-        if self.request_type is SIZE_BY_WH:
+        if self.request_type is FEATURE_SIZE_BY_WH:
             self._init_wh_request(); return
 
     def _run_checks(self):
@@ -92,18 +92,18 @@ class SizeParameter(AbstractParameter):
         if slice[0:1] == '^':
             self.upscaling_requested = True
             slice = slice[1:]
-        if slice == MAX:
-            return MAX
+        if slice == KEYWORD_MAX:
+            return KEYWORD_MAX
         if match(W_REGEX, slice):
-            return SIZE_BY_W
+            return FEATURE_SIZE_BY_W
         if match(H_REGEX, slice):
-            return SIZE_BY_H
+            return FEATURE_SIZE_BY_H
         if match(WH_REGEX, slice):
-            return SIZE_BY_WH
+            return FEATURE_SIZE_BY_WH
         if match(CONFINED_REGEX, slice):
-            return SIZE_BY_CONFINED_WH
+            return FEATURE_SIZE_BY_CONFINED_WH
         if slice.split(':')[0] == 'pct':
-            return SIZE_BY_PCT
+            return FEATURE_SIZE_BY_PCT
         msg = f'Size syntax "{self.uri_slice}" is not valid.'
         raise SyntaxException(msg)
 
@@ -112,9 +112,9 @@ class SizeParameter(AbstractParameter):
         # this can adjust if necessary
 
         if self.image_max_width == self.width and self.image_max_height == self.height:
-            self._request_type = MAX
+            self._request_type = KEYWORD_MAX
         if self.region_w == self.width and self.region_h == self.height:
-            self._request_type = MAX
+            self._request_type = KEYWORD_MAX
 
 
     def _calc_image_max_wh(self):
@@ -196,10 +196,10 @@ class SizeParameter(AbstractParameter):
         return Decimal(float(n)) / DECIMAL_ONE_HUNDRED
 
     def _check_size_upscaling(self):
-        upscaling_configured = SIZE_UPSCALING in self.enabled_features
+        upscaling_configured = FEATURE_SIZE_UPSCALING in self.enabled_features
         larger = self.width > self.region_w or self.height > self.region_h
         if self.upscaling_requested and not upscaling_configured:
-            raise FeatureNotEnabledException(SIZE_UPSCALING)
+            raise FeatureNotEnabledException(FEATURE_SIZE_UPSCALING)
         if larger and not self.upscaling_requested:
             msg = (
                 f"Image would be upsampled (region is {self.region_w}×"
@@ -210,13 +210,13 @@ class SizeParameter(AbstractParameter):
 
     def _check_if_supported(self):
         # raises FeatureNotEnabledException
-        if self.request_type is MAX:
+        if self.request_type is KEYWORD_MAX:
             return
         try:
             if self.request_type not in self.enabled_features:
                 raise FeatureNotEnabledException(self.request_type)
         except FeatureNotEnabledException as fe:
-            if fe.feature is SIZE_BY_W and self._allowed_level0_size_request():
+            if fe.feature is FEATURE_SIZE_BY_W and self._allowed_level0_size_request():
                 return
             else:
                 raise

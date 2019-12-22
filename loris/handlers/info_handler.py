@@ -1,7 +1,7 @@
 from logging import getLogger
-from loris.constants import JSON_CONTENT_TYPE
-from loris.constants import JSONLD_CONTENT_TYPE
-from loris.constants import JSONLD_MEDIA_TYPE
+from loris.constants import MEDIA_TYPE_JSON
+from loris.constants import MEDIA_TYPE_JSONLD
+from loris.constants import FEATURE_JSONLD_MEDIA_TYPE
 from loris.exceptions import LorisException
 from loris.handlers.handler_helpers_mixin import HandlerHelpersMixin
 from loris.handlers.cors_mixin import CORSMixin
@@ -33,14 +33,14 @@ class InfoHandler(HandlerHelpersMixin, CORSMixin):
             if self._profile_header_enabled:
                 cherrypy.response.headers['Link'] = self._profile_header
             accept = cherrypy.request.headers.get('accept')
-            acceptable = (JSONLD_CONTENT_TYPE, None, '*/*')
+            acceptable = (MEDIA_TYPE_JSONLD, None, '*/*')
             if accept in acceptable and self._jsonld_enabled:
-                cherrypy.response.headers['content-type'] = JSONLD_CONTENT_TYPE
+                cherrypy.response.headers['content-type'] = MEDIA_TYPE_JSONLD
             else:
-                cherrypy.response.headers['content-type'] = JSON_CONTENT_TYPE
+                cherrypy.response.headers['content-type'] = MEDIA_TYPE_JSON
             cherrypy.response.headers['etag'] = info_request.etag
             return str(info_request).encode('utf8')
 
     @property
     def _jsonld_enabled(self):
-        return JSONLD_MEDIA_TYPE in InfoRequest.compliance.http.features
+        return FEATURE_JSONLD_MEDIA_TYPE in InfoRequest.compliance.http.features

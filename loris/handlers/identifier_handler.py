@@ -1,4 +1,4 @@
-from loris.constants import BASE_URI_REDIRECT
+from loris.constants import FEATURE_BASE_URI_REDIRECT
 from loris.handlers.cors_mixin import CORSMixin
 from loris.handlers.handler_helpers_mixin import HandlerHelpersMixin
 from loris.requests.info_request import IIIFRequest
@@ -7,7 +7,7 @@ import cherrypy
 class IdentifierHandler(HandlerHelpersMixin, CORSMixin):
     exposed = True
     def GET(self, identifier):
-        if BASE_URI_REDIRECT in IIIFRequest.compliance.http.features:
+        if FEATURE_BASE_URI_REDIRECT in IIIFRequest.compliance.http.features:
             info_uri = f'/{identifier}/info.json'
             del cherrypy.response.headers['Content-Type']
             self._set_acao()

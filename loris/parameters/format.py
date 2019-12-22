@@ -1,6 +1,6 @@
 from loris.constants import ALL_OUTPUT_FORMATS
-from loris.constants import JPG
-from loris.constants import PNG
+from loris.constants import EXTENSION_JPG
+from loris.constants import EXTENSION_PNG
 from loris.exceptions import FeatureNotEnabledException
 from loris.exceptions import RequestException
 from loris.exceptions import SyntaxException
@@ -16,16 +16,16 @@ class FormatParameter(AbstractParameter):
 
     @property
     def canonical(self):
-        return self._canonical # TODO: should use the constants (PNG, JPG, etc)
+        return self._canonical
 
     def _run_checks(self):
-        if self.uri_slice == JPG:
+        if self.uri_slice == EXTENSION_JPG:
             return
         if self.canonical not in ALL_OUTPUT_FORMATS:
             msg = f'{self.canonical} is not a recognized format'
             raise SyntaxException(msg)
-        if self.canonical == PNG and PNG not in self.enabled_features:
-            raise FeatureNotEnabledException(PNG)
+        if self.canonical == EXTENSION_PNG and EXTENSION_PNG not in self.enabled_features:
+            raise FeatureNotEnabledException(EXTENSION_PNG)
         if self.canonical not in self.formats_available:
             msg = f'{self.canonical} is not an available format'
             raise RequestException(msg)

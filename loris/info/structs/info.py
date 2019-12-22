@@ -2,24 +2,24 @@ from collections import OrderedDict
 from dataclasses import dataclass
 from json import dumps
 from loris.compliance import Compliance
-from loris.constants import CONTEXT
-from loris.constants import CONTEXT_URI
-from loris.constants import EXTRA_FEATURES
-from loris.constants import EXTRA_FORMATS
-from loris.constants import EXTRA_QUALITIES
-from loris.constants import HEIGHT
-from loris.constants import ID
-from loris.constants import IMAGE_SERVICE_3
-from loris.constants import MAX_AREA
-from loris.constants import MAX_HEIGHT
-from loris.constants import MAX_WIDTH
-from loris.constants import PROFILE
-from loris.constants import PROTOCOL
-from loris.constants import PROTOCOL_URI
-from loris.constants import SIZES
-from loris.constants import TILES
-from loris.constants import TYPE
-from loris.constants import WIDTH
+from loris.constants import KEYWORD_CONTEXT
+from loris.constants import KEYWORD_EXTRA_FEATURES
+from loris.constants import KEYWORD_EXTRA_FORMATS
+from loris.constants import KEYWORD_EXTRA_QUALITIES
+from loris.constants import KEYWORD_HEIGHT
+from loris.constants import KEYWORD_ID
+from loris.constants import KEYWORD_IMAGE_SERVICE_3
+from loris.constants import KEYWORD_MAX_AREA
+from loris.constants import KEYWORD_MAX_HEIGHT
+from loris.constants import KEYWORD_MAX_WIDTH
+from loris.constants import KEYWORD_PROFILE
+from loris.constants import KEYWORD_PROTOCOL
+from loris.constants import KEYWORD_SIZES
+from loris.constants import KEYWORD_TILES
+from loris.constants import KEYWORD_TYPE
+from loris.constants import KEYWORD_WIDTH
+from loris.constants import URI_CONTEXT
+from loris.constants import URI_PROTOCOL
 from loris.info.structs.size import Size
 from loris.info.structs.tile import Tile
 from operator import methodcaller
@@ -83,21 +83,21 @@ class Info:
 
     def to_dict(self):
         d = OrderedDict()
-        d[CONTEXT] = CONTEXT_URI
-        d[ID] = self.http_identifier
-        d[TYPE] = IMAGE_SERVICE_3
-        d[PROTOCOL] = PROTOCOL_URI
-        d[PROFILE] = str(self.compliance)
-        d[WIDTH] = self.width
-        d[HEIGHT] = self.height
+        d[KEYWORD_CONTEXT] = URI_CONTEXT
+        d[KEYWORD_ID] = self.http_identifier
+        d[KEYWORD_TYPE] = KEYWORD_IMAGE_SERVICE_3
+        d[KEYWORD_PROTOCOL] = URI_PROTOCOL
+        d[KEYWORD_PROFILE] = str(self.compliance)
+        d[KEYWORD_WIDTH] = self.width
+        d[KEYWORD_HEIGHT] = self.height
         if self.tiles:
-            d[TILES] =  list(map(methodcaller('to_dict'), sorted(self.tiles)))
+            d[KEYWORD_TILES] =  list(map(methodcaller('to_dict'), sorted(self.tiles)))
         if self.sizes:
-            d[SIZES] = list(map(methodcaller('to_dict'), sorted(self.sizes)))
-        d[MAX_AREA] = self.max_area
-        d[MAX_WIDTH] = self.max_width
-        d[MAX_HEIGHT] = self.max_height
-        d[EXTRA_FORMATS] = self.extra_formats
-        d[EXTRA_QUALITIES] = self.extra_qualities
-        d[EXTRA_FEATURES] = self.extra_features
+            d[KEYWORD_SIZES] = list(map(methodcaller('to_dict'), sorted(self.sizes)))
+        d[KEYWORD_MAX_AREA] = self.max_area
+        d[KEYWORD_MAX_WIDTH] = self.max_width
+        d[KEYWORD_MAX_HEIGHT] = self.max_height
+        d[KEYWORD_EXTRA_FORMATS] = self.extra_formats
+        d[KEYWORD_EXTRA_QUALITIES] = self.extra_qualities
+        d[KEYWORD_EXTRA_FEATURES] = self.extra_features
         return Info._cleandict(d)

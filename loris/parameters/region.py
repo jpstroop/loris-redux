@@ -1,11 +1,11 @@
 from decimal import Decimal
 from loris.constants import DECIMAL_ONE
 from loris.constants import DECIMAL_ONE_HUNDRED
-from loris.constants import FULL
-from loris.constants import REGION_BY_PCT
-from loris.constants import REGION_BY_PIXEL
-from loris.constants import REGION_SQUARE
-from loris.constants import SQUARE
+from loris.constants import FEATURE_REGION_BY_PCT
+from loris.constants import FEATURE_REGION_BY_PIXEL
+from loris.constants import FEATURE_REGION_SQUARE
+from loris.constants import KEYWORD_FULL
+from loris.constants import KEYWORD_SQUARE
 from loris.exceptions import FeatureNotEnabledException
 from loris.exceptions import RequestException
 from loris.exceptions import SyntaxException
@@ -45,24 +45,24 @@ class RegionParameter(AbstractParameter):
     @property
     def canonical(self):
         if self._canonical is None:
-            if self.request_type is not FULL:
+            if self.request_type is not KEYWORD_FULL:
                 px = (self.pixel_x, self.pixel_y, self.pixel_w, self.pixel_h)
                 self._canonical = ','.join(map(str, px))
             else:
-                self._canonical = FULL
+                self._canonical = KEYWORD_FULL
         return self._canonical
 
     def _initialize_properites(self):
         # raises SyntaxException
         # raises RequestException
-        if self.request_type is FULL:
+        if self.request_type is KEYWORD_FULL:
             self._init_full_request(self.info_data); return
-        if self.request_type is REGION_SQUARE:
+        if self.request_type is FEATURE_REGION_SQUARE:
             self._init_square_request(self.info_data); return
-        if self.request_type is REGION_BY_PIXEL:
+        if self.request_type is FEATURE_REGION_BY_PIXEL:
             xywh = tuple(map(int, self.uri_slice.split(',')))
             self._init_pixel_request(xywh, self.info_data); return
-        if self.request_type is REGION_BY_PCT:
+        if self.request_type is FEATURE_REGION_BY_PCT:
             xywh = tuple(map(float, self.uri_slice.split(':')[1].split(',')))
             self._init_pct_request(xywh, self.info_data); return
 
@@ -75,16 +75,16 @@ class RegionParameter(AbstractParameter):
         self._adjust_if_actually_full()
 
     def _deduce_request_type(self):
-        if self.uri_slice == FULL:
-            return FULL
-        elif self.uri_slice == SQUARE:
-            return REGION_SQUARE
+        if self.uri_slice == KEYWORD_FULL:
+            return KEYWORD_FULL
+        elif self.uri_slice == KEYWORD_SQUARE:
+            return FEATURE_REGION_SQUARE
         elif all([n.isdigit() for n in self.uri_slice.split(',')]):
-            # For REGION_BY_PIXEL and REGION_BY_PCT we'll raise later if there
+            # For FEATURE_REGION_BY_PIXEL and FEATURE_REGION_BY_PCT we'll raise later if there
             # are too many ',' tokens
-            return REGION_BY_PIXEL
+            return FEATURE_REGION_BY_PIXEL
         elif self.uri_slice.split(':')[0] == 'pct':
-            return REGION_BY_PCT
+            return FEATURE_REGION_BY_PCT
         msg = f'Region syntax "{self.uri_slice}" is not valid.'
         raise SyntaxException(msg)
 
@@ -169,7 +169,7 @@ class RegionParameter(AbstractParameter):
             self.decimal_h = DECIMAL_ONE - self.decimal_y
             self.pixel_h = self.info_data.height - self.pixel_y
         if all((self.decimal_x == 0, self.decimal_y == 0, w_oob, h_oob)):
-            self._canonical = FULL
+            self._canonical = KEYWORD_FULL
 
     def _check_for_oob_errors(self):
         # x and y must be in bounds
@@ -193,7 +193,7 @@ class RegionParameter(AbstractParameter):
             raise RequestException(msg)
 
     def _check_if_supported(self):
-        if self.request_type is FULL:
+        if self.request_type is KEYWORD_FULL:
             return
         try:
             if self._request_type not in self.enabled_features:
@@ -209,8 +209,8 @@ class RegionParameter(AbstractParameter):
     def _adjust_if_actually_full(self):
         px = f'0,0,{self.info_data.width},{self.info_data.height}'
         if self.uri_slice == px:
-            self._request_type = FULL
-            self._canonical = FULL
+            self._request_type = KEYWORD_FULL
+            self._canonical = KEYWORD_FULL
 
     def _allowed_level0_tile_request(self):
         if self.info_data.tiles:

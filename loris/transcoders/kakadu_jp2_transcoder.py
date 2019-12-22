@@ -1,12 +1,11 @@
 from logging import getLogger
+from loris.constants import KEYWORD_FULL
+from loris.transcoders.abstract_jp2_transcoder import AbstractJp2Transcoder
+from loris.transcoders.api import AbstractTranscoder
 from os.path import abspath
 from os.path import dirname
 from os.path import join
 import platform
-
-from loris.constants import FULL
-from loris.transcoders.api import AbstractTranscoder
-from loris.transcoders.abstract_jp2_transcoder import AbstractJp2Transcoder
 
 LINUX_KDU_BIN = 'kdu_expand'
 
@@ -35,7 +34,7 @@ class KakaduJp2Transcoder(AbstractJp2Transcoder, AbstractTranscoder):
         # Analogous to opj_decompress -d, but works w/ decimals and expects the
         # y & height dimensions first: {<top>,<left>},{<height>,<width>}
 
-        if image_request.region_request_type is FULL:
+        if image_request.region_request_type is KEYWORD_FULL:
             return ''
         else:
             top = image_request.region_decimal_y

@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from loris.constants import COMPLIANCE_PAGE
+from loris.constants import URI_COMPLIANCE_PAGE
 from json import dumps
 
 class LorisException(Exception):
@@ -46,6 +46,6 @@ class FeatureNotEnabledException(RequestException):
         self.feature = feature
         message = (
             f"Server does not support the '{feature}' feature."
-            f' See {COMPLIANCE_PAGE} for details.'
+            f' See {URI_COMPLIANCE_PAGE} for details.'
         )
         super().__init__(message, 501)

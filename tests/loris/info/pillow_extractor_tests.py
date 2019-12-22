@@ -1,6 +1,6 @@
 from loris.compliance import Compliance
 from loris.constants import COLOR_QUALITIES
-from loris.constants import GRAY_QUALITIES
+from loris.constants import QUALITY_GROUP_GRAY
 from loris.info.pillow_extractor import PillowExtractor
 from loris.info.structs.size import Size
 from loris.info.structs.tile import Tile
@@ -33,11 +33,11 @@ class TestPillowExtractor(object):
 
     def test_gray_jpg_qualities(self, compliance_2, gray_jpg, app_configs):
         info = init_and_extract(gray_jpg, compliance_2, app_configs)
-        assert info.extra_qualities == GRAY_QUALITIES
+        assert info.extra_qualities == QUALITY_GROUP_GRAY
 
     def test_gray_png_qualities(self, compliance_2, gray_png, app_configs):
         info = init_and_extract(gray_png, compliance_2, app_configs)
-        assert info.extra_qualities == GRAY_QUALITIES
+        assert info.extra_qualities == QUALITY_GROUP_GRAY
 
     def test_sizes_color_jpg(self, compliance_0, color_jpg, app_configs):
         # so that tiles are smaller than the full test image:

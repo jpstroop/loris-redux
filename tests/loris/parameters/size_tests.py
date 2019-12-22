@@ -1,13 +1,11 @@
-from loris.constants import MAX
+from loris.constants import KEYWORD_MAX
 from loris.exceptions import FeatureNotEnabledException
 from loris.exceptions import RequestException
 from loris.exceptions import SyntaxException
-from loris.parameters.size import SizeParameter
 from loris.info.structs.size import Size
 from loris.info.structs.tile import Tile
-
+from loris.parameters.size import SizeParameter
 from unittest.mock import Mock
-
 import pytest
 
 class TestSizeParameter(object):
@@ -45,7 +43,7 @@ class TestSizeParameter(object):
         sp = SizeParameter(uri_slice, features, info_data, region_param)
         assert sp.width == 3456
         assert sp.height == 1234
-        assert sp.canonical is MAX # gets adjusted
+        assert sp.canonical is KEYWORD_MAX # gets adjusted
 
     def test__init_max_over_size_w(self):
         uri_slice = 'max'
@@ -55,7 +53,7 @@ class TestSizeParameter(object):
         sp = SizeParameter(uri_slice, features, info_data, region_param)
         assert sp.width == 4000
         assert sp.height == 1600
-        assert sp.canonical is MAX
+        assert sp.canonical is KEYWORD_MAX
 
     def test__init_max_over_size_h(self):
         uri_slice = 'max'
@@ -65,7 +63,7 @@ class TestSizeParameter(object):
         sp = SizeParameter(uri_slice, features, info_data, region_param)
         assert sp.width == 4444
         assert sp.height == 4000
-        assert sp.canonical is MAX
+        assert sp.canonical is KEYWORD_MAX
 
     def test__init_max_over_size_area(self):
         uri_slice = 'max'
@@ -77,7 +75,7 @@ class TestSizeParameter(object):
         assert sp.width == 4140
         assert sp.height == 5796
         assert (sp.height*sp.width) < max_area
-        assert sp.canonical is MAX
+        assert sp.canonical is KEYWORD_MAX
 
     def test__init_sizeByW(self):
         uri_slice = '1024,'
@@ -106,8 +104,8 @@ class TestSizeParameter(object):
         sp = SizeParameter(uri_slice, features, info_data, region_param)
         assert sp.width == 1024
         assert sp.height == 1024
-        assert sp.request_type is MAX
-        assert sp.canonical == MAX
+        assert sp.request_type is KEYWORD_MAX
+        assert sp.canonical == KEYWORD_MAX
 
     def test_full_as_sizeByW_still_raises(self):
         uri_slice = '1024,'

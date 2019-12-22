@@ -1,22 +1,21 @@
+from io import BytesIO
+from loris.constants import FEATURE_REGION_BY_PIXEL
+from loris.constants import KEYWORD_DEFAULT
+from loris.constants import KEYWORD_FULL
+from loris.constants import KEYWORD_MAX
+from loris.transcoders.pillow_transcoder import PillowTranscoder
 from PIL import Image
 from PIL.ImageOps import mirror
-from io import BytesIO
-from unittest.mock import Mock
-
-import pytest
-
-from loris.transcoders.pillow_transcoder import PillowTranscoder
-from loris.constants import FULL
-from loris.constants import REGION_BY_PIXEL
-
-from tests.loris.transcoders.helpers import GREEN
-from tests.loris.transcoders.helpers import RED
+from tests.loris.transcoders.helpers import BLACK
 from tests.loris.transcoders.helpers import BLUE
+from tests.loris.transcoders.helpers import DARK_SLATE
+from tests.loris.transcoders.helpers import GREEN
 from tests.loris.transcoders.helpers import ORANGE
 from tests.loris.transcoders.helpers import PURPLE
-from tests.loris.transcoders.helpers import DARK_SLATE
-from tests.loris.transcoders.helpers import BLACK
+from tests.loris.transcoders.helpers import RED
 from tests.loris.transcoders.helpers import WHITE
+from unittest.mock import Mock
+import pytest
 
 @pytest.fixture(scope='function')
 def pillow_image(pillow_transcoder_test_bmp):
@@ -108,7 +107,7 @@ class TestPillowTranscoder(object):
         assert a == 0
 
     def test_default_quality(self, transcoder, pillow_image):
-        image_request = Mock(quality='default')
+        image_request = Mock(quality=KEYWORD_DEFAULT)
         pillow_image = transcoder._adjust_quality(pillow_image, image_request)
         assert pillow_image.mode == 'RGB'
 
@@ -131,8 +130,8 @@ class TestPillowTranscoder(object):
         # We need to integrate all of the methods to make sure we're saving the
         # correct mode
         image_request = Mock(
-            region_request_type=FULL,
-            size_request_type=FULL,
+            region_request_type=KEYWORD_FULL,
+            size_request_type=KEYWORD_MAX,
             rotation=95,
             quality='color',
             format='png'
@@ -144,10 +143,10 @@ class TestPillowTranscoder(object):
 
     def test_rotated_default_transparency(self, transcoder, pillow_image):
         image_request = Mock(
-            region_request_type=FULL,
-            size_request_type=FULL,
+            region_request_type=KEYWORD_FULL,
+            size_request_type=KEYWORD_MAX,
             rotation=95,
-            quality='default',
+            quality=KEYWORD_DEFAULT,
             format='png'
         )
         stream = transcoder.execute_with_pil_image(pillow_image, image_request)
@@ -157,8 +156,8 @@ class TestPillowTranscoder(object):
 
     def test_rotated_gray_transparency(self, transcoder, pillow_image):
         image_request = Mock(
-            region_request_type=FULL,
-            size_request_type=FULL,
+            region_request_type=KEYWORD_FULL,
+            size_request_type=KEYWORD_MAX,
             rotation=95,
             quality='gray',
             format='png'
@@ -170,12 +169,12 @@ class TestPillowTranscoder(object):
 
     def test_crop(self, transcoder, pillow_image):
         image_request = Mock(
-            region_request_type = REGION_BY_PIXEL,
+            region_request_type = FEATURE_REGION_BY_PIXEL,
             region_pixel_x = 100,
             region_pixel_y = 200,
             region_pixel_w = 300,
             region_pixel_h = 400,
-            size_request_type=FULL,
+            size_request_type=KEYWORD_MAX,
             width = 300,
             height = 400,
             rotation=0,
@@ -190,17 +189,17 @@ class TestPillowTranscoder(object):
     def test_execute(self, transcoder, region_test_jpg):
         image_request = Mock(
             file_path = region_test_jpg,
-            region_request_type = FULL,
+            region_request_type = KEYWORD_FULL,
             region_pixel_x = 0,
             region_pixel_y = 0,
             region_pixel_w = 6000,
             region_pixel_h = 8000,
-            size_request_type=FULL,
+            size_request_type = KEYWORD_MAX,
             width = 6000,
             height = 8000,
             mirror = False,
             rotation = 0.0,
-            quality = 'default',
+            quality = KEYWORD_DEFAULT,
             format='jpg'
         )
         stream = transcoder.execute(image_request)
@@ -219,10 +218,10 @@ class TestPillowTranscoder(object):
 
     def test_output_formats(self, transcoder, pillow_image, fmt):
         image_request = Mock(
-            region_request_type=FULL,
-            size_request_type=FULL,
+            region_request_type=KEYWORD_FULL,
+            size_request_type=KEYWORD_MAX,
             rotation=0,
-            quality='default',
+            quality=KEYWORD_DEFAULT,
             format=fmt[0]
         )
         stream = transcoder.execute_with_pil_image(pillow_image, image_request)

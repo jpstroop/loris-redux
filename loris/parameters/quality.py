@@ -1,7 +1,7 @@
 from loris.constants import ALL_QUALITIES
-from loris.constants import COLOR
-from loris.constants import DEFAULT
-from loris.constants import GRAY
+from loris.constants import QUALITY_COLOR
+from loris.constants import KEYWORD_DEFAULT
+from loris.constants import QUALITY_GRAY
 from loris.exceptions import FeatureNotEnabledException
 from loris.exceptions import RequestException
 from loris.exceptions import SyntaxException
@@ -12,19 +12,19 @@ class QualityParameter(AbstractParameter):
 
     def __init__(self, uri_slice, enabled_features, info):
         super().__init__(uri_slice, enabled_features)
-        self.qualities_available = info.extra_qualities + (DEFAULT,)
-        self.image_is_color = COLOR in self.qualities_available
+        self.qualities_available = info.extra_qualities + (KEYWORD_DEFAULT,)
+        self.image_is_color = QUALITY_COLOR in self.qualities_available
         self._run_checks()
 
     @property
     def canonical(self):
         if self._canonical is None:
             is_default = any((
-                self.image_is_color and self.uri_slice == COLOR,
-                not self.image_is_color and self.uri_slice == GRAY,
-                self.uri_slice == DEFAULT
+                self.image_is_color and self.uri_slice == QUALITY_COLOR,
+                not self.image_is_color and self.uri_slice == QUALITY_GRAY,
+                self.uri_slice == KEYWORD_DEFAULT
             ))
-            self._canonical = DEFAULT if is_default else self.uri_slice # TODO: constants!
+            self._canonical = KEYWORD_DEFAULT if is_default else self.uri_slice # TODO: constants!
         return self._canonical
 
     def _run_checks(self):
@@ -43,7 +43,7 @@ class QualityParameter(AbstractParameter):
             raise RequestException(msg)
 
     def _check_feature_enabled(self):
-        if self.uri_slice == DEFAULT:
+        if self.uri_slice == KEYWORD_DEFAULT:
             return
         if self.uri_slice not in self.enabled_features:
             raise FeatureNotEnabledException(self.uri_slice)

@@ -1,8 +1,8 @@
 import re
 
-from loris.constants import ROTATION_ARBITRARY
-from loris.constants import ROTATION_BY_90S
-from loris.constants import ROTATION_MIRRORING
+from loris.constants import FEATURE_ROTATION_ARBITRARY
+from loris.constants import FEATURE_ROTATION_BY_90S
+from loris.constants import FEATURE_ROTATION_MIRRORING
 from loris.exceptions import FeatureNotEnabledException
 from loris.exceptions import RequestException
 from loris.exceptions import SyntaxException
@@ -49,13 +49,13 @@ class RotationParameter(AbstractParameter):
             raise RequestException(msg)
 
     def _check_mirroring(self):
-        if self.mirror and ROTATION_MIRRORING not in self.enabled_features:
-            raise FeatureNotEnabledException(ROTATION_MIRRORING)
+        if self.mirror and FEATURE_ROTATION_MIRRORING not in self.enabled_features:
+            raise FeatureNotEnabledException(FEATURE_ROTATION_MIRRORING)
 
     def _check_rotation(self):
         if self.rotation == 0.0:
             return
-        if self.rotation % 90 == 0.0 and ROTATION_BY_90S not in self.enabled_features:
-            raise FeatureNotEnabledException(ROTATION_BY_90S)
-        if self.rotation % 90 != 0.0 and ROTATION_ARBITRARY not in self.enabled_features:
-            raise FeatureNotEnabledException(ROTATION_ARBITRARY)
+        if self.rotation % 90 == 0.0 and FEATURE_ROTATION_BY_90S not in self.enabled_features:
+            raise FeatureNotEnabledException(FEATURE_ROTATION_BY_90S)
+        if self.rotation % 90 != 0.0 and FEATURE_ROTATION_ARBITRARY not in self.enabled_features:
+            raise FeatureNotEnabledException(FEATURE_ROTATION_ARBITRARY)

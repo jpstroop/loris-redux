@@ -1,11 +1,11 @@
 from io import BytesIO
 from logging import getLogger
+from loris.constants import KEYWORD_FULL
+from loris.constants import KEYWORD_MAX
+from loris.transcoders.api import AbstractTranscoder
 from math import ceil
 from PIL import Image
 from PIL.ImageOps import mirror
-
-from loris.constants import FULL
-from loris.transcoders.api import AbstractTranscoder
 
 logger = getLogger('loris')
 
@@ -23,9 +23,9 @@ class PillowTranscoder(object):
         return self.execute_with_pil_image(pil_image, image_request, crop=True)
 
     def execute_with_pil_image(self, pil_image, image_request, crop=False, dither=Image.FLOYDSTEINBERG):
-        if crop and image_request.region_request_type is not FULL:
+        if crop and image_request.region_request_type is not KEYWORD_FULL:
             pil_image = self._crop(pil_image, image_request)
-        if image_request.size_request_type is not FULL:
+        if image_request.size_request_type is not KEYWORD_MAX:
             pil_image = self._resize(pil_image, image_request)
         if image_request.mirror:
             pil_image = mirror(pil_image)

@@ -3,10 +3,10 @@ from unittest.mock import Mock
 import pytest
 
 from loris.constants import DECIMAL_ONE
-from loris.constants import FULL
-from loris.constants import REGION_BY_PCT
-from loris.constants import REGION_BY_PIXEL
-from loris.constants import REGION_SQUARE
+from loris.constants import KEYWORD_FULL
+from loris.constants import FEATURE_REGION_BY_PCT
+from loris.constants import FEATURE_REGION_BY_PIXEL
+from loris.constants import FEATURE_REGION_SQUARE
 from loris.exceptions import FeatureNotEnabledException
 from loris.exceptions import RequestException
 from loris.exceptions import SyntaxException
@@ -45,7 +45,7 @@ class TestRegionParameter(object):
         info_data = Mock(width=4637, height=7201, tiles=[])
         features = ('regionByPct', 'regionSquare', 'regionByPx')
         rp = RegionParameter('full', features, info_data)
-        assert rp.canonical is FULL
+        assert rp.canonical is KEYWORD_FULL
         assert rp.pixel_x == 0
         assert rp.pixel_y == 0
         assert rp.pixel_w == info_data.width
@@ -59,7 +59,7 @@ class TestRegionParameter(object):
         info_data = Mock(width=4638, height=7201)
         features = ('regionByPct', 'regionSquare', 'regionByPx')
         rp = RegionParameter('square', features, info_data)
-        assert rp.request_type is REGION_SQUARE
+        assert rp.request_type is FEATURE_REGION_SQUARE
         assert rp.canonical == '0,1281,4638,4638'
         assert rp.pixel_x == 0
         assert rp.pixel_y == 1281
@@ -75,7 +75,7 @@ class TestRegionParameter(object):
         features = ('regionByPct', 'regionSquare', 'regionByPx')
         rp = RegionParameter('square', features, info_data)
         assert rp.canonical == '2700,0,3000,3000'
-        assert rp.request_type is REGION_SQUARE
+        assert rp.request_type is FEATURE_REGION_SQUARE
         assert rp.pixel_x == 2700
         assert rp.pixel_y == 0
         assert rp.pixel_w == 3000
@@ -90,7 +90,7 @@ class TestRegionParameter(object):
         features = ('regionByPct', 'regionSquare', 'regionByPx')
         rp = RegionParameter('pct:20,40,15,30', features, info_data)
         assert rp.canonical == '691,2880,518,2160'
-        assert rp.request_type is REGION_BY_PCT
+        assert rp.request_type is FEATURE_REGION_BY_PCT
         assert rp.pixel_x == 691
         assert rp.pixel_y == 2880
         assert rp.pixel_w == 518
@@ -126,7 +126,7 @@ class TestRegionParameter(object):
         features = ('regionByPct', 'regionSquare', 'regionByPx')
         rp = RegionParameter('600,1357,1567,2590', features, info_data)
         assert rp.canonical == '600,1357,1567,2590'
-        assert rp.request_type is REGION_BY_PIXEL
+        assert rp.request_type is FEATURE_REGION_BY_PIXEL
         assert rp.pixel_x == 600
         assert rp.pixel_y == 1357
         assert rp.pixel_w == 1567
@@ -159,7 +159,7 @@ class TestRegionParameter(object):
         info_data = Mock(width=3456, height=7200)
         features = ('regionByPct', 'regionSquare', 'regionByPx')
         rp = RegionParameter('0,0,3457,7201', features, info_data)
-        assert rp.canonical == FULL
+        assert rp.canonical == KEYWORD_FULL
         assert rp.pixel_x == 0
         assert rp.decimal_x == 0
         assert rp.pixel_y == 0

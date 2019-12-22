@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from dataclasses import dataclass
-from loris.constants import HEIGHT
-from loris.constants import WIDTH
+from loris.constants import KEYWORD_HEIGHT
+from loris.constants import KEYWORD_WIDTH
 
 @dataclass
 class Size:
@@ -31,4 +31,6 @@ class Size:
         return f'Size({self.width},{self.height})'
 
     def to_dict(self):
-        return OrderedDict(((WIDTH, self.width), (HEIGHT, self.height)))
+        return OrderedDict((
+            (KEYWORD_WIDTH, self.width), (KEYWORD_HEIGHT, self.height)
+        ))

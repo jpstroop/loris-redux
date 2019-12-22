@@ -1,13 +1,13 @@
-from loris.constants import ACCEPT_HEADER
-from loris.constants import ACCESS_CONTROL_ALLOW_HEADERS_HEADER
-from loris.constants import ACCESS_CONTROL_ALLOW_METHODS_HEADER
-from loris.constants import ACCESS_CONTROL_ALLOW_ORIGIN_HEADER
-from loris.constants import ACCESS_CONTROL_MAX_AGE_HEADER
-from loris.constants import ALLOW_HEADER
-from loris.constants import CONNECTION_HEADER
-from loris.constants import CONTENT_TYPE_HEADER
-from loris.constants import KEEP_ALIVE_HEADER
-from loris.constants import VARY_HEADER
+from loris.constants import HEADER_ACCEPT
+from loris.constants import HEADER_ACCESS_CONTROL_HEADER_ALLOWS
+from loris.constants import HEADER_ACCESS_CONTROL_ALLOW_METHODS
+from loris.constants import HEADER_ACCESS_CONTROL_ALLOW_ORIGIN
+from loris.constants import HEADER_ACCESS_CONTROL_MAX_AGE
+from loris.constants import HEADER_ALLOW
+from loris.constants import HEADER_CONNECTION
+from loris.constants import HEADER_CONTENT_TYPE
+from loris.constants import HEADER_KEEP_ALIVE
+from loris.constants import HEADER_VARY
 from loris.requests.info_request import InfoRequest
 from tests.loris.handlers.base_handler_test import BaseHandlerTest
 
@@ -62,23 +62,23 @@ class TestInfoHandler(BaseHandlerTest):
 
     def test_acao_header_default(self):
         response = self.get("/loris:sample.jp2/info.json")
-        assert response.headers[ACCESS_CONTROL_ALLOW_ORIGIN_HEADER] == "*"
+        assert response.headers[HEADER_ACCESS_CONTROL_ALLOW_ORIGIN] == "*"
 
     def test_options_preflight(self):
         response = self.options("/loris:sample.jp2/info.json")
-        assert response.headers[ACCESS_CONTROL_ALLOW_ORIGIN_HEADER] == "*"
+        assert response.headers[HEADER_ACCESS_CONTROL_ALLOW_ORIGIN] == "*"
 
     def test_preflight_headers(self):
         response = self.options("/loris:sample.jp2/info.json")
-        excluded_headers = (ALLOW_HEADER, CONTENT_TYPE_HEADER)
+        excluded_headers = (HEADER_ALLOW, HEADER_CONTENT_TYPE)
         included_headers = (
-            ACCESS_CONTROL_ALLOW_HEADERS_HEADER,
-            ACCESS_CONTROL_ALLOW_METHODS_HEADER,
-            ACCESS_CONTROL_ALLOW_ORIGIN_HEADER,
-            ACCESS_CONTROL_MAX_AGE_HEADER,
-            CONNECTION_HEADER,
-            KEEP_ALIVE_HEADER,
-            VARY_HEADER
+            HEADER_ACCESS_CONTROL_HEADER_ALLOWS,
+            HEADER_ACCESS_CONTROL_ALLOW_METHODS,
+            HEADER_ACCESS_CONTROL_ALLOW_ORIGIN,
+            HEADER_ACCESS_CONTROL_MAX_AGE,
+            HEADER_CONNECTION,
+            HEADER_KEEP_ALIVE,
+            HEADER_VARY
         )
         assert all([h in response.headers for h in included_headers])
         assert all([h not in response.headers for h in excluded_headers])

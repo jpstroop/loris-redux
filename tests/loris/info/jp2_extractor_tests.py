@@ -1,6 +1,6 @@
 from loris.compliance import Compliance
 from loris.constants import COLOR_QUALITIES
-from loris.constants import GRAY_QUALITIES
+from loris.constants import QUALITY_GROUP_GRAY
 from loris.info.jp2_extractor import Jp2Parser
 from loris.info.jp2_extractor import Jp2Extractor
 import pytest
@@ -57,7 +57,7 @@ class TestJp2Extractor(object):
 
     def test_with_gray(self, compliance_2, gray_jp2, app_configs):
         info = init_and_extract(gray_jp2, compliance_2, app_configs)
-        assert info.extra_qualities == GRAY_QUALITIES
+        assert info.extra_qualities == QUALITY_GROUP_GRAY
 
     def test_sizes_respects_max(self, compliance_2, tiled_jp2, app_configs):
         info = init_and_extract(tiled_jp2, compliance_2, app_configs)

@@ -1,6 +1,6 @@
 from abc import ABCMeta
 from abc import abstractmethod
-from loris.constants import BITONAL_QUALITIES
+from loris.constants import QUALITY_BITONAL_QUALITIES
 from loris.constants import COLOR_QUALITIES
 from loris.info.structs.info import Info
 from loris.info.structs.size import Size

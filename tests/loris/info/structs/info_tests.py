@@ -1,13 +1,13 @@
 from collections import OrderedDict
 from loris.compliance import Compliance
-from loris.constants import CONTEXT
-from loris.constants import CONTEXT_URI
-from loris.constants import ID
-from loris.constants import IMAGE_SERVICE_3
-from loris.constants import MAX_AREA
-from loris.constants import PROTOCOL
-from loris.constants import PROTOCOL_URI
-from loris.constants import TYPE
+from loris.constants import KEYWORD_CONTEXT
+from loris.constants import KEYWORD_ID
+from loris.constants import KEYWORD_IMAGE_SERVICE_3
+from loris.constants import KEYWORD_MAX_AREA
+from loris.constants import KEYWORD_PROTOCOL
+from loris.constants import KEYWORD_TYPE
+from loris.constants import URI_CONTEXT
+from loris.constants import URI_PROTOCOL
 from loris.info.structs.info import Info
 from loris.info.structs.size import Size
 from loris.info.structs.tile import Tile
@@ -25,16 +25,16 @@ class TestInfo(object):
     def test_dict_has_boilerplate_values(self, compliance):
         info = Info(compliance, HTTP_ID)
         d = info.to_dict()
-        assert d[CONTEXT] == CONTEXT_URI
-        assert d[PROTOCOL] == PROTOCOL_URI
-        assert d[TYPE] == IMAGE_SERVICE_3
-        assert d[ID] == HTTP_ID
+        assert d[KEYWORD_CONTEXT] == URI_CONTEXT
+        assert d[KEYWORD_PROTOCOL] == URI_PROTOCOL
+        assert d[KEYWORD_TYPE] == KEYWORD_IMAGE_SERVICE_3
+        assert d[KEYWORD_ID] == HTTP_ID
 
     def test_to_dict_strips_none_values(self, compliance):
         info = Info(compliance, HTTP_ID)
         info.max_area = None
         d = info.to_dict()
-        assert MAX_AREA not in d
+        assert KEYWORD_MAX_AREA not in d
 
     def test_long_dim(self, compliance):
         info = Info(compliance, HTTP_ID)

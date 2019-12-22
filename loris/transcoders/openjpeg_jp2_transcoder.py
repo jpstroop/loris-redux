@@ -4,7 +4,7 @@ from os.path import dirname
 from os.path import join
 import platform
 
-from loris.constants import FULL
+from loris.constants import KEYWORD_FULL
 from loris.transcoders.api import AbstractTranscoder
 from loris.transcoders.abstract_jp2_transcoder import AbstractJp2Transcoder
 
@@ -33,7 +33,7 @@ class OpenJpegJp2Transcoder(AbstractJp2Transcoder, AbstractTranscoder):
     @staticmethod
     def decode_area_from_image_request(image_request):
         # analogous to kdu_expand -{region} but works w/ pixels
-        if image_request.region_request_type is FULL:
+        if image_request.region_request_type is KEYWORD_FULL:
             return ''
         else:
             x = image_request.region_pixel_x

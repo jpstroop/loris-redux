@@ -18,7 +18,7 @@ def is_close_color(src_rgb, expected_rgb, threshold=10):
 
 @contextmanager
 def tmp_image(bytes_io, fmt='jpg'):
-    tmp = '/tmp/loris_tmp/img.{0}'.format(fmt)
+    tmp = f'/tmp/loris_tmp/img.{fmt}'
     try:
         with open(tmp, 'wb') as f:
             f.write(bytes_io.getvalue())
