@@ -11,9 +11,9 @@ jobs:
     - name: "Python nightly on Ubuntu Bionic"
       dist: bionic
       python: "nightly"
-    - name: "Python 3.7.4 on macOS 10.14"
+    - name: "Python 3.7.5 on macOS 10.14"
       os: osx
-      osx_image: xcode11.2  # Python 3.7.4 running on macOS 10.14.4
+      osx_image: xcode11.2
       language: shell
       before_install: brew install pipenv libmagic
 
