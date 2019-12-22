@@ -8,6 +8,7 @@ from os import path
 from os import remove
 from tests.loris.handlers.base_handler_test import SOCKET_HOST
 from tests.loris.handlers.base_handler_test import SOCKET_PORT
+from warnings import simplefilter
 import cherrypy
 import pytest
 import yaml
@@ -36,6 +37,8 @@ TEST_IMAGES = ( COLOR_JP2, GRAY_JP2, COLOR_PROFILE_JP2, PRECINCTS_JP2,
     PILLOW_TRANSCODER_TESTS_BMP )
 
 IMAGES_URL = 'http://www.princeton.edu/~jstroop/loris_test_images/images.tgz'
+
+simplefilter('ignore', ResourceWarning)
 
 def _download(url, to_dir):
     import requests

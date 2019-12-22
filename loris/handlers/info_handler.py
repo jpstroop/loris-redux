@@ -4,20 +4,20 @@ from loris.constants import JSONLD_CONTENT_TYPE
 from loris.constants import JSONLD_MEDIA_TYPE
 from loris.exceptions import LorisException
 from loris.handlers.handler_helpers_mixin import HandlerHelpersMixin
-from loris.requests.iiif_request import IIIFRequest
+from loris.handlers.cors_mixin import CORSMixin
 from loris.requests.info_request import InfoRequest
 import cherrypy
 import json
 
 logger = getLogger('loris')
 
-class InfoHandler(HandlerHelpersMixin):
+class InfoHandler(HandlerHelpersMixin, CORSMixin):
 
     exposed = True # This is for CherryPy.
 
     def GET(self, identifier):
         cherrypy.response.headers['Allow'] = 'GET'
-        logger.debug(cherrypy.request.path_info)
+        self._set_acao()
         try:
             return self._conditional_response(identifier)
         except LorisException as le:

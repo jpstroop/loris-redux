@@ -8,13 +8,16 @@ import cherrypy
 cherrypy._cpconfig.environments['staging']['engine.autoreload.on'] = True
 
 server_conf = {
-    # take this as a command line option or value in the config file
-    # 'environment': 'staging', TODO: what is the 'development' env?
     'server.socket_port': 5004,
     'server.socket_host': '127.0.0.1'
-    # 'server.socket_host' : 'myserver.edu'
 }
 
+# This disables WSGI, but only works on 8080 :-(
+# See https://github.com/cherrypy/cherrypy/commit/8ac0232c3a2cba2c42df1cab5a3468a34a72f2ec
+# from cherrypy._cpnative_server import CPHTTPServer
+# cherrypy.server.httpserver = CPHTTPServer(cherrypy.server)
+cherrypy.config.update(server_conf)
+cherrypy.quickstart(LorisApp(), config=cherrypy_app_conf)
 
 
 # To start the server, the app should take:
@@ -29,8 +32,7 @@ server_conf = {
 
 # Re. configuration: http://docs.cherrypy.org/en/latest/basics.html#additional-application-settings
 # and http://docs.cherrypy.org/en/latest/config.html
-cherrypy.config.update(server_conf)
-cherrypy.quickstart(LorisApp(), config=cherrypy_app_conf)
+
 
 # TODO: Environments:
 # http://docs.cherrypy.org/en/3.3.0/tutorial/config.html?highlight=environments#environments
