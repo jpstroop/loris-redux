@@ -5,12 +5,15 @@ application:
   max_height: null
   max_width: null
   server_uri: http://localhost:5004
+  access-control-allow-origin: "*" # can be set to False, a URI, or "*"
+  access-control-max-age: 7200
+  cors_keep_alive_max: 100
+  cors_keep_alive_timeout: 2
   sizes_and_tiles:
-    # These settings are regardless of configured compliance, i.e., regionByPx
-    # and sizeByW can be disabled and requests that match these criteria will
-    # work.
+    # These settings are regardless of configured compliance, i.e., features
+    # can be disabled and requests that match these criteria will work.
     jp2:
-      encoded_only: False     # Only report encoded tiles and scale factors
+      encoded_only: False # Only report encoded tiles and scale factors
     other_formats:
       # For other formats, these settings determine the tiles, scale factors,
       # and sizes that still be reported in info.json

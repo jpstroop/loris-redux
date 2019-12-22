@@ -1,5 +1,15 @@
-from tests.loris.handlers.base_handler_test import BaseHandlerTest
+from loris.constants import ACCEPT_HEADER
+from loris.constants import ACCESS_CONTROL_ALLOW_HEADERS_HEADER
+from loris.constants import ACCESS_CONTROL_ALLOW_METHODS_HEADER
+from loris.constants import ACCESS_CONTROL_ALLOW_ORIGIN_HEADER
+from loris.constants import ACCESS_CONTROL_MAX_AGE_HEADER
+from loris.constants import ALLOW_HEADER
+from loris.constants import CONNECTION_HEADER
+from loris.constants import CONTENT_TYPE_HEADER
+from loris.constants import KEEP_ALIVE_HEADER
+from loris.constants import VARY_HEADER
 from loris.requests.info_request import InfoRequest
+from tests.loris.handlers.base_handler_test import BaseHandlerTest
 
 class TestInfoHandler(BaseHandlerTest):
     def test_info_returns200(self):
@@ -49,3 +59,26 @@ class TestInfoHandler(BaseHandlerTest):
         InfoRequest.compliance.http.features = ()
         response = self.get("/loris:sample.jp2/info.json")
         assert "Link" not in response.headers
+
+    def test_acao_header_default(self):
+        response = self.get("/loris:sample.jp2/info.json")
+        assert response.headers[ACCESS_CONTROL_ALLOW_ORIGIN_HEADER] == "*"
+
+    def test_options_preflight(self):
+        response = self.options("/loris:sample.jp2/info.json")
+        assert response.headers[ACCESS_CONTROL_ALLOW_ORIGIN_HEADER] == "*"
+
+    def test_preflight_headers(self):
+        response = self.options("/loris:sample.jp2/info.json")
+        excluded_headers = (ALLOW_HEADER, CONTENT_TYPE_HEADER)
+        included_headers = (
+            ACCESS_CONTROL_ALLOW_HEADERS_HEADER,
+            ACCESS_CONTROL_ALLOW_METHODS_HEADER,
+            ACCESS_CONTROL_ALLOW_ORIGIN_HEADER,
+            ACCESS_CONTROL_MAX_AGE_HEADER,
+            CONNECTION_HEADER,
+            KEEP_ALIVE_HEADER,
+            VARY_HEADER
+        )
+        assert all([h in response.headers for h in included_headers])
+        assert all([h not in response.headers for h in excluded_headers])

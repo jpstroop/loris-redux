@@ -1,4 +1,5 @@
 from requests import get
+from requests import options
 from unittest import TestCase
 
 # This isn't a test; it just takes care of setting up a server for hendler tests
@@ -17,3 +18,13 @@ class BaseHandlerTest(TestCase):
             path = path[1:]
         uri = f"http://{SOCKET_HOST}:{SOCKET_PORT}/{path}"
         return get(uri, **kwargs)
+
+    def options(self, path, **kwargs):
+        """Wrapper around requests.options that allows for getting just the path of
+        the server request from the server that is run by the `self.app_server`
+        context manager.
+        """
+        if path.startswith("/"):
+            path = path[1:]
+        uri = f"http://{SOCKET_HOST}:{SOCKET_PORT}/{path}"
+        return options(uri, **kwargs)
