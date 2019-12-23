@@ -1,8 +1,9 @@
+from loris.compliance.abstract_feature_set import AbstractFeatureSet
+from loris.compliance.helpers import st
 from loris.constants import FEATURE_ROTATION_ARBITRARY
 from loris.constants import FEATURE_ROTATION_BY_90S
 from loris.constants import FEATURE_ROTATION_MIRRORING
-from loris.compliance.abstract_feature_set import AbstractFeatureSet
-from loris.compliance.helpers import st
+
 
 class RotationCompliance(AbstractFeatureSet):
 

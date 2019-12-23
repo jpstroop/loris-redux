@@ -1,40 +1,39 @@
-from math import ceil
-from PIL import Image
-
-from loris.constants import QUALITY_BITONAL_QUALITIES
 from loris.constants import COLOR_QUALITIES
+from loris.constants import QUALITY_BITONAL_QUALITIES
 from loris.constants import QUALITY_GROUP_GRAY
 from loris.info.abstract_extractor import AbstractExtractor
 from loris.info.structs.info import Info
 from loris.info.structs.size import Size
 from loris.info.structs.tile import Tile
+from math import ceil
+from PIL import Image
 
 MODES_TO_QUALITIES = {
-    '1': QUALITY_BITONAL_QUALITIES,
-    'L': QUALITY_GROUP_GRAY,
-    'LA': QUALITY_GROUP_GRAY,
-    'P': QUALITY_GROUP_GRAY,
-    'RGB': COLOR_QUALITIES,
-    'RGBA': COLOR_QUALITIES,
-    'CMYK': COLOR_QUALITIES,
-    'YCbCr': COLOR_QUALITIES,
-    'I': COLOR_QUALITIES,
-    'F': COLOR_QUALITIES
+    "1": QUALITY_BITONAL_QUALITIES,
+    "L": QUALITY_GROUP_GRAY,
+    "LA": QUALITY_GROUP_GRAY,
+    "P": QUALITY_GROUP_GRAY,
+    "RGB": COLOR_QUALITIES,
+    "RGBA": COLOR_QUALITIES,
+    "CMYK": COLOR_QUALITIES,
+    "YCbCr": COLOR_QUALITIES,
+    "I": COLOR_QUALITIES,
+    "F": COLOR_QUALITIES,
 }
 
-COLOR_MODES = ('RGB', 'RGBA', 'CMYK', 'YCbCr', 'I', 'F')
+COLOR_MODES = ("RGB", "RGBA", "CMYK", "YCbCr", "I", "F")
+
 
 class PillowExtractor(AbstractExtractor):
-
     def __init__(self, compliance, app_configs):
         super().__init__(compliance, app_configs)
-        sf = app_configs['sizes_and_tiles']['other_formats']
-        self.include_sizes_and_tiles = sf['enabled']
+        sf = app_configs["sizes_and_tiles"]["other_formats"]
+        self.include_sizes_and_tiles = sf["enabled"]
         if self.include_sizes_and_tiles:
-            self.tile_w = sf['tile_width']
-            self.tile_h = sf['tile_height']
-            self.include_all_factors = sf['all_scale_factors']
-            self.min_dimension = sf['min_dimension']
+            self.tile_w = sf["tile_width"]
+            self.tile_h = sf["tile_height"]
+            self.include_all_factors = sf["all_scale_factors"]
+            self.min_dimension = sf["min_dimension"]
 
     def extract(self, path, http_identifier):
         info = self.init_info(http_identifier)
@@ -62,20 +61,20 @@ class PillowExtractor(AbstractExtractor):
         nxt = 1
         while ceil(short_image_dimenson / nxt) >= self.min_dimension:
             scales.append(nxt)
-            nxt = scales[-1]*2
+            nxt = scales[-1] * 2
         return scales
 
     def _calc_tiles(self, image_w, image_h, scale_factors):
         image_long = max(image_w, image_h)
-        self.tile_long =  max(self.tile_w, self.tile_h)
+        self.tile_long = max(self.tile_w, self.tile_h)
         scales = filter(lambda s: (image_long / s) > self.tile_long, scale_factors)
-        return [ Tile(self.tile_w, tuple(scales), self.tile_h) ]
+        return [Tile(self.tile_w, tuple(scales), self.tile_h)]
 
     def _calc_sizes(self, image_w, image_h, max_size, tile_size, scale_factors):
         # Note: We make heavy use of the fact that Size and Tile structs are
         # comparable here. See loris.info.structs.size.Size, etc. for details.
         # It's cool.
-        sizes = [ max_size ]
+        sizes = [max_size]
         for s in scale_factors:
             this_size = Size(ceil(image_w / s), ceil(image_h / s))
             less_than_max = this_size < max_size

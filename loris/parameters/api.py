@@ -1,13 +1,8 @@
 from abc import ABCMeta
 from abc import abstractmethod
 
-#
-# See: https://docs.python.org/3.5/library/abc.html
-# and: https://pymotw.com/2/abc/
-#
 
 class AbstractParameter(metaclass=ABCMeta):
-
     @abstractmethod
     def __init__(self, uri_slice, enabled_features):
         self.uri_slice = uri_slice
@@ -17,8 +12,8 @@ class AbstractParameter(metaclass=ABCMeta):
 
     @property
     @abstractmethod
-    def canonical(self): # pragma: no cover
+    def canonical(self):  # pragma: no cover
         return
 
-    def __str__(self): # pragma: no cover
+    def __str__(self):  # pragma: no cover
         return self.canonical

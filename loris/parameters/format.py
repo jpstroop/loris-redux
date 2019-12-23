@@ -6,8 +6,8 @@ from loris.exceptions import RequestException
 from loris.exceptions import SyntaxException
 from loris.parameters.api import AbstractParameter
 
-class FormatParameter(AbstractParameter):
 
+class FormatParameter(AbstractParameter):
     def __init__(self, uri_slice, enabled_features, info):
         super().__init__(uri_slice, enabled_features)
         self.formats_available = info.extra_formats
@@ -22,10 +22,16 @@ class FormatParameter(AbstractParameter):
         if self.uri_slice == EXTENSION_JPG:
             return
         if self.canonical not in ALL_OUTPUT_FORMATS:
-            msg = f'{self.canonical} is not a recognized format'
+            msg = f"{self.canonical} is not a recognized format"
             raise SyntaxException(msg)
-        if self.canonical == EXTENSION_PNG and EXTENSION_PNG not in self.enabled_features:
+        if self._png_request() and self._png_disabled():
             raise FeatureNotEnabledException(EXTENSION_PNG)
         if self.canonical not in self.formats_available:
-            msg = f'{self.canonical} is not an available format'
+            msg = f"{self.canonical} is not an available format"
             raise RequestException(msg)
+
+    def _png_request(self):
+        return self.canonical == EXTENSION_PNG
+
+    def _png_disabled(self):
+        return EXTENSION_PNG not in self.enabled_features

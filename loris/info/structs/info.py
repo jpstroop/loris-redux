@@ -25,15 +25,16 @@ from loris.info.structs.tile import Tile
 from operator import methodcaller
 from typing import List
 
+
 @dataclass
 class Info:
-    compliance: Compliance  # These are by the
-    http_identifier: str    # required contructor
+    compliance: Compliance
+    http_identifier: str
     width: int = None
     height: int = None
     _long_dim: int = None
     _short_dim: int = None
-    _all_scales:  List[int] = None
+    _all_scales: List[int] = None
     tiles: List[Tile] = None
     sizes: List[Size] = None
     max_area: int = None
@@ -52,13 +53,13 @@ class Info:
     @property
     def long_dim(self):
         if not self._long_dim:
-            self._long_dim =  max(self.width, self.height)
+            self._long_dim = max(self.width, self.height)
         return self._long_dim
 
     @property
     def short_dim(self):
         if not self._short_dim:
-            self._short_dim =  min(self.width, self.height)
+            self._short_dim = min(self.width, self.height)
         return self._short_dim
 
     @property
@@ -72,14 +73,16 @@ class Info:
 
     @staticmethod
     def _cleandict(d):
-        '''
+        """
         Remove None values from the dict to avoid nulls in serialization.
-        '''
+        """
         if not isinstance(d, OrderedDict):
             return d
-        return (
-            { k : Info._cleandict(v) for (k,v) in d.items() if v is not None }
-        )
+        return {k: Info._cleandict(v) for (k, v) in d.items() if v is not None}
+
+    @staticmethod
+    def _sizes_to_list(sizes):
+        return list(map(methodcaller("to_dict"), sorted(sizes)))
 
     def to_dict(self):
         d = OrderedDict()
@@ -91,9 +94,9 @@ class Info:
         d[KEYWORD_WIDTH] = self.width
         d[KEYWORD_HEIGHT] = self.height
         if self.tiles:
-            d[KEYWORD_TILES] =  list(map(methodcaller('to_dict'), sorted(self.tiles)))
+            d[KEYWORD_TILES] = Info._sizes_to_list(self.tiles)
         if self.sizes:
-            d[KEYWORD_SIZES] = list(map(methodcaller('to_dict'), sorted(self.sizes)))
+            d[KEYWORD_SIZES] = Info._sizes_to_list(self.sizes)
         d[KEYWORD_MAX_AREA] = self.max_area
         d[KEYWORD_MAX_WIDTH] = self.max_width
         d[KEYWORD_MAX_HEIGHT] = self.max_height

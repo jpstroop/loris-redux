@@ -13,11 +13,14 @@ from loris.info.structs.size import Size
 from loris.info.structs.tile import Tile
 import pytest
 
+
 @pytest.fixture()
 def compliance(level2_plus_yaml):
     return Compliance(level2_plus_yaml)
 
-HTTP_ID = 'https://example.edu/images/1234'
+
+HTTP_ID = "https://example.edu/images/1234"
+
 
 class TestInfo(object):
 
@@ -56,11 +59,11 @@ class TestInfo(object):
         s3 = Size(6000, 3000)
         info.sizes = [s2, s3, s1]
         expected = [
-            OrderedDict([('width', 1500), ('height', 750)]),
-            OrderedDict([('width', 3000), ('height', 1500)]),
-            OrderedDict([('width', 6000), ('height', 3000)])
+            OrderedDict([("width", 1500), ("height", 750)]),
+            OrderedDict([("width", 3000), ("height", 1500)]),
+            OrderedDict([("width", 6000), ("height", 3000)]),
         ]
-        assert info.to_dict()['sizes'] == expected
+        assert info.to_dict()["sizes"] == expected
 
     def test_tiles_sort_in_to_dict(self, compliance):
         # Integrates w/ Tile. If this is failing, check Size first
@@ -70,15 +73,11 @@ class TestInfo(object):
         t3 = Tile(2048, [16])
         info.tiles = [t2, t3, t1]
         expected = [
-            OrderedDict([('width', 512), ('scaleFactors', [1, 2, 4])]),
-            OrderedDict([
-                ('width', 1024),
-                ('height', 2048),
-                ('scaleFactors', [8])
-            ]),
-            OrderedDict([('width', 2048), ('scaleFactors', [16])])
+            OrderedDict([("width", 512), ("scaleFactors", [1, 2, 4])]),
+            OrderedDict([("width", 1024), ("height", 2048), ("scaleFactors", [8])]),
+            OrderedDict([("width", 2048), ("scaleFactors", [16])]),
         ]
-        assert info.to_dict()['tiles'] == expected
+        assert info.to_dict()["tiles"] == expected
 
     def test_all_scales(self, compliance):
         # Integrates w/ Tile. If this is failing, check Size first

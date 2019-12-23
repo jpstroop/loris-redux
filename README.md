@@ -1,12 +1,11 @@
 # loris-redux
 
 [![Build Status](https://travis-ci.org/jpstroop/loris-redux.svg?branch=master)](https://travis-ci.org/jpstroop/loris-redux) [![Coverage Status](https://coveralls.io/repos/github/jpstroop/loris-redux/badge.svg?branch=master)](https://coveralls.io/github/jpstroop/loris-redux?branch=master) [![Maintainability](https://api.codeclimate.com/v1/badges/ffde55935b8967cd546a/maintainability)](https://codeclimate.com/github/jpstroop/loris-redux/maintainability) [![Requirements Status](https://requires.io/github/jpstroop/loris-redux/requirements.svg)](https://requires.io/github/jpstroop/loris-redux/requirements/)
-
 [![License: New BSD](https://img.shields.io/badge/license-New%20BSD-blue.svg)](https://github.com/jpstroop/loris-redux/blob/master/LICENSE)
-
 [![Python 3.7](https://img.shields.io/badge/python-3.7-yellow.svg)](https://img.shields.io/badge/python-3.7-yellow.svg)
 [![Python 3.8](https://img.shields.io/badge/python-3.8-yellow.svg)](https://img.shields.io/badge/python-3.8-yellow.svg)
 [![Python Nightly](https://img.shields.io/badge/python-nightly-yellow.svg)](https://img.shields.io/badge/python-nightly-yellow.svg)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 A rewrite of loris using [CherryPy](http://cherrypy.org/) and Python `>=` 3.7.
 

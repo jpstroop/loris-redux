@@ -4,14 +4,14 @@ from logging import getLogger
 
 # See an explanation about how these work in loris.parameters.api
 
-logger = getLogger('loris')
+logger = getLogger("loris")
+
 
 class AbstractResolver(metaclass=ABCMeta):
-
     def __init__(self, config):
-        self.description = config.get('description')
-        self.__dict__ = { **self.__dict__, **config }
-        logger.debug('Initialized %s.%s', __name__, self.__class__.__name__)
+        self.description = config.get("description")
+        self.__dict__ = {**self.__dict__, **config}
+        logger.debug("Initialized %s.%s", __name__, self.__class__.__name__)
 
     @abstractmethod
     def is_resolvable(self, ident):  # pragma: no cover

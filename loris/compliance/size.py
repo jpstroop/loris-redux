@@ -1,11 +1,12 @@
 from loris.compliance.abstract_feature_set import AbstractFeatureSet
 from loris.compliance.helpers import st
-from loris.constants import FEATURE_SIZE_UPSCALING
 from loris.constants import FEATURE_SIZE_BY_CONFINED_WH
 from loris.constants import FEATURE_SIZE_BY_H
 from loris.constants import FEATURE_SIZE_BY_PCT
 from loris.constants import FEATURE_SIZE_BY_W
 from loris.constants import FEATURE_SIZE_BY_WH
+from loris.constants import FEATURE_SIZE_UPSCALING
+
 
 class SizeCompliance(AbstractFeatureSet):
 

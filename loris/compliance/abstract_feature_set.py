@@ -1,11 +1,12 @@
-from loris.compliance.helpers import st
 from loris.compliance.helpers import ComparableMixin
+from loris.compliance.helpers import st
+
 
 class AbstractFeatureSet(ComparableMixin):
     # Override these in implementations
     LEVEL_2 = ()
     LEVEL_1 = ()
-    LEVEL_0 = () # Only necessary to overide if value are listed in the profile
+    LEVEL_0 = ()  # Only necessary to overide if value are listed in the profile
     ALL = ()
 
     def __init__(self, config):
@@ -18,7 +19,7 @@ class AbstractFeatureSet(ComparableMixin):
         # of level. See http://iiif.io/api/image/3.1/compliance/
         # This should be passed to the various Parameter constructors.
         if self._features is None:
-            self._features = st(k for k,v in self._config.items() if v['enabled'])
+            self._features = st(k for k, v in self._config.items() if v["enabled"])
         return self._features
 
     # This is here to that we can change features dynamically during tests. It

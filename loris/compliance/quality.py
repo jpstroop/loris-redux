@@ -1,8 +1,9 @@
-from loris.compliance.helpers import st
 from loris.compliance.abstract_feature_set import AbstractFeatureSet
+from loris.compliance.helpers import st
 from loris.constants import QUALITY_BITONAL
 from loris.constants import QUALITY_COLOR
 from loris.constants import QUALITY_GRAY
+
 
 class QualityCompliance(AbstractFeatureSet):
 

@@ -1,15 +1,15 @@
 from decimal import Decimal
 from loris.constants import DECIMAL_ONE_HUNDRED
-from loris.constants import KEYWORD_MAX
-from loris.constants import KEYWORD_MAX_AREA
-from loris.constants import KEYWORD_MAX_HEIGHT
-from loris.constants import KEYWORD_MAX_WIDTH
-from loris.constants import FEATURE_SIZE_UPSCALING
 from loris.constants import FEATURE_SIZE_BY_CONFINED_WH
 from loris.constants import FEATURE_SIZE_BY_H
 from loris.constants import FEATURE_SIZE_BY_PCT
 from loris.constants import FEATURE_SIZE_BY_W
 from loris.constants import FEATURE_SIZE_BY_WH
+from loris.constants import FEATURE_SIZE_UPSCALING
+from loris.constants import KEYWORD_MAX
+from loris.constants import KEYWORD_MAX_AREA
+from loris.constants import KEYWORD_MAX_HEIGHT
+from loris.constants import KEYWORD_MAX_WIDTH
 from loris.exceptions import FeatureNotEnabledException
 from loris.exceptions import RequestException
 from loris.exceptions import SyntaxException
@@ -19,15 +19,15 @@ from math import floor
 from re import compile
 from re import match
 
-# note that these regexes do not account for a leading '^'; we just check for
+# Note that these regexes do not account for a leading '^'; we just check for
 # that in self._deduce_request_type()
-W_REGEX = compile(r'^\d+,$')
-H_REGEX = compile(r'^,\d+$')
-WH_REGEX = compile(r'^\d+,\d+$')
-CONFINED_REGEX = compile(r'^!\d+,\d+$')
+W_REGEX = compile(r"^\d+,$")
+H_REGEX = compile(r"^,\d+$")
+WH_REGEX = compile(r"^\d+,\d+$")
+CONFINED_REGEX = compile(r"^!\d+,\d+$")
+
 
 class SizeParameter(AbstractParameter):
-
     def __init__(self, uri_slice, enabled_features, info, region_param):
         super().__init__(uri_slice, enabled_features)
         self.info = info
@@ -60,23 +60,29 @@ class SizeParameter(AbstractParameter):
             if self.request_type is KEYWORD_MAX:
                 self._canonical = KEYWORD_MAX
             else:
-                self._canonical = f'{self.width},{self.height}'
+                self._canonical = f"{self.width},{self.height}"
         return self._canonical
 
     def _initialize_properties(self):
         # raises SyntaxException, RequestException
         if self.request_type is KEYWORD_MAX:
-            self._init_max_request(); return
+            self._init_max_request()
+            return
         if self.request_type is FEATURE_SIZE_BY_W:
-            self._init_by_w_request(); return
+            self._init_by_w_request()
+            return
         if self.request_type is FEATURE_SIZE_BY_H:
-            self._init_by_h_request(); return
+            self._init_by_h_request()
+            return
         if self.request_type is FEATURE_SIZE_BY_PCT:
-            self._init_by_pct_request(); return
+            self._init_by_pct_request()
+            return
         if self.request_type is FEATURE_SIZE_BY_CONFINED_WH:
-            self._init_by_confined_wh_request(); return
+            self._init_by_confined_wh_request()
+            return
         if self.request_type is FEATURE_SIZE_BY_WH:
-            self._init_wh_request(); return
+            self._init_wh_request()
+            return
 
     def _run_checks(self):
         # raises RequestException
@@ -89,7 +95,7 @@ class SizeParameter(AbstractParameter):
 
     def _deduce_request_type(self):
         slice = self.uri_slice
-        if slice[0:1] == '^':
+        if slice[0:1] == "^":
             self.upscaling_requested = True
             slice = slice[1:]
         if slice == KEYWORD_MAX:
@@ -102,27 +108,23 @@ class SizeParameter(AbstractParameter):
             return FEATURE_SIZE_BY_WH
         if match(CONFINED_REGEX, slice):
             return FEATURE_SIZE_BY_CONFINED_WH
-        if slice.split(':')[0] == 'pct':
+        if slice.split(":")[0] == "pct":
             return FEATURE_SIZE_BY_PCT
         msg = f'Size syntax "{self.uri_slice}" is not valid.'
         raise SyntaxException(msg)
 
     def _adjust_if_actually_max(self):
-        # TODO: we need to calculate max width and height when we init so that
-        # this can adjust if necessary
-
         if self.image_max_width == self.width and self.image_max_height == self.height:
             self._request_type = KEYWORD_MAX
         if self.region_w == self.width and self.region_h == self.height:
             self._request_type = KEYWORD_MAX
 
-
     def _calc_image_max_wh(self):
-        # remember, region may be the whole image. it doesn't reall
+        # remember, region may be the whole image. it doesn't really matter
         max_w = self.region_w
         max_h = self.region_h
         if self.info.max_area:
-            scale = (self.info.max_area / (max_w * max_h))**0.5
+            scale = (self.info.max_area / (max_w * max_h)) ** 0.5
             max_w = floor(self.region_w * scale)
             max_h = floor(self.region_h * scale)
         if self.info.max_width and max_w > self.info.max_width:
@@ -149,24 +151,22 @@ class SizeParameter(AbstractParameter):
         slice = self._strip_caret_if_upsample()
         self.width = int(slice[:-1])
         scale = self.width / self.region_w
-        self.height = round(self.region_h * scale) # rounding vs. floor seems to
-                                                   # seems to produce errors
-                                                   # less frequently, but...
+        self.height = round(self.region_h * scale)
 
     def _init_by_h_request(self):
         slice = self._strip_caret_if_upsample()
         self.height = int(slice[1:])
         scale = self.height / self.region_h
-        self.width = round(self.region_w * scale) # see above, round vs. floor
+        self.width = round(self.region_w * scale)
 
     def _init_by_pct_request(self):
         slice = self._strip_caret_if_upsample()
         try:
-            scale = SizeParameter._pct_to_decimal(slice.split(':')[1])
+            scale = SizeParameter._pct_to_decimal(slice.split(":")[1])
         except ValueError as ve:
             raise SyntaxException(str(ve))
         if scale <= 0:
-            msg = f'Size percentage must be greater than 0 ({self.uri_slice}).'
+            msg = f"Size percentage must be greater than 0 ({self.uri_slice})."
             raise RequestException(msg)
         w_decimal = self.region_w * scale
         h_decimal = self.region_h * scale
@@ -176,7 +176,7 @@ class SizeParameter(AbstractParameter):
 
     def _init_by_confined_wh_request(self):
         slice = self._strip_caret_if_upsample()
-        request_w, request_h = map(int, slice[1:].split(','))
+        request_w, request_h = map(int, slice[1:].split(","))
         # TODO: below may need more precision than we get from floats w/
         # large images.
         scale = min(request_w / self.region_w, request_h / self.region_h)
@@ -185,7 +185,7 @@ class SizeParameter(AbstractParameter):
 
     def _init_wh_request(self):
         slice = self._strip_caret_if_upsample()
-        self.width, self.height = map(int, slice.split(','))
+        self.width, self.height = map(int, slice.split(","))
 
     def _strip_caret_if_upsample(self):
         s = self.uri_slice[1:] if self.upscaling_requested else self.uri_slice
@@ -225,20 +225,20 @@ class SizeParameter(AbstractParameter):
         area = self.width * self.height
         if self.info.max_area and area > self.info.max_area:
             msg = (
-                f'Request area ({area}) is greater '
-                f'than max area allowed ({self.info.max_area})'
+                f"Request area ({area}) is greater "
+                f"than max area allowed ({self.info.max_area})"
             )
             raise RequestException(msg)
         if self.info.max_width and self.width > self.info.max_width:
             msg = (
-                f'Request width ({self.width}) is greater than'
-                f'max width allowed ({self.info.max_width})'
+                f"Request width ({self.width}) is greater than"
+                f"max width allowed ({self.info.max_width})"
             )
             raise RequestException(msg)
         if self.info.max_height and self.height > self.info.max_height:
             msg = (
-                f'Request height ({self.height}) is greater than'
-                f'max height allowed ({self.info.max_height})'
+                f"Request height ({self.height}) is greater than"
+                f"max height allowed ({self.info.max_height})"
             )
             raise RequestException(msg)
 
@@ -250,7 +250,7 @@ class SizeParameter(AbstractParameter):
             bottom_row_height = self.info.height % tile_height
             tile_requirements = (
                 self.width in (tile_width, right_col_width),
-                self.height in (tile_height, bottom_row_height)
+                self.height in (tile_height, bottom_row_height),
             )
             size = Size(self.width, self.height)
             return all(tile_requirements) or size in self.info.sizes

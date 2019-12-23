@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from threading import Lock
 
+
 class SafeLruDict(object):
     # Implements a thread-safe LRU cache in memory.
     #
@@ -36,7 +37,7 @@ class SafeLruDict(object):
             del self._dict[key]
 
     def __getitem__(self, key):
-        val = self.get(key) # takes care of the lock & move to front
+        val = self.get(key)  # takes care of the lock & move to front
         if val is None:
             raise KeyError
         return val

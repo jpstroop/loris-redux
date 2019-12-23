@@ -12,6 +12,7 @@ from loris.exceptions import SyntaxException
 from loris.parameters.api import AbstractParameter
 from math import floor
 
+
 class RegionParameter(AbstractParameter):
     # Almost all of the methods here could be static, but passing stuff
     # around was starting to get messy.
@@ -47,7 +48,7 @@ class RegionParameter(AbstractParameter):
         if self._canonical is None:
             if self.request_type is not KEYWORD_FULL:
                 px = (self.pixel_x, self.pixel_y, self.pixel_w, self.pixel_h)
-                self._canonical = ','.join(map(str, px))
+                self._canonical = ",".join(map(str, px))
             else:
                 self._canonical = KEYWORD_FULL
         return self._canonical
@@ -56,15 +57,19 @@ class RegionParameter(AbstractParameter):
         # raises SyntaxException
         # raises RequestException
         if self.request_type is KEYWORD_FULL:
-            self._init_full_request(self.info_data); return
+            self._init_full_request(self.info_data)
+            return
         if self.request_type is FEATURE_REGION_SQUARE:
-            self._init_square_request(self.info_data); return
+            self._init_square_request(self.info_data)
+            return
         if self.request_type is FEATURE_REGION_BY_PIXEL:
-            xywh = tuple(map(int, self.uri_slice.split(',')))
-            self._init_pixel_request(xywh, self.info_data); return
+            xywh = tuple(map(int, self.uri_slice.split(",")))
+            self._init_pixel_request(xywh, self.info_data)
+            return
         if self.request_type is FEATURE_REGION_BY_PCT:
-            xywh = tuple(map(float, self.uri_slice.split(':')[1].split(',')))
-            self._init_pct_request(xywh, self.info_data); return
+            xywh = tuple(map(float, self.uri_slice.split(":")[1].split(",")))
+            self._init_pct_request(xywh, self.info_data)
+            return
 
     def _run_checks(self):
         # raises RequestException
@@ -79,11 +84,11 @@ class RegionParameter(AbstractParameter):
             return KEYWORD_FULL
         elif self.uri_slice == KEYWORD_SQUARE:
             return FEATURE_REGION_SQUARE
-        elif all([n.isdigit() for n in self.uri_slice.split(',')]):
+        elif all([n.isdigit() for n in self.uri_slice.split(",")]):
             # For FEATURE_REGION_BY_PIXEL and FEATURE_REGION_BY_PCT we'll raise later if there
             # are too many ',' tokens
             return FEATURE_REGION_BY_PIXEL
-        elif self.uri_slice.split(':')[0] == 'pct':
+        elif self.uri_slice.split(":")[0] == "pct":
             return FEATURE_REGION_BY_PCT
         msg = f'Region syntax "{self.uri_slice}" is not valid.'
         raise SyntaxException(msg)
@@ -113,10 +118,7 @@ class RegionParameter(AbstractParameter):
         try:
             self.pixel_x, self.pixel_y, self.pixel_w, self.pixel_h = xywh
         except ValueError:
-            msg = (
-                'Four points are required for pixel regions '
-                f'(request was: {self.uri_slice})'
-            )
+            msg = "Four points are required for pixel regions " f"(request was: {self.uri_slice})"
             raise SyntaxException(msg)
         self.decimal_x = self.pixel_x / Decimal(info_data.width)
         self.decimal_y = self.pixel_y / Decimal(info_data.height)
@@ -128,14 +130,14 @@ class RegionParameter(AbstractParameter):
         # raises SyntaxException
         if any(n > DECIMAL_ONE_HUNDRED for n in xywh):
             msg = (
-                'Region percentages must be less than or equal to 100 '
-                f'(request was: {self.uri_slice})'
+                "Region percentages must be less than or equal to 100 "
+                f"(request was: {self.uri_slice})"
             )
             raise RequestException(msg)
         if any((n <= 0) for n in xywh[2:]):
             msg = (
-                'Width and Height percentages must be greater than 0 '
-                f'(request was: {self.uri_slice})'
+                "Width and Height percentages must be greater than 0 "
+                f"(request was: {self.uri_slice})"
             )
             raise RequestException(msg)
 
@@ -143,10 +145,7 @@ class RegionParameter(AbstractParameter):
             px_xywh = map(RegionParameter._pct_to_decimal, xywh)
             self.decimal_x, self.decimal_y, self.decimal_w, self.decimal_h = px_xywh
         except ValueError:
-            msg = (
-                'Four points are required for pct regions '
-                f'(request was: {self.uri_slice})'
-            )
+            msg = "Four points are required for pct regions " f"(request was: {self.uri_slice})"
             raise SyntaxException(msg)
 
         self.pixel_x = int(floor(self.decimal_x * info_data.width))
@@ -175,20 +174,20 @@ class RegionParameter(AbstractParameter):
         # x and y must be in bounds
         if any(axis < 0 for axis in (self.pixel_x, self.pixel_y)):
             msg = (
-                'x and y region parameters must be 0 or greater '
-                f'(original_request: {self.uri_value}).'
+                "x and y region parameters must be 0 or greater "
+                f"(original_request: {self.uri_value})."
             )
             raise RequestException(msg)
         if self.pixel_x >= self.info_data.width:
             msg = (
-                'Region x parameter is greater than the width of the image. '
-                f'Image width is {self.info_data.width}.'
+                "Region x parameter is greater than the width of the image. "
+                f"Image width is {self.info_data.width}."
             )
             raise RequestException(msg)
         if self.pixel_y >= self.info_data.height:
             msg = (
-                'Region y parameter is greater than the height of the image. '
-                f'Image height is {self.info_data.height}.'
+                "Region y parameter is greater than the height of the image. "
+                f"Image height is {self.info_data.height}."
             )
             raise RequestException(msg)
 
@@ -207,18 +206,18 @@ class RegionParameter(AbstractParameter):
                 raise
 
     def _adjust_if_actually_full(self):
-        px = f'0,0,{self.info_data.width},{self.info_data.height}'
+        px = f"0,0,{self.info_data.width},{self.info_data.height}"
         if self.uri_slice == px:
             self._request_type = KEYWORD_FULL
             self._canonical = KEYWORD_FULL
 
     def _allowed_level0_tile_request(self):
         if self.info_data.tiles:
-            tile_width = self.info_data.tiles[0]['width']
-            tile_height = self.info_data.tiles[0].get('height', tile_width)
+            tile_width = self.info_data.tiles[0]["width"]
+            tile_height = self.info_data.tiles[0].get("height", tile_width)
             image_width = self.info_data.width
             image_height = self.info_data.height
-            x, y, w, h = map(int, self.canonical.split(','))
+            x, y, w, h = map(int, self.canonical.split(","))
             # TODO: We should really be checking scale factors...:
             # (w / tile_width) in scale_factors or w / (image_width % tile_width) in scale_factors
             # (h / tile_height) in scale_factors or h / (image_height % tile_height) in scale_factors
@@ -227,7 +226,7 @@ class RegionParameter(AbstractParameter):
                 x % tile_width == 0,
                 y % tile_height == 0,
                 (w in (tile_width, image_width % tile_width) or w % tile_width == 0),
-                (h in (tile_height, image_height % tile_height) or h % tile_height == 0)
+                (h in (tile_height, image_height % tile_height) or h % tile_height == 0),
             )
             return all(requirements)
         else:
