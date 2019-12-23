@@ -4,15 +4,16 @@ from loris.helpers.classproperty import classproperty
 from loris.helpers.safe_lru_dict import SafeLruDict
 from magic import from_file
 
-logger = getLogger('loris')
+logger = getLogger("loris")
+
 
 class MagicCharacterizerMixin(object):
 
     supported_formats = {
-        'image/jpeg' : 'jpg',
-        'image/png' : 'png',
-        'image/tiff' : 'tif',
-        'image/jp2' : 'jp2'
+        "image/jpeg": "jpg",
+        "image/png": "png",
+        "image/tiff": "tif",
+        "image/jp2": "jp2"
         # TODO: jpf?
     }
 
@@ -29,7 +30,7 @@ class MagicCharacterizerMixin(object):
         try:
             return MagicCharacterizerMixin._format_cache
         except AttributeError:
-            logger.debug('format cache initialized')
+            logger.debug("format cache initialized")
             MagicCharacterizerMixin._format_cache = SafeLruDict(200)
             return MagicCharacterizerMixin._format_cache
 
@@ -42,7 +43,6 @@ class MagicCharacterizerMixin(object):
             return fmt
         except KeyError:
             message = (
-                f'{file_path} characterized as {mime_type} format, '
-                f'which is not supported'
+                f"{file_path} characterized as {mime_type} format, " f"which is not supported"
             )
             raise UnsupportedFormat(message, http_status_code=500)

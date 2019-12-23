@@ -1,7 +1,7 @@
 from loris.constants import HEADER_ACCEPT
-from loris.constants import HEADER_ACCESS_CONTROL_HEADER_ALLOWS
 from loris.constants import HEADER_ACCESS_CONTROL_ALLOW_METHODS
 from loris.constants import HEADER_ACCESS_CONTROL_ALLOW_ORIGIN
+from loris.constants import HEADER_ACCESS_CONTROL_HEADER_ALLOWS
 from loris.constants import HEADER_ACCESS_CONTROL_MAX_AGE
 from loris.constants import HEADER_ALLOW
 from loris.constants import HEADER_CONNECTION
@@ -14,7 +14,6 @@ import pytest
 
 
 class TestImageHandler(BaseHandlerTest):
-
     @pytest.mark.filterwarnings("ignore:unclosed file")
     def test_image_returns200(self):
         response = self.get("/loris:sample.jp2/full/200,/0/default.jpg")
@@ -77,13 +76,13 @@ class TestImageHandler(BaseHandlerTest):
         response = self.options("/loris:sample.jp2/full/200,/0/default.jpg")
         excluded_headers = (HEADER_ALLOW, HEADER_CONTENT_TYPE)
         included_headers = (
-            HEADER_ACCESS_CONTROL_HEADER_ALLOWS,
             HEADER_ACCESS_CONTROL_ALLOW_METHODS,
             HEADER_ACCESS_CONTROL_ALLOW_ORIGIN,
+            HEADER_ACCESS_CONTROL_HEADER_ALLOWS,
             HEADER_ACCESS_CONTROL_MAX_AGE,
             HEADER_CONNECTION,
             HEADER_KEEP_ALIVE,
-            HEADER_VARY
+            HEADER_VARY,
         )
         assert all([h in response.headers for h in included_headers])
         assert all([h not in response.headers for h in excluded_headers])

@@ -1,17 +1,18 @@
 from loris.compliance import Compliance
 from loris.constants import COLOR_QUALITIES
 from loris.constants import QUALITY_GROUP_GRAY
-from loris.info.jp2_extractor import Jp2Parser
 from loris.info.jp2_extractor import Jp2Extractor
+from loris.info.jp2_extractor import Jp2Parser
 import pytest
 
-HTTP_ID = 'https://example.edu/images/1234'
+HTTP_ID = "https://example.edu/images/1234"
+
 
 def init_and_extract(path, compliance, app_configs):
     return Jp2Extractor(compliance, app_configs).extract(path, HTTP_ID)
 
-class TestJp2Extractor(object):
 
+class TestJp2Extractor(object):
     def test_wh(self, compliance_2, tiled_jp2, app_configs):
         info = init_and_extract(tiled_jp2, compliance_2, app_configs)
         assert info.width == 5906
@@ -36,7 +37,7 @@ class TestJp2Extractor(object):
         assert info.tiles[0].width == 1024
 
     def test_sizes_no_max(self, compliance_2, tiled_jp2, app_configs):
-        app_configs['max_area'] = None
+        app_configs["max_area"] = None
         info = init_and_extract(tiled_jp2, compliance_2, app_configs)
         assert info.sizes[0].width == 5906
         assert info.sizes[0].height == 7200
@@ -79,22 +80,22 @@ class TestJp2Extractor(object):
         assert info.max_area == 16000000
 
     def test_includes_max_width(self, compliance_2, tiled_jp2, app_configs):
-        app_configs['max_area'] = None
-        app_configs['max_width'] = 4000
+        app_configs["max_area"] = None
+        app_configs["max_width"] = 4000
         info = init_and_extract(tiled_jp2, compliance_2, app_configs)
         assert info.max_width == 4000
 
     def test_includes_max_height(self, compliance_2, tiled_jp2, app_configs):
-        app_configs['max_area'] = None
-        app_configs['max_height'] = 4001
+        app_configs["max_area"] = None
+        app_configs["max_height"] = 4001
         info = init_and_extract(tiled_jp2, compliance_2, app_configs)
         assert info.max_height == 4001
 
     def test_wh_in_sizes_l0_when_no_maxes(self, compliance_0, tiled_jp2, app_configs):
-        app_configs['sizes_and_tiles']['jp2']['encoded_only'] = False
-        app_configs['max_area'] = None
-        app_configs['max_width'] = None
-        app_configs['max_height'] = None
+        app_configs["sizes_and_tiles"]["jp2"]["encoded_only"] = False
+        app_configs["max_area"] = None
+        app_configs["max_width"] = None
+        app_configs["max_height"] = None
         info = init_and_extract(tiled_jp2, compliance_0, app_configs)
         assert info.sizes[0].width == 5906
         assert info.sizes[0].height == 7200
@@ -108,6 +109,7 @@ class TestJp2Extractor(object):
         with pytest.raises(IndexError):
             _ = info.sizes[1]
 
+
 class TestJp2Parser(object):
 
     # We test just a few elements at a time so that tests can be run
@@ -115,37 +117,37 @@ class TestJp2Parser(object):
 
     def test_wh(self, tiled_jp2):
         info = Jp2Parser(tiled_jp2).metadata
-        assert info['image_width'] == 5906
-        assert info['image_height'] == 7200
+        assert info["image_width"] == 5906
+        assert info["image_height"] == 7200
 
     def test_qualities_color_no_profile(self, tiled_jp2):
         info = Jp2Parser(tiled_jp2).metadata
-        assert info['is_color']
-        assert info.get('embedded_color_profile') is None
+        assert info["is_color"]
+        assert info.get("embedded_color_profile") is None
 
     def test_qualities_gray_no_profile(self, gray_jp2):
         info = Jp2Parser(gray_jp2).metadata
-        assert not info['is_color']
-        assert info.get('embedded_color_profile') is None
+        assert not info["is_color"]
+        assert info.get("embedded_color_profile") is None
 
     def test_qualities_color_with_profile(self, color_profile_jp2):
         info = Jp2Parser(color_profile_jp2).metadata
-        assert info['is_color']
-        assert info.get('embedded_color_profile') is not None
+        assert info["is_color"]
+        assert info.get("embedded_color_profile") is not None
 
     def test_tiles_for_tiled_jp2(self, tiled_jp2):
         info = Jp2Parser(tiled_jp2).metadata
-        assert info['tile_width'] == 256
-        assert info['tile_height'] == 256
+        assert info["tile_width"] == 256
+        assert info["tile_height"] == 256
 
     def test_tiles_for_region_test_jp2(self, region_test_jp2):
         info = Jp2Parser(region_test_jp2).metadata
-        assert info['tile_width'] == 1024
-        assert info['tile_height'] == 1024
+        assert info["tile_width"] == 1024
+        assert info["tile_height"] == 1024
 
     def test_levels(self, tiled_jp2):
         info = Jp2Parser(tiled_jp2).metadata
-        assert info['levels'] == 6
+        assert info["levels"] == 6
 
     def test_tiles_for_precincts(self, precincts_jp2):
         # The fixture Jp2 was made with this command:
@@ -154,13 +156,13 @@ class TestJp2Parser(object):
         #   Clevels=6
         #   Cprecincts="{512,512},{256,256},{128,128}"
         info = Jp2Parser(precincts_jp2).metadata
-        assert info['precincts'][0] == (512, 512)
-        assert info['precincts'][1] == (256, 256)
-        assert info['precincts'][2] == (128, 128)
-        assert info['precincts'][3] == (128, 128)
-        assert info['precincts'][4] == (128, 128)
-        assert info['precincts'][5] == (128, 128)
+        assert info["precincts"][0] == (512, 512)
+        assert info["precincts"][1] == (256, 256)
+        assert info["precincts"][2] == (128, 128)
+        assert info["precincts"][3] == (128, 128)
+        assert info["precincts"][4] == (128, 128)
+        assert info["precincts"][5] == (128, 128)
 
     def test_no_precincts(self, tiled_jp2):
         info = Jp2Parser(tiled_jp2).metadata
-        assert 'precincts' not in info
+        assert "precincts" not in info

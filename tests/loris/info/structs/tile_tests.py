@@ -1,8 +1,8 @@
-from loris.info.structs.tile import Tile
 from collections import OrderedDict
+from loris.info.structs.tile import Tile
+
 
 class TestTile(object):
-
     def test_sorts_by_width_ascending(self):
         t1 = Tile(512, [1, 2, 4])
         t2 = Tile(1024, [8])
@@ -19,14 +19,10 @@ class TestTile(object):
 
     def test_to_dict(self):
         t = Tile(2048, [8, 16])
-        expected = OrderedDict([('width', 2048), ('scaleFactors', [8, 16])])
+        expected = OrderedDict([("width", 2048), ("scaleFactors", [8, 16])])
         assert t.to_dict() == expected
 
     def test_to_dict_with_height(self):
         t = Tile(2048, [8, 16], 1024)
-        expected = OrderedDict([
-            ('width', 2048),
-            ('height', 1024),
-            ('scaleFactors', [8, 16])
-        ])
+        expected = OrderedDict([("width", 2048), ("height", 1024), ("scaleFactors", [8, 16])])
         assert t.to_dict() == expected

@@ -1,15 +1,15 @@
 from abc import ABCMeta
 from abc import abstractmethod
-from loris.constants import QUALITY_BITONAL_QUALITIES
 from loris.constants import COLOR_QUALITIES
+from loris.constants import QUALITY_BITONAL_QUALITIES
 from loris.info.structs.info import Info
 from loris.info.structs.size import Size
-from math import ceil
+
 
 class AbstractExtractor(metaclass=ABCMeta):
     #
     # The InfoHandler has a static dict of these, one for each format we
-    # support, e.g., at init:
+    # support, created when the application starts
     #
     # extractors = { 'jp2' : jp2extractor_instance, 'jpg' : ... }
     #
@@ -22,9 +22,9 @@ class AbstractExtractor(metaclass=ABCMeta):
     def __init__(self, compliance, app_configs):
         self.compliance = compliance
         self.app_configs = app_configs
-        self._max_area = self.app_configs.get('max_area')
-        self._max_width = self.app_configs.get('max_width')
-        self._max_height = self.app_configs.get('max_height')
+        self._max_area = self.app_configs.get("max_area")
+        self._max_width = self.app_configs.get("max_width")
+        self._max_height = self.app_configs.get("max_height")
 
     def init_info(self, http_identifier):
         # This is all of the info that is per-server
@@ -56,7 +56,7 @@ class AbstractExtractor(metaclass=ABCMeta):
 
     @staticmethod
     def _scale_wh(scale, width, height):
-        return [AbstractExtractor._scale_dim(d, scale) for d in (width, height)]
+        return (AbstractExtractor._scale_dim(d, scale) for d in (width, height))
 
     @staticmethod
     def _scale_dim(dim, scale):

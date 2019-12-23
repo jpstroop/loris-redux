@@ -2,8 +2,9 @@ from loris.info.structs.size import Size
 from loris.constants import KEYWORD_HEIGHT
 from loris.constants import KEYWORD_SCALE_FACTORS
 
+
 class Tile(Size):
-    __slots__ = 'scale_factors'
+    __slots__ = "scale_factors"
 
     def __init__(self, width, scale_factors, height=None):
         self.width = width

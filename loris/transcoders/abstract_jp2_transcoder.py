@@ -17,19 +17,19 @@ from subprocess import DEVNULL
 from subprocess import Popen
 from warnings import simplefilter
 
-logger = getLogger('loris')
+logger = getLogger("loris")
 # Pillow thinks we leave our fifos open. We don't:
-simplefilter('ignore', ResourceWarning)
+simplefilter("ignore", ResourceWarning)
+
 
 class AbstractJp2Transcoder(metaclass=ABCMeta):
     # Any code that can be shared between the OpenJpegJp2Transcoder and the
     # KakaduJp2Transcoder goes here.
     def __init__(self, config):
         self.pillow_transcoder = PillowTranscoder()
-        self.tmp = config.get('tmp', '/tmp/loris_tmp')
-        makedirs(self.tmp, exist_ok=True) # let errors bubble up for now
-        # TODO: Subclasses need to do this. Mayke them properties or something
-        # so that we can be sure that they do.
+        self.tmp = config.get("tmp", "/tmp/loris_tmp")
+        makedirs(self.tmp, exist_ok=True)  # let errors bubble up for now
+        # Subclasses need these:
         # self.lib = None
         # self.bin = None
         # self.env = {
@@ -59,16 +59,16 @@ class AbstractJp2Transcoder(metaclass=ABCMeta):
         return pillow_image
 
     @contextmanager
-    def _named_pipe(self, extension='bmp'):
+    def _named_pipe(self, extension="bmp"):
         # Make a unique named pipe and yield the path
         try:
-            name = ''.join(choice(ascii_lowercase) for x in range(6))
-            pth = f'{join(self.tmp, name)}.{extension}'
+            name = "".join(choice(ascii_lowercase) for x in range(6))
+            pth = f"{join(self.tmp, name)}.{extension}"
             mkfifo(pth)
             yield pth
         finally:
             unlink(pth)
-            logger.debug('Unlinked %s', pth)
+            logger.debug("Unlinked %s", pth)
 
     @staticmethod
     def reduce_arg_from_image_request(image_request):
@@ -89,7 +89,7 @@ class AbstractJp2Transcoder(metaclass=ABCMeta):
 
     @staticmethod
     def _scale_dimension(dim, scale):
-        return ceil(dim/scale) # Kakadu and OpenJPEG always seem to ceil
+        return ceil(dim / scale)  # Kakadu and OpenJPEG always seem to ceil
 
     @staticmethod
     def _get_closest_scale(req_w, req_h, full_w, full_h, scales=[]):
@@ -97,8 +97,9 @@ class AbstractJp2Transcoder(metaclass=ABCMeta):
             return 1
         else:
             is_larger = AbstractJp2Transcoder._scale_is_larger
-            larger_scales = [scale for scale in scales \
-                if is_larger(req_w, req_h, full_w, full_h, scale)]
+            larger_scales = [
+                scale for scale in scales if is_larger(req_w, req_h, full_w, full_h, scale)
+            ]
             return max(larger_scales)
 
     @staticmethod

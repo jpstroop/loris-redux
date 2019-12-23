@@ -1,11 +1,12 @@
 from loris.constants import ALL_QUALITIES
-from loris.constants import QUALITY_COLOR
 from loris.constants import KEYWORD_DEFAULT
+from loris.constants import QUALITY_COLOR
 from loris.constants import QUALITY_GRAY
 from loris.exceptions import FeatureNotEnabledException
 from loris.exceptions import RequestException
 from loris.exceptions import SyntaxException
 from loris.parameters.api import AbstractParameter
+
 
 class QualityParameter(AbstractParameter):
     # TODO: leave room for compression extensions like dithered, default_low
@@ -19,13 +20,20 @@ class QualityParameter(AbstractParameter):
     @property
     def canonical(self):
         if self._canonical is None:
-            is_default = any((
+            if self._is_default():
+                self._canonical = KEYWORD_DEFAULT
+            else:
+                self._canonical = self.uri_slice
+        return self._canonical
+
+    def _is_default(self):
+        return any(
+            (
                 self.image_is_color and self.uri_slice == QUALITY_COLOR,
                 not self.image_is_color and self.uri_slice == QUALITY_GRAY,
-                self.uri_slice == KEYWORD_DEFAULT
-            ))
-            self._canonical = KEYWORD_DEFAULT if is_default else self.uri_slice # TODO: constants!
-        return self._canonical
+                self.uri_slice == KEYWORD_DEFAULT,
+            )
+        )
 
     def _run_checks(self):
         self._is_recognizable()
@@ -39,7 +47,7 @@ class QualityParameter(AbstractParameter):
 
     def _check_quality_available(self):
         if self.uri_slice not in self.qualities_available:
-            msg = f'{self.uri_slice} quality is not available for this image'
+            msg = f"{self.uri_slice} quality is not available for this image"
             raise RequestException(msg)
 
     def _check_feature_enabled(self):

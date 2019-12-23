@@ -1,3 +1,4 @@
+from hashlib import sha1
 from loris.parameters.format import FormatParameter
 from loris.parameters.quality import QualityParameter
 from loris.parameters.region import RegionParameter
@@ -5,15 +6,12 @@ from loris.parameters.rotation import RotationParameter
 from loris.parameters.size import SizeParameter
 from loris.requests.iiif_request import IIIFRequest
 
-from hashlib import sha1
 
 class ImageRequest(IIIFRequest):
-
     def __init__(self, identifier, iiif_params):
         super().__init__(identifier, iiif_params)
-        region_s, size_s, rotation_s, quality_fmt = iiif_params.split('/')
-        quality_s, format_s = quality_fmt.split('.')
-
+        region_s, size_s, rotation_s, quality_fmt = iiif_params.split("/")
+        quality_s, format_s = quality_fmt.split(".")
         self._region_param = self._init_region(region_s)
         self._size_param = self._init_size(size_s)
         self._rotation_param = self._init_rotation(rotation_s)
@@ -23,7 +21,7 @@ class ImageRequest(IIIFRequest):
         self._canonical = None
 
     def _init_delegations(self):
-        # This makes mocking a TON easier
+        # This makes mocking easier
         self.region_request_type = self._region_param.request_type
         self.region_decimal_x = self._region_param.decimal_x
         self.region_decimal_y = self._region_param.decimal_y
@@ -48,18 +46,18 @@ class ImageRequest(IIIFRequest):
                 self._region_param,
                 self._size_param,
                 self._rotation_param,
-                self._quality_param
+                self._quality_param,
             )
             # str(param) returns the canonical version:
-            path = '/'.join(map(str, params))
-            self._canonical = f'{path}.{self.format}'
+            path = "/".join(map(str, params))
+            self._canonical = f"{path}.{self.format}"
         return self._canonical
 
     @property
     def etag(self):
         if self._etag is None:
             last_mod = str(self.last_mod)
-            b = bytes(last_mod + self.file_path + self.canonical, 'utf-8')
+            b = bytes(last_mod + self.file_path + self.canonical, "utf-8")
             self._etag = sha1(b).hexdigest()
         return self._etag
 

@@ -6,13 +6,14 @@ from loris.info.structs.size import Size
 from loris.info.structs.tile import Tile
 import pytest
 
-HTTP_ID = 'https://example.edu/images/1234'
+HTTP_ID = "https://example.edu/images/1234"
+
 
 def init_and_extract(path, compliance, app_configs):
     return PillowExtractor(compliance, app_configs).extract(path, HTTP_ID)
 
-class TestPillowExtractor(object):
 
+class TestPillowExtractor(object):
     def test_wh_color_jpg(self, compliance_2, color_jpg, app_configs):
         info = init_and_extract(color_jpg, compliance_2, app_configs)
         assert info.width == 200
@@ -41,8 +42,8 @@ class TestPillowExtractor(object):
 
     def test_sizes_color_jpg(self, compliance_0, color_jpg, app_configs):
         # so that tiles are smaller than the full test image:
-        app_configs['sizes_and_tiles']['other_formats']['tile_width'] = 64
-        app_configs['sizes_and_tiles']['other_formats']['tile_height'] = 64
+        app_configs["sizes_and_tiles"]["other_formats"]["tile_width"] = 64
+        app_configs["sizes_and_tiles"]["other_formats"]["tile_height"] = 64
         info = init_and_extract(color_jpg, compliance_0, app_configs)
         assert info.sizes[0] == Size(200, 279)
 
@@ -54,9 +55,11 @@ class TestPillowExtractor(object):
 
     def test_scale_factors(self, compliance_2, app_configs):
         pe = PillowExtractor(compliance_2, app_configs)
-        assert pe._scale_factors(6000,8000) == [1, 2, 4, 8, 16, 32, 64]
+        assert pe._scale_factors(6000, 8000) == [1, 2, 4, 8, 16, 32, 64]
 
-    def test_tiles_and_sizes_reported_with_higher_compliance(self, compliance_2, region_test_jpg, app_configs):
+    def test_tiles_and_sizes_reported_with_higher_compliance(
+        self, compliance_2, region_test_jpg, app_configs
+    ):
         info = init_and_extract(region_test_jpg, compliance_2, app_configs)
         assert info.tiles[0].scale_factors == (1, 2, 4)
         assert info.sizes[0].width == 3464
@@ -79,20 +82,20 @@ class TestPillowExtractor(object):
         assert info.max_area == 16000000
 
     def test_includes_max_width(self, compliance_2, color_jpg, app_configs):
-        app_configs['max_width'] = 7200
+        app_configs["max_width"] = 7200
         info = init_and_extract(color_jpg, compliance_2, app_configs)
         assert info.max_width == 7200
 
     def test_includes_max_width(self, compliance_2, color_jpg, app_configs):
-        app_configs['max_height'] = 5000
+        app_configs["max_height"] = 5000
         info = init_and_extract(color_jpg, compliance_2, app_configs)
         assert info.max_height == 5000
 
     def test_sizes_always_includes_full_or_max(self, compliance_0, color_jpg, app_configs):
-        app_configs['sizes_and_tiles']['other_formats']['enabled'] = False
-        app_configs['max_area'] = None
-        app_configs['max_width'] = None
-        app_configs['max_height'] = None
+        app_configs["sizes_and_tiles"]["other_formats"]["enabled"] = False
+        app_configs["max_area"] = None
+        app_configs["max_width"] = None
+        app_configs["max_height"] = None
         info = init_and_extract(color_jpg, compliance_0, app_configs)
         assert info.sizes[0] == Size(200, 279)
         with pytest.raises(IndexError):
