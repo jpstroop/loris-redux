@@ -12,6 +12,7 @@ requests = '>=2.22.0'
 
 [dev-packages]
 black = '==19.10b0'
+coveralls = ">=1.9.2"
 nose = '>=1.3.7'
 pytest-cov = '>=2.8.1'
 
